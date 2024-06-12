@@ -1,4 +1,8 @@
 #include <iostream>
+#include "EnrollMenu.h"
+#include "StudentMenu.h"
+#include "ScheduleMenu.h"
+#include "CourseMenu.h"
 using namespace std;
 /* Enrolment
 1. Enroll a Student
