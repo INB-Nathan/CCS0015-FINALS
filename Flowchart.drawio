@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2024-06-12T04:42:08.873Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0" etag="l8WsklTwB-drb__zghtg" version="24.5.3" type="device">
+<mxfile host="app.diagrams.net" modified="2024-06-12T04:59:28.814Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0" etag="CX1wXq5pUbkrJUs1SpPK" version="24.5.3" type="device">
   <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
-    <mxGraphModel dx="805" dy="485" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2000" pageHeight="2000" math="0" shadow="0">
+    <mxGraphModel dx="2269" dy="1365" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2000" pageHeight="2000" math="0" shadow="0">
       <root>
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
@@ -94,7 +94,7 @@
           <mxGeometry x="283" y="740.88" width="169.5" height="84.75" as="geometry" />
         </mxCell>
         <mxCell id="j7jmiCkk_v82CKJUUQBR-54" value="Display Enrolled Students" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
-          <mxGeometry x="520.5" y="740.88" width="120" height="70" as="geometry" />
+          <mxGeometry x="520.5" y="740.88" width="120" height="89.12" as="geometry" />
         </mxCell>
         <mxCell id="j7jmiCkk_v82CKJUUQBR-55" value="" style="endArrow=none;html=1;rounded=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
@@ -177,6 +177,48 @@
             <mxPoint x="230" y="1060" as="sourcePoint" />
             <mxPoint x="460" y="1170" as="targetPoint" />
           </mxGeometry>
+        </mxCell>
+        <mxCell id="j7jmiCkk_v82CKJUUQBR-88" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="j7jmiCkk_v82CKJUUQBR-82" target="j7jmiCkk_v82CKJUUQBR-87">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="j7jmiCkk_v82CKJUUQBR-82" value="View Student&#39;s Schedule" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="303.88" y="1430" width="127.75" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="j7jmiCkk_v82CKJUUQBR-87" value="Output: Return to main menu or enrollment menu?" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="263.24" y="1510" width="209.01" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="j7jmiCkk_v82CKJUUQBR-89" value="Choice" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="327.76" y="1560" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="j7jmiCkk_v82CKJUUQBR-90" value="" style="endArrow=none;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" target="j7jmiCkk_v82CKJUUQBR-89">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="178.5" y="1599.68" as="sourcePoint" />
+            <mxPoint x="276.5" y="1599.68" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="j7jmiCkk_v82CKJUUQBR-91" value="" style="endArrow=none;html=1;rounded=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="180" y="1600" as="sourcePoint" />
+            <mxPoint x="180" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="j7jmiCkk_v82CKJUUQBR-93" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.059;entryY=0.43;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" target="j7jmiCkk_v82CKJUUQBR-29">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="180" y="150" as="sourcePoint" />
+            <mxPoint x="480" y="150" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="j7jmiCkk_v82CKJUUQBR-94" value="" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" target="j7jmiCkk_v82CKJUUQBR-10">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="180" y="460" as="sourcePoint" />
+            <mxPoint x="480" y="520" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="j7jmiCkk_v82CKJUUQBR-95" value="1.Add a Student&lt;div&gt;2. View Student Lists&lt;/div&gt;&lt;div&gt;3. Edit Student ID&lt;/div&gt;&lt;div&gt;4.Delete Student&lt;/div&gt;" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="671.75" y="520" width="143.5" height="71.75" as="geometry" />
+        </mxCell>
+        <mxCell id="j7jmiCkk_v82CKJUUQBR-96" value="User picks" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="703.5" y="610" width="80" height="80" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
