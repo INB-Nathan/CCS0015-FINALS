@@ -1,3 +1,10 @@
 #include <iostream>
-#define "EnrollMenu.h";
+#include <fstream>
+class studentDetails{
+    private:
+        string firstName, lastName, middleName;
+        int idNumber;
+    public:
+
+};
 using namespace std;
