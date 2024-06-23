@@ -21,20 +21,22 @@ public:
     StudentNode *root;
     // Add input validation functions.
     bool IsValidName(string);
+    bool IsValidGender(string);
     // Constructor
     StudentDetails();
     // Add main functions : Add student, view student, edit student, delete student.
     void AddStudent(string, string, string, string, string, string, string, int, int);
-    void ViewStudent(StudentNode*);
+    void ViewStudent(StudentNode *);
     void EditStudent();
     void DeleteStudent();
 };
 
-bool StudentDetails::IsValidName(string str) 
+bool StudentDetails::IsValidName(string str)
 {
-    for(int i=0;i<(int)str.length();i++) 
+    // Convert the string to lowercase manually
+    for (int i = 0; i < str.length(); i++)
     {
-        if (!isalpha(str[i]) && !isspace(str[i])) 
+        if (!isalpha(str[i]) && !isspace(str[i])) // Check if alpha or a space
         {
             cout << "Please Enter a Valid Name (a-z)" << endl;
             return false;
@@ -42,6 +44,26 @@ bool StudentDetails::IsValidName(string str)
     }
 
     return true;
+}
+
+bool StudentDetails::IsValidGender(string str)
+{
+    // Convert the string to lowercase manually
+    for (int i = 0; i < str.length(); ++i)
+    {
+        str[i] = tolower(str[i]);
+    }
+
+    // Check if the string is male or female
+    if (str == "male" || str == "female")
+    {
+        return true;
+    }
+    else
+    {
+        cout << "Please Enter a Valid Gender." << endl;
+        return false;
+    }
 }
 
 StudentDetails::StudentDetails()
@@ -52,6 +74,8 @@ StudentDetails::StudentDetails()
 void StudentDetails::AddStudent(string fName, string lName, string mName, string dProgram, string sGender, string sAddress, string bDay, int idNum, int yrLvl)
 {
     // Create and instantiate the node
+    string filename;
+
     node = new StudentNode;
     node->firstName = fName;
     node->lastName = lName;
@@ -70,7 +94,7 @@ void StudentDetails::AddStudent(string fName, string lName, string mName, string
     {
         // Set the new node as the root
         root = node;
-        cout << "New Student is inserted as root....\n";
+        cout << "New Student is Successfully Added\n";
     }
     else
     {                   // If the tree has nodes already
@@ -85,7 +109,7 @@ void StudentDetails::AddStudent(string fName, string lName, string mName, string
                     // If the left pointer of the currrent node is empty
                     //   insert the new node to the left of the current node
                     current->left = node;
-                    cout << "New node is inserted as left child....\n";
+                    cout << "New Student is Successfully Added\n";
                     break;
                 }
                 else
@@ -102,7 +126,7 @@ void StudentDetails::AddStudent(string fName, string lName, string mName, string
                     // If the right pointer of the currrent node is empty
                     //   insert the new node to the right of the current node
                     current->right = node;
-                    cout << "New node is inserted as right child....\n";
+                    cout << "New Student is Successfully Added\n";
                     break;
                 }
                 else
@@ -120,7 +144,7 @@ void StudentDetails::AddStudent(string fName, string lName, string mName, string
     }
 
     // Generate a filename from the input id, use to_string function to convert int to string
-    string filename = to_string(idNum) + ".txt";
+    filename = to_string(idNum) + ".txt";
     // Create the file object and open the file
     ofstream ofile(filename);
 
@@ -138,16 +162,16 @@ void StudentDetails::AddStudent(string fName, string lName, string mName, string
     ofile.close();
 }
 
-//this shows ID Number and full names of all students in the program. The list must be sorted.
+// This shows ID Number and full names of all students in the program. The list must be sorted.
 void StudentDetails::ViewStudent(StudentNode *tempNode)
 {
     // Left -> Root -> Right
-
-    if(tempNode == NULL){ // Base case of the recursion
+    if (tempNode == NULL)
+    { // Base case of the recursion
         return;
     }
 
     ViewStudent(tempNode->left);
-    cout << tempNode->idNumber << "\t\t" << tempNode->firstName << " "  << tempNode->middleName << " "  << tempNode->lastName << endl;
+    cout << tempNode->idNumber << "\t\t" << tempNode->firstName << " " << tempNode->middleName << " " << tempNode->lastName << endl;
     ViewStudent(tempNode->right);
 }
