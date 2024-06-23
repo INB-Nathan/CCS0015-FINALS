@@ -73,9 +73,8 @@ StudentDetails::StudentDetails()
 
 void StudentDetails::AddStudent(string fName, string lName, string mName, string dProgram, string sGender, string sAddress, string bDay, int idNum, int yrLvl)
 {
-    // Create and instantiate the node
     string filename;
-
+    // Create and instantiate the node
     node = new StudentNode;
     node->firstName = fName;
     node->lastName = lName;
@@ -165,14 +164,39 @@ void StudentDetails::AddStudent(string fName, string lName, string mName, string
 // This shows ID Number and full names of all students in the program. The list must be sorted.
 void StudentDetails::ViewStudent(StudentNode *tempNode)
 {
-    // Left -> Root -> Right
+    // // Left -> Root -> Right
 
-    if (tempNode == NULL)
-    { // Base case of the recursion
-        return;
+    // if (tempNode == NULL)
+    // { // Base case of the recursion
+    //     return;
+    // }
+
+    // ViewStudent(tempNode->left);
+    // cout << tempNode->idNumber << "\t\t" << tempNode->firstName << " " << tempNode->middleName << " " << tempNode->lastName << endl;
+    // ViewStudent(tempNode->right);
+
+    int i = 0, studID;
+    string fullName, firstName, middleName, lastName;
+    string filename = to_string(tempNode->idNumber) + ".txt";
+    
+    
+    ViewStudent(tempNode->left);
+    // To get data from file
+    // Open a ifstream object and open the file (use the same filename variable)
+    ifstream ifile(filename);
+    string filedata[9] = {"", "", "", "", "", "", "", "", ""};
+    while (getline(ifile, filedata[i]))
+    { // Fetch data strored in the file one line at a time
+        i++;
     }
 
-    ViewStudent(tempNode->left);
-    cout << tempNode->idNumber << "\t\t" << tempNode->firstName << " " << tempNode->middleName << " " << tempNode->lastName << endl;
+    studID = stoi(filedata[0]);
+    firstName = filedata[1];
+    middleName = filedata[2];
+    lastName = filedata[3];
+    fullName = firstName + " " + middleName + " " + lastName;
+
+    cout << studID << "\t\t" << fullName << endl;
+
     ViewStudent(tempNode->right);
 }
