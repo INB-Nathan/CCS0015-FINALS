@@ -34,7 +34,7 @@ bool StudentDetails::IsValidName(string str)
 {
     for(int i=0;i<(int)str.length();i++) 
     {
-        if (!isalpha(str[i])) 
+        if (!isalpha(str[i]) && !isspace(str[i])) 
         {
             cout << "Please Enter a Valid Name (a-z)" << endl;
             return false;
@@ -114,9 +114,28 @@ void StudentDetails::AddStudent(string fName, string lName, string mName, string
             else
             {
                 cout << "Duplicate values are not allowed in trees.";
+                return;
             }
         }
     }
+
+    // Generate a filename from the input id, use to_string function to convert int to string
+    string filename = to_string(idNum) + ".txt";
+    // Create the file object and open the file
+    ofstream ofile(filename);
+
+    // Store data to file
+    ofile << node->firstName << endl;
+    ofile << node->middleName << endl;
+    ofile << node->lastName << endl;
+    ofile << node->birthday << endl;
+    ofile << node->studentGender << endl;
+    ofile << node->studentAddress << endl;
+    ofile << node->idNumber << endl;
+    ofile << node->degreeProgram << endl;
+    ofile << node->yearLevel << endl;
+    // Close the ofstream object, always close the object after using it to avoid problems
+    ofile.close();
 }
 
 //this shows ID Number and full names of all students in the program. The list must be sorted.

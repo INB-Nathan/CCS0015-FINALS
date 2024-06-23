@@ -40,16 +40,42 @@ int main(){
         cout << "Enter Gender (Male or Female): ";
         cin >> studentGender;
         cin.ignore();
-        cout << "Enter City Address (ex. Manila City): ";
-        getline(cin, studentAddress);
-        cout << "Enter ID Number (9-digit ID Number): ";
-        cin >> idNumber;
-        cout << "Enter Degree Program (ex. BSITCST): ";
-        cin >> degreeProgram;
-        cout << "Enter Year Level (1-4): ";
-        cin >> yearLevel;
-        cin.ignore();
 
+        while (true)
+        {
+            cout << "Enter City Address (ex. Manila City): ";
+            getline(cin, studentAddress);
+
+            if (sNode.IsValidName(studentAddress)) break;
+        }
+
+        while (true)
+        {
+            cout << "Enter ID Number (9-digit ID Number): ";
+            cin >> idNumber;
+
+            if (idNumber >= 201500000 && idNumber < 202500000) break;
+            else cout << "Enter a Valid Student Number." << endl; 
+        }
+        
+        while (true)
+        {
+            cout << "Enter Degree Program (ex. BSITCST): ";
+            cin >> degreeProgram;
+
+            if (sNode.IsValidName(degreeProgram)) break;
+        }
+        
+        while (true)
+        {
+            cout << "Enter Year Level (1-4): ";
+            cin >> yearLevel;
+            cin.ignore();
+
+            if (yearLevel >= 1 && yearLevel <= 4) break;
+            else cout << "Enter a Valid Year Level." << endl;  
+        }
+        
         // Insert he new value to the tree
         sNode.AddStudent(firstName, lastName, middleName, degreeProgram, studentGender, studentAddress, birthday, idNumber, yearLevel);
         counter++;
