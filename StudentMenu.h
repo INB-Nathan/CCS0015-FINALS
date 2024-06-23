@@ -149,13 +149,13 @@ void StudentDetails::AddStudent(string fName, string lName, string mName, string
     ofstream ofile(filename);
 
     // Store data to file
+    ofile << node->idNumber << endl;
     ofile << node->firstName << endl;
     ofile << node->middleName << endl;
     ofile << node->lastName << endl;
     ofile << node->birthday << endl;
     ofile << node->studentGender << endl;
     ofile << node->studentAddress << endl;
-    ofile << node->idNumber << endl;
     ofile << node->degreeProgram << endl;
     ofile << node->yearLevel << endl;
     // Close the ofstream object, always close the object after using it to avoid problems
@@ -166,6 +166,7 @@ void StudentDetails::AddStudent(string fName, string lName, string mName, string
 void StudentDetails::ViewStudent(StudentNode *tempNode)
 {
     // Left -> Root -> Right
+
     if (tempNode == NULL)
     { // Base case of the recursion
         return;
