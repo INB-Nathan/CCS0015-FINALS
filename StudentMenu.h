@@ -10,7 +10,7 @@ private:
     // Declare Student Information variables.
     struct StudentNode
     {
-        string firstName, lastName, middleName, degreeProgram, studentGender, studentAddress;
+        string firstName, lastName, middleName, degreeProgram, studentGender, studentAddress, birthday;
         int idNumber, yearLevel;
 
         StudentNode *left;
@@ -20,22 +20,36 @@ private:
 public:
     StudentNode *root;
     // Add input validation functions.
-
+    bool IsValidName(string);
     // Constructor
     StudentDetails();
     // Add main functions : Add student, view student, edit student, delete student.
-    void AddStudent(string, string, string, string, string, string, int, int);
+    void AddStudent(string, string, string, string, string, string, string, int, int);
     void ViewStudent(StudentNode*);
     void EditStudent();
     void DeleteStudent();
 };
+
+bool StudentDetails::IsValidName(string str) 
+{
+    for(int i=0;i<(int)str.length();i++) 
+    {
+        if (!isalpha(str[i])) 
+        {
+            cout << "Please Enter a Valid Name (a-z)" << endl;
+            return false;
+        }
+    }
+
+    return true;
+}
 
 StudentDetails::StudentDetails()
 {
     root = NULL;
 }
 
-void StudentDetails::AddStudent(string fName, string lName, string mName, string dProgram, string sGender, string sAddress, int idNum, int yrLvl)
+void StudentDetails::AddStudent(string fName, string lName, string mName, string dProgram, string sGender, string sAddress, string bDay, int idNum, int yrLvl)
 {
     // Create and instantiate the node
     node = new StudentNode;
@@ -45,6 +59,7 @@ void StudentDetails::AddStudent(string fName, string lName, string mName, string
     node->degreeProgram = dProgram;
     node->studentGender = sGender;
     node->studentAddress = sAddress;
+    node->birthday = bDay;
     node->idNumber = idNum;
     node->yearLevel = yrLvl;
     node->left = NULL;
@@ -104,6 +119,7 @@ void StudentDetails::AddStudent(string fName, string lName, string mName, string
     }
 }
 
+//this shows ID Number and full names of all students in the program. The list must be sorted.
 void StudentDetails::ViewStudent(StudentNode *tempNode)
 {
     // Left -> Root -> Right
@@ -113,15 +129,6 @@ void StudentDetails::ViewStudent(StudentNode *tempNode)
     }
 
     ViewStudent(tempNode->left);
-
-    cout << "First Name: " << tempNode->firstName << endl;
-    cout << "Middle Name: " << tempNode->middleName << endl;
-    cout << "Last Name: " << tempNode->lastName << endl;
-    cout << "Gender: " << tempNode->studentGender << endl;
-    cout << "Address: " << tempNode->studentAddress << endl;
-    cout << "Student Number: " << tempNode->idNumber << endl;
-    cout << "Degree Program: " << tempNode->degreeProgram << endl;
-    cout << "Year Level: " << tempNode->yearLevel << endl;
-
+    cout << tempNode->idNumber << "\t\t" << tempNode->firstName << " "  << tempNode->middleName << " "  << tempNode->lastName << endl;
     ViewStudent(tempNode->right);
 }
