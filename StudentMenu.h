@@ -22,6 +22,9 @@ public:
     // Add input validation functions.
     bool IsValidName(string);
     bool IsValidGender(string);
+    int MonthNameToNumber(string&);
+    bool IsValidBirthMonth(string&);
+    bool IsValidBirthDate(int, string&, int);
     // Constructor
     StudentDetails();
     // Add main functions : Add student, view student, edit student, delete student.
@@ -63,6 +66,80 @@ bool StudentDetails::IsValidGender(string str)
     {
         cout << "Please Enter a Valid Gender." << endl;
         return false;
+    }
+}
+
+int StudentDetails::MonthNameToNumber(string& monthName){ 
+    if (monthName == "January"){
+        return 1;
+    }
+    if (monthName == "February"){
+        return 2;
+    }
+    if (monthName == "March"){
+        return 3;
+    }
+    if (monthName == "April"){
+        return 4;
+    }
+    if (monthName == "May"){
+        return 5;
+    }
+    if (monthName == "June"){
+        return 6;
+    }
+    if (monthName == "July"){
+        return 7;
+    }
+    if (monthName == "August"){
+        return 8;
+    }
+    if (monthName == "September"){
+        return 9;
+    }
+    if (monthName == "October"){
+        return 10;
+    }
+    if (monthName == "November"){
+        return 11;
+    }
+    if (monthName == "December"){
+        return 12;
+    }
+    return -1;
+}
+
+bool StudentDetails::IsValidBirthMonth(string& month) {
+    string validMonths[] = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+    for (string& validMonth : validMonths) {
+        if (month == validMonth) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool StudentDetails::IsValidBirthDate(int birthday, string& month, int year) {
+    int monthNumber = MonthNameToNumber(month);
+
+    if (monthNumber == -1) {
+        return false; // Invalid month
+    }
+
+    if (birthday < 1 || birthday > 31) {
+        return false; // Invalid day
+    }
+
+    if (monthNumber == 2) {
+        if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) {
+            return birthday <= 29; // Leap year
+        } else {
+            return birthday <= 28; // Non-leap year
+        }
+    } else if (monthNumber == 4 || monthNumber == 6 || monthNumber == 9 || monthNumber == 11) {
+        return birthday <= 30; // April, June, September, November have 30 days
+    } else {
+        return true; // All other months have 31 days
     }
 }
 

@@ -7,13 +7,14 @@ using namespace std;
 int main()
 {
     StudentDetails sNode;
-    string firstName, lastName, middleName, degreeProgram, studentGender, studentAddress, birthday;
-    int idNumber, yearLevel, choice, counter = 0;
+    string firstName, lastName, middleName, degreeProgram, studentGender, studentAddress, birthMonthName, fullBirthday;
+    int idNumber, yearLevel, choice, counter = 0, birthDay, birthYear, birthMonthNum;
 
     while (true)
     {
         cout << "1. Add Student" << endl;
-        cout << "2. View Student List" << endl << endl;
+        cout << "2. View Student List" << endl
+             << endl;
         cout << "0. Exit" << endl;
         cin >> choice;
         cin.ignore();
@@ -50,11 +51,33 @@ int main()
                 getline(cin, lastName);
 
                 if (sNode.IsValidName(lastName))
-                break;
+                    break;
             }
 
-            cout << "Enter Birthday (MM/DD/YYYY): ";
-            getline(cin, birthday);
+            cout << "Enter Birth Month: ";
+            cin >> birthMonthName;
+            while (!sNode.IsValidBirthMonth(birthMonthName))
+            {
+                cout << "Invalid Month! Please enter a valid birth month." << endl;
+                cout << "Enter Birth Month: ";
+                cin >> birthMonthName;
+            }
+
+            cout << "Enter Birth Day: ";
+            cin >> birthDay;
+
+            cout << "Enter Birth Year: ";
+            cin >> birthYear;
+            while (!sNode.IsValidBirthDate(birthDay, birthMonthName, birthYear))
+            {
+                cout << "Invalid Birthdate! Please enter a valid birthdate." << endl;
+                cout << "Enter Birth Month: ";
+                cin >> birthMonthName;
+                cout << "Enter Birth Day: ";
+                cin >> birthDay;
+                cout << "Enter Birth Year: ";
+                cin >> birthYear;
+            }
 
             while (true)
             {
@@ -107,8 +130,10 @@ int main()
                     cout << "Enter a Valid Year Level." << endl;
             }
 
+            birthMonthNum = sNode.MonthNameToNumber(birthMonthName); // Convert month name to number(int)
+            fullBirthday = to_string(birthMonthNum) + "/" + to_string(birthDay) + "/" + to_string(birthYear); // Convert into the full birthday format (string)
             // Insert he new value to the tree
-            sNode.AddStudent(firstName, lastName, middleName, degreeProgram, studentGender, studentAddress, birthday, idNumber, yearLevel);
+            sNode.AddStudent(firstName, lastName, middleName, degreeProgram, studentGender, studentAddress, fullBirthday, idNumber, yearLevel);
             break;
         }
         case 2:
