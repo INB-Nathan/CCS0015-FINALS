@@ -13,9 +13,8 @@ int main()
     while (true)
     {
         cout << "1. Add Student" << endl;
-        cout << "2. View Student List" << endl
-             << endl;
-        cout << "0. Exit" << endl;
+        cout << "2. View Student List" << endl;
+        cout << "3. Exit" << endl;
         cin >> choice;
         cin.ignore();
 

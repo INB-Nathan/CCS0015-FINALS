@@ -22,9 +22,9 @@ public:
     // Add input validation functions.
     bool IsValidName(string);
     bool IsValidGender(string);
-    int MonthNameToNumber(string&);
-    bool IsValidBirthMonth(string&);
-    bool IsValidBirthDate(int, string&, int);
+    int MonthNameToNumber(string);
+    bool IsValidBirthMonth(string);
+    bool IsValidBirthDate(int, string, int);
     // Constructor
     StudentDetails();
     // Add main functions : Add student, view student, edit student, delete student.
@@ -32,6 +32,8 @@ public:
     void ViewStudent(StudentNode *);
     void EditStudent();
     void DeleteStudent();
+    // Add additional function for sorting the list of students by ID Number.
+    void SortStudent();
 };
 
 bool StudentDetails::IsValidName(string str)
@@ -69,7 +71,7 @@ bool StudentDetails::IsValidGender(string str)
     }
 }
 
-int StudentDetails::MonthNameToNumber(string& monthName){ 
+int StudentDetails::MonthNameToNumber(string monthName){ 
     if (monthName == "January"){
         return 1;
     }
@@ -109,7 +111,7 @@ int StudentDetails::MonthNameToNumber(string& monthName){
     return -1;
 }
 
-bool StudentDetails::IsValidBirthMonth(string& month) {
+bool StudentDetails::IsValidBirthMonth(string month) {
     string validMonths[] = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
     for (string& validMonth : validMonths) {
         if (month == validMonth) {
@@ -119,7 +121,7 @@ bool StudentDetails::IsValidBirthMonth(string& month) {
     return false;
 }
 
-bool StudentDetails::IsValidBirthDate(int birthday, string& month, int year) {
+bool StudentDetails::IsValidBirthDate(int birthday, string month, int year) {
     int monthNumber = MonthNameToNumber(month);
 
     if (monthNumber == -1) {
@@ -236,6 +238,11 @@ void StudentDetails::AddStudent(string fName, string lName, string mName, string
     ofile << node->yearLevel << endl;
     // Close the ofstream object, always close the object after using it to avoid problems
     ofile.close();
+    // Create mainfile to store all student data, not individual data.
+    ofstream afile("mainfile.txt", ios::app);
+    // Store data to file
+    afile << node->idNumber << "-" << node->firstName << "-" << node->middleName << "-" << node->lastName << "-" << node->birthday << "-" << node->studentGender << "-" << node->studentAddress << "-" << node->degreeProgram << "-" << node->yearLevel << endl;
+    afile.close();
 }
 
 // This shows ID Number and full names of all students in the program. The list must be sorted.
@@ -243,10 +250,10 @@ void StudentDetails::ViewStudent(StudentNode *tempNode)
 {
     // // Left -> Root -> Right
 
-    // if (tempNode == NULL)
-    // { // Base case of the recursion
-    //     return;
-    // }
+    if (tempNode == NULL)
+    { // Base case of the recursion
+        return;
+    }
 
     // ViewStudent(tempNode->left);
     // cout << tempNode->idNumber << "\t\t" << tempNode->firstName << " " << tempNode->middleName << " " << tempNode->lastName << endl;
