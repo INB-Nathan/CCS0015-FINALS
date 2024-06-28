@@ -70,7 +70,7 @@ int main()
             cin >> birthYear;
             while (!sNode.IsValidBirthDate(birthDay, birthMonthName, birthYear))
             {
-                cout << "Invalid Birthdate! Please enter a valid birthdate." << endl;
+                cout << "Invalid Birth Date! Please enter a valid Birth Date." << endl;
                 cout << "Enter Birth Month: ";
                 cin >> birthMonthName;
                 cout << "Enter Birth Day: ";
