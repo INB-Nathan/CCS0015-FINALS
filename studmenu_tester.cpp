@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cctype>
+#include <string>
 #include "StudentMenu.h"
 
 using namespace std;
@@ -9,6 +10,7 @@ int main()
     StudentDetails sNode;
     string firstName, lastName, middleName, degreeProgram, studentGender, studentAddress, birthMonthName, fullBirthday;
     int idNumber, yearLevel, choice, counter = 0, birthDay, birthYear, birthMonthNum;
+    sNode.FetchStudentInfo();
 
     while (true)
     {
