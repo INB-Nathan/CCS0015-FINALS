@@ -9,13 +9,15 @@ int main()
 {
     StudentDetails sNode;
     string firstName, lastName, middleName, degreeProgram, studentGender, studentAddress, birthMonthName, fullBirthday;
-    int idNumber, yearLevel, choice, counter = 0, birthDay, birthYear, birthMonthNum;
+    int idNumber, yearLevel, choice, counter = 0, birthDay, birthYear, birthMonthNum, idToView, idToEdit;
     sNode.FetchStudentInfo();
 
     while (true)
     {
         cout << "1. Add Student" << endl;
-        cout << "2. View Student List" << endl
+        cout << "2. View Student List" << endl;
+        cout << "3. View Student's Record" << endl;
+        cout << "4. Edit Student Info" << endl
              << endl;
         cout << "0. Exit" << endl;
         cin >> choice;
@@ -146,6 +148,52 @@ int main()
             cout << endl;
             break;
         }
+        case 3:
+        {
+            cout << "\n\nDisplaying Students in order of Student Number:\n";
+            cout << "Student Number\t\tName" << endl;
+            sNode.ViewStudent(sNode.root);
+            cout << endl;
+
+            while (true) // to edit
+            {
+                cout << "Enter Student Number to View: ";
+                cin >> idToView;
+
+                if (idToView >= 201500000 && idToView < 202500000)
+                    break;
+                else
+                    cout << "Enter a Valid Student Number." << endl;
+            }
+            
+            sNode.ViewDetails(to_string(idToView));
+
+            break;
+        }
+        case 4:
+        {
+            cout << "\n\nDisplaying Students in order of Student Number:\n";
+            cout << "Student Number\t\tName" << endl;
+            sNode.ViewStudent(sNode.root);
+            cout << endl;
+
+            while (true) // to edit
+            {
+                cout << "Enter Student Number to Edit: ";
+                cin >> idToEdit;
+
+                if (idToEdit >= 201500000 && idToEdit < 202500000)
+                    break;
+                else
+                    cout << "Enter a Valid Student Number." << endl;
+            }
+
+            sNode.EditStudent(to_string(idToEdit));
+            
+            cout << endl << "Successfully Edited" << endl << endl;
+
+            break;
+        } 
         }
     }
 }

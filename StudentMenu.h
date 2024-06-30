@@ -2,6 +2,7 @@
 #include <fstream>
 #include <cctype>
 #include <string>
+#include <cstdio>
 
 using namespace std;
 class StudentDetails
@@ -30,8 +31,9 @@ public:
     // Add main functions
     void AddStudent(string, string, string, string, string, string, string, int, int);
     void SaveIDToList();
-    void EditStudent();
-    void DeleteStudent();
+    void ViewDetails(string);
+    void EditStudent(string);
+    void DeleteStudent(string);
     void RestoreStudentInfo(int, string, string, string, string, string, string, string, int);
     void FetchEachStudentFile(string);
     void FetchStudentInfo();
@@ -334,10 +336,10 @@ void StudentDetails::FetchEachStudentFile(string idOfFile) // Reads each student
     sAddress = s[6];
     dProgram = s[7];
     yrLvl = stoi(s[8]);
-    
+
     ifile.close();
 
-    RestoreStudentInfo(idNum, fName, mName, lName, bDay, sGender, sAddress, dProgram, yrLvl); 
+    RestoreStudentInfo(idNum, fName, mName, lName, bDay, sGender, sAddress, dProgram, yrLvl);
 }
 
 void StudentDetails::RestoreStudentInfo(int idNum, string fName, string mName, string lName, string bDay, string sGender, string sAddress, string dProgram, int yrLvl)
@@ -409,4 +411,229 @@ void StudentDetails::RestoreStudentInfo(int idNum, string fName, string mName, s
             }
         }
     }
+}
+
+void StudentDetails::ViewDetails(string idNum) // Preview details inside the student's record
+{
+    int i = 0;
+    string *s = new string[9];
+    ifstream ifile(idNum + ".txt");
+
+    while (getline(ifile, s[i]))
+    { // Fetch data stored in the file one line at a time
+        i++;
+    }
+
+    cout << "\n\nStudent Number: " << s[0] << endl;
+    cout << "First Name: " << s[1] << endl;
+    cout << "Middle Name: " << s[2] << endl;
+    cout << "Last Name: " << s[3] << endl;
+    cout << "Birthday: " << s[4] << endl;
+    cout << "Gender: " << s[5] << endl;
+    cout << "Address: " << s[6] << endl;
+    cout << "Degree Program: " << s[7] << endl;
+    cout << "Year Level: " << s[8] << endl
+         << endl;
+
+    ifile.close();
+}
+
+void StudentDetails::EditStudent(string idToEdit)
+{
+    string fName, mName, lName, bDay, sGender, sAddress, dProgram, birthMonthName, fullBirthday, filename;
+    int idNum, yrLvl, choice, birthDay, birthYear, birthMonthNum, i = 0;
+    string *s = new string[9];
+    ifstream ifile(idToEdit + ".txt");
+
+    while (getline(ifile, s[i]))
+    { // Fetch data stored in the file one line at a time
+        i++;
+    }
+
+    idNum = stoi(s[0]);
+    fName = s[1];
+    mName = s[2];
+    lName = s[3];
+    bDay = s[4];
+    sGender = s[5];
+    sAddress = s[6];
+    dProgram = s[7];
+    yrLvl = stoi(s[8]);
+
+    ifile.close();
+
+    cout << "\n\n1. Student Number: " << idNum << endl;
+    cout << "2. First Name: " << fName << endl;
+    cout << "3. Middle Name: " << mName << endl;
+    cout << "4. Last Name: " << lName << endl;
+    cout << "5. Birthday: " << bDay << endl;
+    cout << "6. Gender: " << sGender << endl;
+    cout << "7. Address: " << sAddress << endl;
+    cout << "8. Degree Program: " << dProgram << endl;
+    cout << "9. Year Level: " << yrLvl << endl
+         << endl;
+
+    cout << "What do you want to edit (1-9): ";
+    cin >> choice;
+    cin.ignore();
+
+    switch (choice)
+    {
+    case 1:
+    {
+        while (true)
+        {
+            cout << "Enter new ID Number (9-digit ID Number): ";
+            cin >> idNum;
+            cin.ignore();
+
+            if (idNum >= 201500000 && idNum < 202500000)
+                break;
+            else
+                cout << "Enter a Valid Student Number." << endl;
+        }
+        break;
+    }
+    case 2:
+    {
+        while (true)
+        {
+            cout << "Enter new First Name: ";
+            getline(cin, fName);
+
+            if (IsValidName(fName))
+                break;
+        }
+        break;
+    }
+    case 3:
+    {
+        while (true)
+        {
+            cout << "Enter new Middle Name: ";
+            getline(cin, mName);
+
+            if (IsValidName(mName))
+                break;
+        }
+        break;
+    }
+    case 4:
+    {
+        while (true)
+        {
+            cout << "Enter new Last Name: ";
+            getline(cin, lName);
+
+            if (IsValidName(lName))
+                break;
+        }
+        break;
+    }
+    case 5:
+    {
+        cout << "Enter new Birth Month: ";
+        cin >> birthMonthName;
+        while (!IsValidBirthMonth(birthMonthName))
+        {
+            cout << "Invalid Month! Please enter a valid birth month." << endl;
+            cout << "Enter Birth Month: ";
+            cin >> birthMonthName;
+        }
+
+        cout << "Enter new Birth Day: ";
+        cin >> birthDay;
+
+        cout << "Enter new Birth Year: ";
+        cin >> birthYear;
+        while (!IsValidBirthDate(birthDay, birthMonthName, birthYear))
+        {
+            cout << "Invalid Birth Date! Please enter a valid Birth Date." << endl;
+            cout << "Enter Birth Month: ";
+            cin >> birthMonthName;
+            cout << "Enter Birth Day: ";
+            cin >> birthDay;
+            cout << "Enter Birth Year: ";
+            cin >> birthYear;
+        }
+
+        birthMonthNum = MonthNameToNumber(birthMonthName);                                                // Convert month name to number(int)
+        fullBirthday = to_string(birthMonthNum) + "/" + to_string(birthDay) + "/" + to_string(birthYear); // Convert into the full birthday format (string)
+        break;
+    }
+    case 6:
+    {
+        while (true)
+        {
+            cout << "Enter new Gender (Male or Female): ";
+            cin >> sGender;
+            cin.ignore();
+
+            if (IsValidGender(sGender))
+                break;
+        }
+        break;
+    }
+    case 7:
+    {
+        while (true)
+        {
+            cout << "Enter new City Address (ex. Manila City): ";
+            getline(cin, sAddress);
+
+            if (IsValidName(sAddress))
+                break;
+        }
+        break;
+    }
+    case 8:
+    {
+        while (true)
+        {
+            cout << "Enter new Degree Program (ex. BSITCST): ";
+            cin >> dProgram;
+
+            if (IsValidName(dProgram))
+                break;
+        }
+        break;
+    }
+    case 9:
+    {
+        while (true)
+        {
+            cout << "Enter new Year Level (1-4): ";
+            cin >> yrLvl;
+            cin.ignore();
+
+            if (yrLvl >= 1 && yrLvl <= 4)
+                break;
+            else
+                cout << "Enter a Valid Year Level." << endl;
+        }
+        break;
+    }
+    }
+
+    // Generate a filename from the input id, use to_string function to convert int to string
+    filename = to_string(idNum) + ".txt";
+    // Create the file object and open the file
+    ofstream ofile(filename);
+
+    // Store data to file
+    ofile << idNum << endl;
+    ofile << fName << endl;
+    ofile << mName << endl;
+    ofile << lName << endl;
+    ofile << bDay << endl;
+    ofile << sGender << endl;
+    ofile << sAddress << endl;
+    ofile << dProgram << endl;
+    ofile << yrLvl << endl;
+    // Close the ofstream object, always close the object after using it to avoid problems
+    ofile.close();
+}
+
+void StudentDetails::DeleteStudent(string idNum)
+{
 }
