@@ -13,7 +13,6 @@ private:
     {
         string firstName, lastName, middleName, degreeProgram, studentGender, studentAddress, birthday;
         int idNumber, yearLevel;
-
         StudentNode *left;
         StudentNode *right;
     } *node, *current;
@@ -40,7 +39,7 @@ public:
     void ViewStudent(StudentNode *);
 };
 
-bool StudentDetails::IsValidName(string str)
+bool StudentDetails::IsValidName(string str) // Function for checking if the input is Alpha or a Space mostly used for names and such
 {
     // Convert the string to lowercase manually
     for (int i = 0; i < str.length(); i++)
@@ -55,7 +54,7 @@ bool StudentDetails::IsValidName(string str)
     return true;
 }
 
-bool StudentDetails::IsValidGender(string str)
+bool StudentDetails::IsValidGender(string str) // Function to check if the input is either male or female regardless of the case
 {
     // Convert the string to lowercase manually
     for (int i = 0; i < str.length(); ++i)
@@ -75,7 +74,7 @@ bool StudentDetails::IsValidGender(string str)
     }
 }
 
-int StudentDetails::MonthNameToNumber(string &monthName)
+int StudentDetails::MonthNameToNumber(string &monthName) // Converts the month name input into its corresponding number
 {
     if (monthName == "January")
     {
@@ -128,7 +127,7 @@ int StudentDetails::MonthNameToNumber(string &monthName)
     return -1;
 }
 
-bool StudentDetails::IsValidBirthMonth(string &month)
+bool StudentDetails::IsValidBirthMonth(string &month) // Function to check if the input is a valid month
 {
     string validMonths[] = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
     for (string &validMonth : validMonths)
@@ -141,7 +140,7 @@ bool StudentDetails::IsValidBirthMonth(string &month)
     return false;
 }
 
-bool StudentDetails::IsValidBirthDate(int birthday, string &month, int year)
+bool StudentDetails::IsValidBirthDate(int birthday, string &month, int year) // Function to check if the date of birth is valid, checks leap years and such
 {
     int monthNumber = MonthNameToNumber(month);
 
@@ -176,15 +175,14 @@ bool StudentDetails::IsValidBirthDate(int birthday, string &month, int year)
     }
 }
 
-StudentDetails::StudentDetails()
+StudentDetails::StudentDetails() // Constructor
 {
     root = NULL;
 }
 
-void StudentDetails::AddStudent(string fName, string lName, string mName, string dProgram, string sGender, string sAddress, string bDay, int idNum, int yrLvl)
+void StudentDetails::AddStudent(string fName, string lName, string mName, string dProgram, string sGender, string sAddress, string bDay, int idNum, int yrLvl) // Function to add student into the tree and creates a file to store their data
 {
     string filename;
-
     // Create and instantiate the node
     node = new StudentNode;
     node->firstName = fName;
@@ -257,7 +255,11 @@ void StudentDetails::AddStudent(string fName, string lName, string mName, string
     filename = to_string(idNum) + ".txt";
     // Create the file object and open the file
     ofstream ofile(filename);
-
+    if (!ofile) // Error display if the file won't open
+    {
+        cerr << "Error opening file" << endl;
+        return;
+    }
     // Store data to file
     ofile << node->idNumber << endl;
     ofile << node->firstName << endl;
@@ -271,14 +273,18 @@ void StudentDetails::AddStudent(string fName, string lName, string mName, string
     // Close the ofstream object, always close the object after using it to avoid problems
     ofile.close();
 
-    SaveIDToList();
+    SaveIDToList(); // Save the student id to the idlist file
 }
 
 void StudentDetails::SaveIDToList() // Saves the Stud num to a list for reading purposes
 {
     // Create another file to store all of the student numbers
     ofstream ofile("idlist.txt", ios::app);
-
+    if (!ofile) // Error display if the file won't open
+    {
+        cerr << "Error opening file" << endl;
+        return;
+    }
     // Store the idNumber
     ofile << node->idNumber << endl;
 
@@ -289,13 +295,11 @@ void StudentDetails::SaveIDToList() // Saves the Stud num to a list for reading 
 // This shows ID Number and full names of all students in the program. The list must be sorted.
 void StudentDetails::ViewStudent(StudentNode *tempNode)
 {
-    // Left -> Root -> Right
-
     if (tempNode == NULL)
     { // Base case of the recursion
         return;
     }
-
+    // Left -> Root -> Right
     ViewStudent(tempNode->left);
     cout << tempNode->idNumber << "\t\t" << tempNode->firstName << " " << tempNode->middleName << " " << tempNode->lastName << endl;
     ViewStudent(tempNode->right);
@@ -306,7 +310,11 @@ void StudentDetails::FetchStudentInfo() // Reads the idlist file to traverse thr
     string filename;
     // Open a ifstream object and open the idlist file
     ifstream ifile("idlist.txt");
-
+    if (!ifile) // Error display if the file won't open
+    {
+        cerr << "Error opening file" << endl;
+        return;
+    }
     while (getline(ifile, filename))
     { // Fetch data stored in the file one line at a time
         FetchEachStudentFile(filename);
@@ -322,6 +330,11 @@ void StudentDetails::FetchEachStudentFile(string idOfFile) // Reads each student
     string *s = new string[9];
 
     ifstream ifile(idOfFile + ".txt"); // Opens the student file given by the FetchStudentInfo func
+    if (!ifile) // Error display if the file won't open
+    {
+        cerr << "Error opening file" << endl;
+        return;
+    }
     while (getline(ifile, s[i]))
     { // Fetch data stored in the file one line at a time
         i++;
@@ -339,11 +352,11 @@ void StudentDetails::FetchEachStudentFile(string idOfFile) // Reads each student
 
     ifile.close();
 
-    RestoreStudentInfo(idNum, fName, mName, lName, bDay, sGender, sAddress, dProgram, yrLvl);
+    RestoreStudentInfo(idNum, fName, mName, lName, bDay, sGender, sAddress, dProgram, yrLvl); // Passes the information to the RestoreStudentInfo function to insert the info into the tree again
 }
 
-void StudentDetails::RestoreStudentInfo(int idNum, string fName, string mName, string lName, string bDay, string sGender, string sAddress, string dProgram, int yrLvl)
-{ // Restores the data into the tree
+void StudentDetails::RestoreStudentInfo(int idNum, string fName, string mName, string lName, string bDay, string sGender, string sAddress, string dProgram, int yrLvl) // Restores the data into the tree
+{
     // Create and instantiate the node
     node = new StudentNode;
     node->firstName = fName;
@@ -418,12 +431,16 @@ void StudentDetails::ViewDetails(string idNum) // Preview details inside the stu
     int i = 0;
     string *s = new string[9];
     ifstream ifile(idNum + ".txt");
-
+    if (!ifile) // Error display if the file won't open
+    {
+        cerr << "Error opening file" << endl;
+        return;
+    }
     while (getline(ifile, s[i]))
-    { // Fetch data stored in the file one line at a time
+    { // Fetch data stored in the file one line at a time and saves it in the string array
         i++;
     }
-
+    // Prints the details stored in the string array
     cout << "\n\nStudent Number: " << s[0] << endl;
     cout << "First Name: " << s[1] << endl;
     cout << "Middle Name: " << s[2] << endl;
@@ -444,7 +461,11 @@ void StudentDetails::EditStudent(string idToEdit)
     int idNum, yrLvl, choice, birthDay, birthYear, birthMonthNum, i = 0;
     string *s = new string[9];
     ifstream ifile(idToEdit + ".txt");
-
+    if (!ifile) // Error display if the file won't open
+    {
+        cerr << "Error opening file" << endl;
+        return;
+    }
     while (getline(ifile, s[i]))
     { // Fetch data stored in the file one line at a time
         i++;
@@ -461,7 +482,7 @@ void StudentDetails::EditStudent(string idToEdit)
     yrLvl = stoi(s[8]);
 
     ifile.close();
-
+    // Same with the ViewDetails function, this reprints the information so that the user would know which info they will be editing
     cout << "\n\n1. Student Number: " << idNum << endl;
     cout << "2. First Name: " << fName << endl;
     cout << "3. Middle Name: " << mName << endl;
@@ -473,7 +494,7 @@ void StudentDetails::EditStudent(string idToEdit)
     cout << "9. Year Level: " << yrLvl << endl
          << endl;
 
-    cout << "What do you want to edit (1-9): ";
+    cout << "What do you want to edit (1-9): "; // Ask what part to edit
     cin >> choice;
     cin.ignore();
 
@@ -496,25 +517,38 @@ void StudentDetails::EditStudent(string idToEdit)
         ifstream ifile("idlist.txt");
         ofstream ofile("temp.txt");
 
-        while (getline(ifile, temp))
+        if (!ifile || !ofile) // Error display if the file/s won't open
         {
-            size_t pos = temp.find(idToEdit);
+            cerr << "Error opening file" << endl;
+            return;
+        }
 
-            while (pos != string::npos)
+        while (getline(ifile, temp)) // Reads the file and stores strings in temp
+        {
+            size_t pos = temp.find(idToEdit); // Looks for the id to edit in the list
+
+            while (pos != string::npos) // While everything that has to be replaced isnt replaced yet
             {
-                temp.replace(pos, idToEdit.length(), to_string(idNum));
-                pos = temp.find(idToEdit, pos + to_string(idNum).length());
+                temp.replace(pos, idToEdit.length(), to_string(idNum));     // Replaces the id in the list with the new one starting at the pos
+                pos = temp.find(idToEdit, pos + to_string(idNum).length()); // Looks again for other id match
             }
 
-            ofile << temp << "\n";
+            ofile << temp << "\n"; // Writes the modified line in the temp file
         }
 
         ifile.close();
         ofile.close();
 
-        // Rename temp.txt to idlist.txt
-        remove("idlist.txt");
-        rename("temp.txt", "idlist.txt");
+        // Replace the original idlist.txt with the temporary file
+        // Error display if it doesn't go through
+        if (remove("idlist.txt") != 0)
+        {
+            cerr << "Error deleting file: idlist.txt" << endl;
+        }
+        if (rename("temp.txt", "idlist.txt") != 0)
+        {
+            cerr << "Error renaming file: temp.txt to idlist.txt" << endl;
+        }
 
         break;
     }
@@ -644,7 +678,7 @@ void StudentDetails::EditStudent(string idToEdit)
     // Create the file object and open the file
     ofstream ofile(filename);
 
-    // Store data to file
+    // Store data to file, overwrites the existing details
     ofile << idNum << endl;
     ofile << fName << endl;
     ofile << mName << endl;
@@ -667,7 +701,8 @@ void StudentDetails::DeleteStudent(string idNum)
     ifstream ifile("idlist.txt");
     ofstream ofile("temp.txt");
 
-    if (!ifile || !ofile) {
+    if (!ifile || !ofile) // Error display if the file/s won't open
+    {
         cerr << "Error opening file" << endl;
         return;
     }
@@ -676,7 +711,8 @@ void StudentDetails::DeleteStudent(string idNum)
     while (getline(ifile, line))
     {
         // If the line doesn't contain the idNum, write it to the temporary file
-        if (line.find(idNum) == string::npos) {
+        if (line.find(idNum) == string::npos)
+        {
             ofile << line << "\n";
         }
     }
@@ -685,10 +721,13 @@ void StudentDetails::DeleteStudent(string idNum)
     ofile.close();
 
     // Replace the original idlist.txt with the temporary file
-    if (remove("idlist.txt") != 0) {
+    // Error display if it doesn't go through
+    if (remove("idlist.txt") != 0)
+    {
         cerr << "Error deleting file: idlist.txt" << endl;
     }
-    if (rename("temp.txt", "idlist.txt") != 0) {
+    if (rename("temp.txt", "idlist.txt") != 0)
+    {
         cerr << "Error renaming file: temp.txt to idlist.txt" << endl;
     }
 }
