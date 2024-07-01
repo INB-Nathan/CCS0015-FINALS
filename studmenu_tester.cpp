@@ -9,7 +9,7 @@ int main()
 {
     StudentDetails sNode;
     string firstName, lastName, middleName, degreeProgram, studentGender, studentAddress, birthMonthName, fullBirthday;
-    int idNumber, yearLevel, choice, counter = 0, birthDay, birthYear, birthMonthNum, idToView, idToEdit;
+    int idNumber, yearLevel, choice, counter = 0, birthDay, birthYear, birthMonthNum, idToView, idToEdit, idToDelete;
     sNode.FetchStudentInfo();
 
     while (true)
@@ -17,7 +17,8 @@ int main()
         cout << "1. Add Student" << endl;
         cout << "2. View Student List" << endl;
         cout << "3. View Student's Record" << endl;
-        cout << "4. Edit Student Info" << endl
+        cout << "4. Edit Student Info" << endl;
+        cout << "5. Delete Student" << endl
              << endl;
         cout << "0. Exit" << endl;
         cin >> choice;
@@ -191,6 +192,30 @@ int main()
             sNode.EditStudent(to_string(idToEdit));
             
             cout << endl << "Successfully Edited" << endl << endl;
+
+            break;
+        }
+        case 5:
+        {
+            cout << "\n\nDisplaying Students in order of Student Number:\n";
+            cout << "Student Number\t\tName" << endl;
+            sNode.ViewStudent(sNode.root);
+            cout << endl;
+
+            while (true) // to edit
+            {
+                cout << "Enter Student Number to Delete: ";
+                cin >> idToDelete;
+
+                if (idToDelete >= 201500000 && idToDelete < 202500000)
+                    break;
+                else
+                    cout << "Enter a Valid Student Number." << endl;
+            }
+
+            sNode.DeleteStudent(to_string(idToDelete));
+            
+            cout << endl << "Successfully Deleted" << endl << endl;
 
             break;
         } 

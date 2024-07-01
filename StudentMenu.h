@@ -440,7 +440,7 @@ void StudentDetails::ViewDetails(string idNum) // Preview details inside the stu
 
 void StudentDetails::EditStudent(string idToEdit)
 {
-    string fName, mName, lName, bDay, sGender, sAddress, dProgram, birthMonthName, fullBirthday, filename;
+    string fName, mName, lName, bDay, sGender, sAddress, dProgram, birthMonthName, fullBirthday, filename, temp;
     int idNum, yrLvl, choice, birthDay, birthYear, birthMonthNum, i = 0;
     string *s = new string[9];
     ifstream ifile(idToEdit + ".txt");
@@ -492,6 +492,30 @@ void StudentDetails::EditStudent(string idToEdit)
             else
                 cout << "Enter a Valid Student Number." << endl;
         }
+
+        ifstream ifile("idlist.txt");
+        ofstream ofile("temp.txt");
+
+        while (getline(ifile, temp))
+        {
+            size_t pos = temp.find(idToEdit);
+
+            while (pos != string::npos)
+            {
+                temp.replace(pos, idToEdit.length(), to_string(idNum));
+                pos = temp.find(idToEdit, pos + to_string(idNum).length());
+            }
+
+            ofile << temp << "\n";
+        }
+
+        ifile.close();
+        ofile.close();
+
+        // Rename temp.txt to idlist.txt
+        remove("idlist.txt");
+        rename("temp.txt", "idlist.txt");
+
         break;
     }
     case 2:
@@ -636,4 +660,35 @@ void StudentDetails::EditStudent(string idToEdit)
 
 void StudentDetails::DeleteStudent(string idNum)
 {
+    string temp, line;
+    string filename = idNum + ".txt";
+    remove(filename.c_str());
+
+    ifstream ifile("idlist.txt");
+    ofstream ofile("temp.txt");
+
+    if (!ifile || !ofile) {
+        cerr << "Error opening file" << endl;
+        return;
+    }
+
+    // Read each line from idlist.txt
+    while (getline(ifile, line))
+    {
+        // If the line doesn't contain the idNum, write it to the temporary file
+        if (line.find(idNum) == string::npos) {
+            ofile << line << "\n";
+        }
+    }
+
+    ifile.close();
+    ofile.close();
+
+    // Replace the original idlist.txt with the temporary file
+    if (remove("idlist.txt") != 0) {
+        cerr << "Error deleting file: idlist.txt" << endl;
+    }
+    if (rename("temp.txt", "idlist.txt") != 0) {
+        cerr << "Error renaming file: temp.txt to idlist.txt" << endl;
+    }
 }
