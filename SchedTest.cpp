@@ -4,7 +4,6 @@ using namespace std;
 
 int main() {
     Schedule sched;
-    
     while (true) {
         switch (sched.ScheduleMenu()) {
         case 1:

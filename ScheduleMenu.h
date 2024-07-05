@@ -10,7 +10,7 @@ class Schedule {
     private:
     struct SchedNode {
         int numUnits, yearLevel;
-        string courseTitle, courseCode, section, weekDay, startTime, endTime, roomNumber;
+        string courseTitle, courseCode, section, weekDay, startTime, endTime, roomNumber, time;
         int schedHour, schedMinute, schedSecond;
         double amountMinute;
 
@@ -29,10 +29,13 @@ class Schedule {
     void EditSchedule();
     void DeleteSchedule();
     void UpperString(string&);
+    void LoadFiles();
+    void AddFileNameRecord();
 };
 
 Schedule::Schedule() {
     root = NULL;
+    LoadFiles();
 }
 
 int Schedule::ScheduleMenu() {
@@ -44,11 +47,12 @@ int Schedule::ScheduleMenu() {
         cout << "[2] View Schedules\n";
         cout << "[3] Edit a Schedule\n";
         cout << "[4] Delete a Schedule\n";
+        cout << "[5] Load a Schedule\n";
         cout << "[0] Return to Main Menu\n";
         cout << ":: ";
         cin >> choice;
         cin.ignore();
-    } while (choice < 0 || choice > 4);
+    } while (choice < 0 || choice > 5);
     return choice;
 }
 
@@ -147,6 +151,7 @@ void Schedule::AddScheduleRecord(string courseName, string block, string day, st
             parent->right = holder;
         }
         cout << "Schedule successfully added!\n";
+        AddFileNameRecord();
     }
 
     TimeFormat();
@@ -159,6 +164,7 @@ void Schedule::AddScheduleRecord(string courseName, string block, string day, st
     ofile << holder->startTime << " - " << holder->endTime << "\n";
     ofile << holder->roomNumber << "\n";
     ofile.close();
+
 }
 
 void Schedule::ViewSchedule() {
@@ -167,7 +173,7 @@ void Schedule::ViewSchedule() {
     current = root;
     string scheduleData[7];
 
-    cout << "|" <<"-------------------------------------------------------------------------------------------------------------------------"<< "|\n";
+    cout << "|" <<"----------------------------------------------------------------------------------------------------------------------"<< "|\n";
     while (current != NULL) {
         schedFile = "Schedules\\" + current->section + "_" + current->courseCode + "_" + current->weekDay + ".txt";
         ifile.open(schedFile);
@@ -176,9 +182,8 @@ void Schedule::ViewSchedule() {
                 getline(ifile, scheduleData[i]);
             }
             ifile.close();
-
             cout << "| " << setw(11) << scheduleData[0] << " | " << setw(10) << scheduleData[1] << " | " << setw(5) << scheduleData[2] << " | " << setw(10) << scheduleData[3] << " | " << setw(10) << scheduleData[4] << " | " << setw(10) << scheduleData[5] << " | " << setw(10) << scheduleData[6] << " |\n";
-            cout <<"|" <<"-------------------------------------------------------------------------------------------------------------------------"<< "|\n";
+            cout <<"|" <<"----------------------------------------------------------------------------------------------------------------------"<< "|\n";
         }
 
         if (current->left != NULL && current->right != NULL) {
@@ -232,6 +237,71 @@ void Schedule::UpperString(string &str) {
     }
 }
 
+void Schedule::LoadFiles() {
+    ifstream ifile("Schedules\\SCHEDULES.txt"); // Opens the txt file where all file names existing gets stored
+    string schedFile;
 
+    if (ifile.is_open()) {
+        while (getline(ifile, schedFile)) { // Iterates over file names inside the text file 
+            ifstream schedIfile("Schedules\\" + schedFile + ".txt");
+            if (schedIfile.is_open()) {
+                string scheduleData[7];
+                for (int i = 0; i < 7; i++) {
+                    getline(schedIfile, scheduleData[i]); // Iterates over the data of the open schedule file
+                }
+                schedIfile.close();
 
+                holder = new SchedNode;
+                holder->courseCode = scheduleData[0];
+                holder->courseTitle = scheduleData[1];
+                holder->section = scheduleData[2];
+                holder->numUnits = stoi(scheduleData[3]);
+                holder->weekDay = scheduleData[4];
+                string startTime = scheduleData[5].substr(0, 5);
+                string endTime = scheduleData[5].substr(7);
+                holder->startTime = startTime;
+                holder->endTime = endTime;
+                holder->roomNumber = scheduleData[6];
 
+                holder->schedHour = stoi(startTime.substr(0, 2));
+                holder->schedMinute = stoi(startTime.substr(3, 2));
+
+                holder->schedHour = stoi(endTime.substr(0, 2));
+                holder->schedMinute = stoi(endTime.substr(3, 2));
+                // Puts all the data from the specified files to the record again
+                if (root == NULL) {
+                    root = holder; 
+                } else {
+                    current = root;
+                    while (true) {
+                        if (holder->section < current->section) {
+                            if (current->left == NULL) {
+                                current->left = holder;
+                                break;
+                            }
+                            current = current->left;
+                        } else {
+                            if (current->right == NULL) {
+                                current->right = holder;
+                                break;
+                            }
+                            current = current->right;
+                        }
+                    }
+                }
+            } else {
+                cout << "Failed to open file: " << schedFile << ".txt" << endl;
+            }
+        }
+        ifile.close(); // Closes the schedules txt file either from the error catcher or the function has completely loaded all
+                       // schedule files
+    } else {
+        cout << "Failed to open SCHEDULES.txt file." << endl;
+    }
+}
+
+void Schedule::AddFileNameRecord() {
+    ofstream ofile("Schedules\\SCHEDULES.txt", ios::app);
+    ofile << holder->section + "_" + holder->courseCode + "_" + holder->weekDay + "\n";
+    ofile.close();
+}
