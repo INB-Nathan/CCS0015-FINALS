@@ -9,7 +9,7 @@ int main()
 {
     StudentDetails sNode;
     string firstName, lastName, middleName, degreeProgram, studentGender, studentAddress, birthMonthName, fullBirthday;
-    int idNumber, yearLevel, choice, counter = 0, birthDay, birthYear, birthMonthNum, idToView, idToEdit, idToDelete, sortChoice;
+    int idNumber, yearLevel, choice, birthDay, birthYear, birthMonthNum, idToView, idToEdit, idToDelete;
     sNode.FetchStudentInfo();
 
     while (true)

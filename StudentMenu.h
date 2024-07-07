@@ -66,7 +66,8 @@ bool StudentDetails::IsValidStudentNum(int idNumber) // Function to check if the
 bool StudentDetails::IsValidName(string str) // Function for checking if the input is Alpha or a Space mostly used for names and such
 {
     // Convert the string to lowercase manually
-    for (int i = 0; i < str.length(); i++)
+    int i;
+    for (i = 0; i < str.length(); i++)
     {
         if (!isalpha(str[i]) && !isspace(str[i])) // Check if alpha or a space
         {
@@ -81,7 +82,8 @@ bool StudentDetails::IsValidName(string str) // Function for checking if the inp
 bool StudentDetails::IsValidGender(string str) // Function to check if the input is either male or female regardless of the case
 {
     // Convert the string to lowercase manually
-    for (int i = 0; i < str.length(); ++i)
+    int i;
+    for (i = 0; i < str.length(); ++i)
     {
         str[i] = tolower(str[i]);
     }
