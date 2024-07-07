@@ -1,48 +1,44 @@
-
 #include <iostream>
-#include <fstream>
 #include <iomanip>
-#include <sstream>
-#include <string>
-#include <cctype>
-#include <stack>
-#include <list>
-#include <filesystem>
 #include "CourseCode.h"
 
 using namespace std;
-namespace fs = std::filesystem;
-
-using namespace std;
-
 
 int main() {
+    string input;
     BinaryTree tree;
-    loadCourses(tree);
+    LoadCourses(tree);
 
     int choice;
     do {
-        cout << "Course Management Menu:\n";
-        cout << "1. Add Course\n";
-        cout << "2. View Courses\n";
-        cout << "3. Edit Course\n";
-        cout << "4. Delete Course\n";
-        cout << "0. Exit\n";
-        cout << "Enter choice: ";
-        cin >> choice;
-        cin.ignore();
+        while (true) {
+            
+            CourseCodeMenu();
+            cout << "Enter choice: ";
+            cin >> input;
+
+            if (input.length() == 1 && isdigit(input[0])) {
+                choice = input[0] - '0';
+                if (choice >= 0 && choice <= 4) {
+                    break;
+                }
+            }
+            cout << "Invalid input! \nPlease enter a number between 0 and 4." << endl;
+            cin.clear(); 
+        }
+
         switch (choice) {
             case 1:
-                addCourse(tree);
+                AddCourse(tree);
                 break;
             case 2:
-                tree.viewCourses();
+                tree.ViewCourses();
                 break;
             case 3:
-                editCourse(tree);
+                EditCourse(tree);
                 break;
             case 4:
-                deleteCourse(tree);
+                DeleteCourse(tree);
                 break;
             case 0:
                 cout << "Exiting...\n";
