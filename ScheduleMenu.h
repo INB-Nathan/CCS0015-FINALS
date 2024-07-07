@@ -22,6 +22,7 @@ class Schedule {
     SchedNode *root;
     Schedule();
     int ScheduleMenu();
+    int EditMenu();
     void AddScheduleData();
     void AddScheduleRecord(string, string, string, string, string, int, int, int, int, int, double);
     void TimeFormat();
@@ -48,6 +49,22 @@ int Schedule::ScheduleMenu() {
         cout << "[3] Edit a Schedule\n";
         cout << "[4] Delete a Schedule\n";
         cout << "[0] Return to Main Menu\n";
+        cout << ":: ";
+        cin >> choice;
+        cin.ignore();
+    } while (choice < 0 || choice > 4);
+    return choice;
+}
+
+int Schedule::EditMenu() {
+    int choice;
+    do {
+        cout << "\n\n-- Edit Schedule Menu --\n\n";
+        cout << "[1] Edit Day\n";
+        cout << "[2] Edit Time\n";
+        cout << "[3] Edit Section\n";
+        cout << "[4] Edit Room\n";
+        cout << "[0] Return to Schedule Menu\n";
         cout << ":: ";
         cin >> choice;
         cin.ignore();
@@ -202,7 +219,153 @@ void Schedule::ViewSchedule() {
 }
 
 void Schedule::EditSchedule() {
-    
+    string section, courseCode, weekDay, schedFile, newSchedFile, newDay, newSection, newRoom;
+    int schedHour, schedMinute, schedSecond, amountMinute;
+
+    cout << "Enter Section: ";
+    getline(cin, section);
+    cout << "Enter Course Code: ";
+    getline(cin, courseCode);
+    cout << "Enter Day: ";
+    getline(cin, weekDay);
+
+    UpperString(section);
+    UpperString(courseCode);
+    UpperString(weekDay);
+
+    schedFile = "Schedules\\" + section + "_" + courseCode + "_" + weekDay + ".txt";
+
+    ifstream ifile(schedFile);
+    if (ifile.is_open()) {
+        ifile.close();
+
+        SchedNode* temp = root;
+        while (temp != NULL) {
+            if (temp->section == section && temp->courseCode == courseCode && temp->weekDay == weekDay) {
+                break;
+            } else if (temp->section < section || temp->weekDay < weekDay || temp->courseCode < courseCode) {
+                temp = temp->right;
+            } else {
+                temp = temp->left;
+            }
+        }
+
+        if (temp == NULL) {
+            cout << "Schedule not found!\n";
+            return;
+        }
+
+        
+        while (true) {        
+            switch (EditMenu()) {
+                case 1: {
+                    cout << "Enter new Day: ";
+                    getline(cin, newDay);
+                    UpperString(newDay);
+                    holder->weekDay = newDay;
+                    newSchedFile = "Schedules\\" + holder->section + "_" + holder->courseCode + "_" + holder->weekDay + ".txt";
+                    rename(schedFile.c_str(), newSchedFile.c_str());
+                    schedFile = newSchedFile;
+                break;
+                }
+                case 2: {
+                    cout << "Enter new Start Hour: ";
+                    cin >> schedHour;
+                    cin.ignore();
+                    cout << "Enter new Start Minute: ";
+                    cin >> schedMinute;
+                    cin.ignore();
+                    cout << "Enter new Start Second: ";
+                    cin >> schedSecond;
+                    cin.ignore();
+                    cout << "Enter Amount of Minute for the Course: ";
+                    cin >> amountMinute;
+                    cin.ignore();
+
+                    holder->schedHour = schedHour;
+                    holder->schedMinute = schedMinute;
+                    holder->schedSecond = schedSecond;
+                    holder->amountMinute = amountMinute;
+                    TimeFormat();
+                    break;
+                }
+                case 3: {
+                    cout << "Enter new Section: ";
+                    getline(cin, newSection);
+                    UpperString(newSection);
+                    holder->section = newSection;
+
+                    newSchedFile = "Schedules\\" + holder->section + "_" + holder->courseCode + "_" + holder->weekDay + ".txt";
+                    rename(schedFile.c_str(), newSchedFile.c_str());
+                    schedFile = newSchedFile;
+                    break;
+                }
+                case 4: {
+                    cout << "Enter new Room: ";
+                    getline(cin, newRoom);
+                    UpperString(newRoom);
+                    holder->roomNumber = newRoom;
+                    break;
+                }
+                case 0:
+                    return;
+                default:
+                    cout << "Invalid choice!\n";
+                    return;
+            }
+
+            ofstream ofile(schedFile);
+            ofile << holder->courseCode << "\n";
+            ofile << holder->courseTitle << "\n";
+            ofile << holder->section << "\n";
+            ofile << holder->numUnits << "\n";
+            ofile << holder->weekDay << "\n";
+            ofile << holder->startTime << " - " << holder->endTime << "\n";
+            ofile << holder->roomNumber << "\n";
+            ofile.close();
+            cout << "Schedule successfully edited!\n";
+            return;
+        }
+    } else {
+        cout << "Schedule not found!\n";
+    }
+}
+
+void Schedule::DeleteSchedule() {
+    string section, courseCode, weekDay, schedFile;
+
+    cout << "Enter Section: ";
+    getline(cin, section);
+    cout << "Enter Course Code: ";
+    getline(cin, courseCode);
+    cout << "Enter Day: ";
+    getline(cin, weekDay);
+
+    UpperString(section);
+    UpperString(courseCode);
+    UpperString(weekDay);
+    schedFile = "Schedules\\" + section + "_" + courseCode + "_" + weekDay + ".txt";
+
+    ifstream ifile(schedFile);
+    if (ifile.is_open()) {
+        ifile.close();
+        remove(schedFile.c_str());
+        ifstream schedIfile("Schedules\\SCHEDULES.txt");
+        ofstream tempFile("Schedules\\temp.txt");
+        string line;
+        while (getline(schedIfile, line)) {
+            if (line != section + "_" + courseCode + "_" + weekDay) {
+                tempFile << line << "\n";
+            }
+        }
+        schedIfile.close();
+        tempFile.close();
+        remove("Schedules\\SCHEDULES.txt"); 
+        rename("Schedules\\temp.txt", "Schedules\\SCHEDULES.txt");
+        cout << "Schedule successfully deleted!\n";
+    } else {
+        cout << "Schedule not found!\n";
+    }
 }
 
 void Schedule::TimeFormat() {
