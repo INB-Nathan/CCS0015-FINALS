@@ -17,9 +17,16 @@ private:
         StudentNode *right;
     } *node, *current;
 
+    struct ListNode
+    {
+        StudentNode *student;
+        ListNode *next;
+    } *head;
+
 public:
     StudentNode *root;
     // Add input validation functions.
+    bool IsValidStudentNum(int);
     bool IsValidName(string);
     bool IsValidGender(string);
     int MonthNameToNumber(string &);
@@ -36,8 +43,25 @@ public:
     void RestoreStudentInfo(int, string, string, string, string, string, string, string, int);
     void FetchEachStudentFile(string);
     void FetchStudentInfo();
-    void ViewStudent(StudentNode *);
+    void ViewStudentsSortedByIDNumber(StudentNode *);
+    void ViewStudentsSortedByLastName();
+    void InOrderTraversal(StudentNode *);
+    void InsertSorted(StudentNode *);
+    void ViewStudents();
 };
+
+bool StudentDetails::IsValidStudentNum(int idNumber) // Function to check if the id number input is valid
+{
+    if (idNumber >= 201500000 && idNumber < 202500000) // Only accepts student numbers from 2015 to 2024, returns true if valid, false if not
+    {
+        return true;
+    }
+    else
+    {
+        cout << "Enter a Valid Student Number." << endl;
+        return false;
+    }
+}
 
 bool StudentDetails::IsValidName(string str) // Function for checking if the input is Alpha or a Space mostly used for names and such
 {
@@ -292,17 +316,16 @@ void StudentDetails::SaveIDToList() // Saves the Stud num to a list for reading 
     ofile.close();
 }
 
-// This shows ID Number and full names of all students in the program. The list must be sorted.
-void StudentDetails::ViewStudent(StudentNode *tempNode)
+void StudentDetails::ViewStudentsSortedByIDNumber(StudentNode *tempNode) // This shows ID Number and full names of all students in the program. The list is sorted by id number
 {
     if (tempNode == NULL)
     { // Base case of the recursion
         return;
     }
     // Left -> Root -> Right
-    ViewStudent(tempNode->left);
+    ViewStudentsSortedByIDNumber(tempNode->left);
     cout << tempNode->idNumber << "\t\t" << tempNode->firstName << " " << tempNode->middleName << " " << tempNode->lastName << endl;
-    ViewStudent(tempNode->right);
+    ViewStudentsSortedByIDNumber(tempNode->right);
 }
 
 void StudentDetails::FetchStudentInfo() // Reads the idlist file to traverse through the student files
@@ -330,7 +353,7 @@ void StudentDetails::FetchEachStudentFile(string idOfFile) // Reads each student
     string *s = new string[9];
 
     ifstream ifile(idOfFile + ".txt"); // Opens the student file given by the FetchStudentInfo func
-    if (!ifile) // Error display if the file won't open
+    if (!ifile)                        // Error display if the file won't open
     {
         cerr << "Error opening file" << endl;
         return;
@@ -508,10 +531,8 @@ void StudentDetails::EditStudent(string idToEdit)
             cin >> idNum;
             cin.ignore();
 
-            if (idNum >= 201500000 && idNum < 202500000)
+            if (IsValidStudentNum(idNum))    
                 break;
-            else
-                cout << "Enter a Valid Student Number." << endl;
         }
 
         ifstream ifile("idlist.txt");
@@ -729,5 +750,91 @@ void StudentDetails::DeleteStudent(string idNum)
     if (rename("temp.txt", "idlist.txt") != 0)
     {
         cerr << "Error renaming file: temp.txt to idlist.txt" << endl;
+    }
+}
+
+void StudentDetails::InOrderTraversal(StudentNode *node) // Performs an in order traversal in the BST and sends it to the InsertSorted Function
+{
+    if (node == NULL) // Checks if node is null (base case)
+    {
+        return;
+    }
+    InOrderTraversal(node->left); // Left, Root, Right traversal
+    InsertSorted(node); // Inserts the current node to the Linked List
+    InOrderTraversal(node->right);
+}
+
+void StudentDetails::InsertSorted(StudentNode *student) // Inserts the sorted StudentNodes into the linked list for last name based sorting
+{
+    ListNode *newNode = new ListNode; // Creates a new node
+    newNode->student = student; // Sets the new node value as the students' data
+    newNode->next = NULL;
+
+    if (head == NULL || head->student->lastName > student->lastName) // If the list is empty or if the new student's last name should be on top
+    {
+        newNode->next = head; // Sets the val of the new node next pointer to the current head
+        head = newNode; // Sets the newNode as the new head
+    }
+    else // Finds the correct position if not in front
+    {
+        ListNode *current = head;
+        while (current->next != NULL && current->next->student->lastName < student->lastName) // Traversing the list to find the right position
+        {
+            current = current->next;
+        }
+        newNode->next = current->next; // Sets the val of the new node next pointer to the current node's next node
+        current->next = newNode; // Sets the current node's next node to the new node value
+    }
+}
+
+void StudentDetails::ViewStudentsSortedByLastName() // This shows ID Number and full names of all students in the program. The list is sorted by last name
+{
+    head = NULL;            // Clear the linked list
+    InOrderTraversal(root); // Populate the linked list with sorted nodes
+
+    ListNode *current = head;
+    while (current != NULL) // Traversing the linked list
+    {
+        StudentNode *student = current->student; // Fetching student data from current node
+        cout << student->idNumber << "\t\t" << student->firstName << " " << student->middleName << " " << student->lastName << endl;
+        current = current->next; // Moves to the next node
+    }
+
+    // Clean up the linked list
+    while (head != NULL)
+    {
+        ListNode *temp = head; // Stores the current head node in a temp var
+        head = head->next; // Moves from head to the next node
+        delete temp; // Delete to free memory
+    }
+}
+
+void StudentDetails::ViewStudents() // This function is for viewing student list, giving the user a choice if they want to view sorted by last name or student num
+{
+    int choice;
+    cout << "Sort by: " << endl;
+    cout << "1. Student Number" << endl;
+    cout << "2. Last Name" << endl;
+    cin >> choice;
+
+    switch (choice)
+    {
+        case 1:
+        {
+            cout << "\n\nDisplaying Students in order of Student Number:\n";
+            cout << "Student Number\t\tName" << endl;
+            ViewStudentsSortedByIDNumber(root); // Calls function to display student list by id num
+            cout << endl;
+            break;
+        }
+
+        case 2:
+        {
+            cout << "\n\nDisplaying Students in order of Last Name:\n";
+            cout << "Student Number\t\tName" << endl;
+            ViewStudentsSortedByLastName(); // Calls function to display student list by last name
+            cout << endl;
+            break;
+        }
     }
 }
