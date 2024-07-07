@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <fstream>
 #include <iomanip>
@@ -6,7 +7,11 @@
 #include <cctype>
 #include <stack>
 #include <list>
+#include <filesystem>
 #include "CourseCode.h"
+
+using namespace std;
+namespace fs = std::filesystem;
 
 using namespace std;
 
@@ -25,6 +30,7 @@ int main() {
         cout << "0. Exit\n";
         cout << "Enter choice: ";
         cin >> choice;
+        cin.ignore();
         switch (choice) {
             case 1:
                 addCourse(tree);

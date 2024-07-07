@@ -6,8 +6,10 @@
 #include <cctype>
 #include <stack>
 #include <list>
+#include <filesystem>
 
 using namespace std;
+namespace fs = std::filesystem;
 
 class Course {
 public:
@@ -22,7 +24,38 @@ public:
     void display() const {
         cout << "| " << setw(11) << courseCode << " | " << setw(50) << courseTitle << " | "
              << setw(5) << units << " | " << setw(10) << yearLevel << " |\n";
-        cout <<"|" <<"---------------------------------------------------------------------------------------"<< "| " << endl;
+        cout << "|" << "---------------------------------------------------------------------------------------" << "|\n";
+    }
+
+    string getFileName() const {
+        return "CourseRecords/" + courseCode + "_" + courseTitle + ".txt";
+    }
+
+    void saveToFile() const {
+        ofstream file(getFileName());
+        if (file.is_open()) {
+            file << courseCode << "," << courseTitle << "," << units << "," << yearLevel << "\n";
+            file.close();
+        } else {
+            cerr << "Unable to open file for writing: " << getFileName() << endl;
+        }
+    }
+
+    void loadFromFile(const string& fileName) {
+        ifstream file(fileName);
+        if (file.is_open()) {
+            string line;
+            getline(file, line);
+            stringstream ss(line);
+            getline(ss, courseCode, ',');
+            getline(ss, courseTitle, ',');
+            ss >> units;
+            ss.ignore();
+            ss >> yearLevel;
+            file.close();
+        } else {
+            cerr << "Unable to open file for reading: " << fileName << endl;
+        }
     }
 };
 
@@ -50,11 +83,11 @@ public:
             cout << "No courses available." << endl;
             return;
         }
-        
+
         cout << "|=======================================================================================|\n";
         cout << "|                                    COURSE RECORDS                                     |\n";
         cout << "|=======================================================================================|\n";
-        cout << "| Course Code | Course Title                                       | Units | Year Level |\n";
+        cout << "| Course Code |                      Course Title                  | Units | Year Level |\n";
         cout << "|=======================================================================================|\n";
 
         inOrder(root);
@@ -106,10 +139,12 @@ private:
             if (node->left == nullptr) {
                 Node* temp = node->right;
                 delete node;
+                fs::remove(node->course.getFileName());
                 return temp;
             } else if (node->right == nullptr) {
                 Node* temp = node->left;
                 delete node;
+                fs::remove(node->course.getFileName());
                 return temp;
             }
 
@@ -136,37 +171,59 @@ bool isAlphaString(const string& str) {
 }
 
 void addCourse(BinaryTree& tree) {
-    string code, title;
+    string code, title, input;
     int units, year;
-    cout << "Enter course code: ";
-    cin >> code;
-    cin.ignore();
+
+     while (true) {
+        cout << "Enter course code: ";
+        cin >> code;
+        cin.ignore();
+        if (tree.find(code) == nullptr) {
+            break;
+        }
+        cout << "Course code already exists! Please enter a different course code." << endl;
+    }
+
+
     cout << "Enter course title: ";
     getline(cin, title);
-    while (!isAlphaString(title)) {
-        cout << "Invalid title. Enter course title again: ";
-        getline(cin, title);
+
+    while (true) {
+        cout << "Enter number of units (0 to 9): ";
+        cin >> input;
+
+        if (input.length() == 1 && isdigit(input[0])) {
+            units = input[0] - '0';
+            if (units >= 0 && units <= 9) {
+                break;
+            }
+        }
+        cout << "Invalid input! Please enter a number between 0 and 9." << endl;
     }
-    cout << "Enter number of units: ";
-    cin >> units;
-    cout << "Enter year level: ";
-    cin >> year;
+
+    while (true) {
+        cout << "Enter year level (1 to 4): ";
+        cin >> input;
+
+        if (input.length() == 1 && isdigit(input[0])) {
+            year = input[0] - '0';
+            if (year >= 1 && year <= 4) {
+                break;
+            }
+        }
+        cout << "Invalid input! Please enter a year level between 1 and 4." << endl;
+    }
 
     Course course(code, title, units, year);
     tree.insert(course);
-    ofstream file("courses.txt", ios::app);
-    if (file.is_open()) {
-        file << code << "," << title << "," << units << "," << year << "\n";
-        file.close();
-    } else {
-        cerr << "Unable to open file for writing.\n";
-    }
+    course.saveToFile();
 }
 
 void editCourse(BinaryTree& tree) {
-    string code;
+    string code, input;
     cout << "Enter course code to edit: ";
     cin >> code;
+    cin.ignore();
     Node* node = tree.find(code);
     if (node == nullptr) {
         cout << "Course not found.\n";
@@ -175,40 +232,41 @@ void editCourse(BinaryTree& tree) {
 
     string title;
     int units, year;
+
     cout << "Enter new course title: ";
-    cin.ignore();
     getline(cin, title);
-    while (!isAlphaString(title)) {
-        cout << "Invalid title. Enter new course title again: ";
-        getline(cin, title);
+
+
+    while (true) {
+        cout << "Enter new number of units (0 to 9): ";
+        cin >> input;
+
+        if (input.length() == 1 && isdigit(input[0])) {
+            units = input[0] - '0';
+            if (units >= 0 && units <= 9) {
+                break;
+            }
+        }
+        cout << "Invalid input! Please enter a number between 0 and 9." << endl;
     }
-    cout << "Enter new number of units: ";
-    cin >> units;
-    cout << "Enter new year level: ";
-    cin >> year;
+
+    while (true) {
+        cout << "Enter new year level (1 to 4): ";
+        cin >> input;
+
+        if (input.length() == 1 && isdigit(input[0])) {
+            year = input[0] - '0';
+            if (year >= 1 && year <= 4) {
+                break;
+            }
+        }
+        cout << "Invalid input! Please enter a year level between 1 and 4." << endl;
+    }
 
     node->course.courseTitle = title;
     node->course.units = units;
     node->course.yearLevel = year;
-
-    ofstream file("courses.txt");
-    if (file.is_open()) {
-        stack<Node*> s;
-        Node* current = tree.root;
-        while (current != nullptr || !s.empty()) {
-            while (current != nullptr) {
-                s.push(current);
-                current = current->left;
-            }
-            current = s.top();
-            s.pop();
-            file << current->course.courseCode << "," << current->course.courseTitle << "," << current->course.units << "," << current->course.yearLevel << "\n";
-            current = current->right;
-        }
-        file.close();
-    } else {
-        cerr << "Unable to open file for writing.\n";
-    }
+    node->course.saveToFile();
 }
 
 void deleteCourse(BinaryTree& tree) {
@@ -222,55 +280,17 @@ void deleteCourse(BinaryTree& tree) {
     }
 
     tree.remove(code);
-
-    ofstream file("courses.txt");
-    if (file.is_open()) {
-        stack<Node*> s;
-        Node* current = tree.root;
-        while (current != nullptr || !s.empty()) {
-            while (current != nullptr) {
-                s.push(current);
-                current = current->left;
-            }
-            current = s.top();
-            s.pop();
-            file << current->course.courseCode << "," << current->course.courseTitle << "," << current->course.units << "," << current->course.yearLevel << "\n";
-            current = current->right;
-        }
-        file.close();
-    } else {
-        cerr << "Unable to open file for writing.\n";
-    }
+    fs::remove(node->course.getFileName());
 }
 
 void loadCourses(BinaryTree& tree) {
-    ifstream file("courses.txt");
-    if (file.is_open()) {
-        string line;
-        while (getline(file, line)) {
-            size_t pos = 0;
-            string token;
-            list<string> tokens;
-            while ((pos = line.find(',')) != string::npos) {
-                token = line.substr(0, pos);
-                tokens.push_back(token);
-                line.erase(0, pos + 1);
-            }
-            tokens.push_back(line);
+    if (!fs::exists("CourseRecords")) {
+        fs::create_directory("CourseRecords");
+    }
 
-            if (tokens.size() == 4) {
-                auto it = tokens.begin();
-                string code = *it++;
-                string title = *it++;
-                int units = stoi(*it++);
-                int year = stoi(*it);
-
-                Course course(code, title, units, year);
-                tree.insert(course);
-            }
-        }
-        file.close();
-    } else {
-        cerr << "Unable to open file for reading.\n";
+    for (const auto& entry : fs::directory_iterator("CourseRecords")) {
+        Course course;
+        course.loadFromFile(entry.path().string());
+        tree.insert(course);
     }
 }
