@@ -47,12 +47,11 @@ int Schedule::ScheduleMenu() {
         cout << "[2] View Schedules\n";
         cout << "[3] Edit a Schedule\n";
         cout << "[4] Delete a Schedule\n";
-        cout << "[5] Load a Schedule\n";
         cout << "[0] Return to Main Menu\n";
         cout << ":: ";
         cin >> choice;
         cin.ignore();
-    } while (choice < 0 || choice > 5);
+    } while (choice < 0 || choice > 4);
     return choice;
 }
 
@@ -133,10 +132,10 @@ void Schedule::AddScheduleRecord(string courseName, string block, string day, st
         current = root;
         while (current != NULL) {
             parent = current;
-            if (block < current->section || day < current->weekDay) {
+            if (block < current->section || day < current->weekDay || courseId < current->courseCode) {
                 current = current->left;
             }
-            else if (block > current->section || day > current -> weekDay) {
+            else if (block > current->section || day > current -> weekDay || courseId > current->courseCode) {
                 current = current->right;
             }
             else {
@@ -202,6 +201,10 @@ void Schedule::ViewSchedule() {
     }
 }
 
+void Schedule::EditSchedule() {
+    
+}
+
 void Schedule::TimeFormat() {
     const int SIZE = 100;
     struct tm time;
@@ -239,7 +242,7 @@ void Schedule::UpperString(string &str) {
 
 void Schedule::LoadFiles() {
     ifstream ifile("Schedules\\SCHEDULES.txt"); // Opens the txt file where all file names existing gets stored
-    string schedFile;
+    string schedFile, startTime, endTime;
 
     if (ifile.is_open()) {
         while (getline(ifile, schedFile)) { // Iterates over file names inside the text file 
@@ -257,18 +260,18 @@ void Schedule::LoadFiles() {
                 holder->section = scheduleData[2];
                 holder->numUnits = stoi(scheduleData[3]);
                 holder->weekDay = scheduleData[4];
-                string startTime = scheduleData[5].substr(0, 5);
-                string endTime = scheduleData[5].substr(7);
+                startTime = scheduleData[5].substr(0, 5);
+                endTime = scheduleData[5].substr(7);
                 holder->startTime = startTime;
                 holder->endTime = endTime;
                 holder->roomNumber = scheduleData[6];
 
                 holder->schedHour = stoi(startTime.substr(0, 2));
                 holder->schedMinute = stoi(startTime.substr(3, 2));
-
                 holder->schedHour = stoi(endTime.substr(0, 2));
                 holder->schedMinute = stoi(endTime.substr(3, 2));
-                // Puts all the data from the specified files to the record again
+
+                // Puts all the data from the found files to the record again
                 if (root == NULL) {
                     root = holder; 
                 } else {
