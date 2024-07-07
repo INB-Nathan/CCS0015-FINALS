@@ -186,35 +186,29 @@ void Schedule::AddScheduleRecord(string courseName, string block, string day, st
 void Schedule::ViewSchedule() {
     string schedFile;
     ifstream ifile;
-    current = root;
     string scheduleData[7];
 
-    cout << "|" <<"----------------------------------------------------------------------------------------------------------------------"<< "|\n";
-    while (current != NULL) {
-        schedFile = "Schedules\\" + current->section + "_" + current->courseCode + "_" + current->weekDay + ".txt";
-        ifile.open(schedFile);
-        if (ifile.is_open()) {
-            for (int i = 0; i < 7; i++) {
-                getline(ifile, scheduleData[i]);
-            }
-            ifile.close();
-            cout << "| " << setw(11) << scheduleData[0] << " | " << setw(10) << scheduleData[1] << " | " << setw(5) << scheduleData[2] << " | " << setw(10) << scheduleData[3] << " | " << setw(10) << scheduleData[4] << " | " << setw(10) << scheduleData[5] << " | " << setw(10) << scheduleData[6] << " |\n";
-            cout <<"|" <<"----------------------------------------------------------------------------------------------------------------------"<< "|\n";
-        }
-
-        if (current->left != NULL && current->right != NULL) {
-            if (current->left->section < current->right->section) {
-                current = current->left;
+    ifstream schedIfile("Schedules\\SCHEDULES.txt");
+    if (schedIfile.is_open()) {
+        string line;
+        while (getline(schedIfile, line)) {
+            schedFile = "Schedules\\" + line + ".txt";
+            ifile.open(schedFile);
+            if (ifile.is_open()) {
+                for (int i = 0; i < 7; i++) {
+                    getline(ifile, scheduleData[i]);
+                }
+                ifile.close();
+                cout <<"|" <<"----------------------------------------------------------------------------------------------------------------------"<< "|\n";
+                cout << "|" << setw(11) << scheduleData[0] << " | " << setw(10) << scheduleData[1] << " | " << setw(5) << scheduleData[2] << " | " << setw(10) << scheduleData[3] << " | " << setw(10) << scheduleData[4] << " | " << setw(10) << scheduleData[5] << " | " << setw(10) << scheduleData[6] << " |\n";
+                cout <<"|" <<"----------------------------------------------------------------------------------------------------------------------"<< "|\n";
             } else {
-                current = current->right;
+                cout << "Failed to open file: " << schedFile << endl;
             }
-        } else if (current->left != NULL) {
-            current = current->left;
-        } else if (current->right != NULL) {
-            current = current->right;
-        } else {
-            break;
         }
+        schedIfile.close();
+    } else {
+        cout << "Failed to open SCHEDULES.txt file." << endl;
     }
 }
 
