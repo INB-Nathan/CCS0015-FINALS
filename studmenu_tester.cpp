@@ -9,7 +9,8 @@ int main()
 {
     StudentDetails sNode;
     string firstName, lastName, middleName, degreeProgram, studentGender, studentAddress, birthMonthName, fullBirthday;
-    int idNumber, yearLevel, choice, counter = 0, birthDay, birthYear, birthMonthNum, idToView, idToEdit, idToDelete, sortChoice;
+    int idNumber, yearLevel, choice, birthDay, birthYear, birthMonthNum, idToView, idToEdit, idToDelete;
+    char conChoice = ' ';
     sNode.FetchStudentInfo();
 
     while (true)
@@ -133,15 +134,39 @@ int main()
                     cout << "Enter a Valid Year Level." << endl;
             }
 
-            birthMonthNum = sNode.MonthNameToNumber(birthMonthName); // Convert month name to number(int)
+            birthMonthNum = sNode.MonthNameToNumber(birthMonthName);                                          // Convert month name to number(int)
             fullBirthday = to_string(birthMonthNum) + "/" + to_string(birthDay) + "/" + to_string(birthYear); // Convert into the full birthday format (string)
-            // Insert he new value to the tree
-            sNode.AddStudent(firstName, lastName, middleName, degreeProgram, studentGender, studentAddress, fullBirthday, idNumber, yearLevel);
+
+            while (true)
+            {
+                cout << "Confirm Add Student? [Y/N]" << endl;
+                cin >> conChoice;
+
+                if (toupper(conChoice) == 'Y')
+                {
+                    sNode.AddStudent(firstName, lastName, middleName, degreeProgram, studentGender, studentAddress, fullBirthday, idNumber, yearLevel);
+                    break; // Exit loop after adding student
+                }
+                else if (toupper(conChoice) == 'N')
+                {
+                    cout << "Add Student Cancelled" << endl;
+                    break; // Exit loop without adding student
+                }
+                else
+                {
+                    cout << "Invalid Input. Y or N only." << endl;
+                }
+            }
+
+            sNode.Pause();
+            system("clear");
             break;
         }
         case 2:
         {
             sNode.ViewStudents();
+            sNode.Pause();
+            system("clear");
             break;
         }
         case 3:
@@ -157,8 +182,11 @@ int main()
                 if (sNode.IsValidStudentNum(idToView))
                     break;
             }
-            
+            system("clear");
             sNode.ViewDetails(to_string(idToView));
+
+            sNode.Pause();
+            system("clear");
 
             break;
         }
@@ -176,9 +204,33 @@ int main()
                     break;
             }
 
-            sNode.EditStudent(to_string(idToEdit));
-            
-            cout << endl << "Successfully Edited" << endl << endl;
+            while (true)
+            {
+                cout << "Confirm Edit Student? [Y/N]" << endl;
+                cin >> conChoice;
+
+                if (toupper(conChoice) == 'Y')
+                {
+                    sNode.EditStudent(to_string(idToEdit));
+
+                    cout << endl
+                         << "Successfully Edited" << endl
+                         << endl;
+                    break; // Exit loop after editing student
+                }
+                else if (toupper(conChoice) == 'N')
+                {
+                    cout << "Edit Student Cancelled" << endl;
+                    break; // Exit loop without editing student
+                }
+                else
+                {
+                    cout << "Invalid Input. Y or N only." << endl;
+                }
+            }
+
+            sNode.Pause();
+            system("clear");
 
             break;
         }
@@ -192,16 +244,40 @@ int main()
                 cout << "Enter Student Number to Delete: ";
                 cin >> idToDelete;
 
-                if (sNode.IsValidStudentNum(idToDelete))    
+                if (sNode.IsValidStudentNum(idToDelete))
                     break;
             }
 
-            sNode.DeleteStudent(to_string(idToDelete));
-            
-            cout << endl << "Successfully Deleted" << endl << endl;
+            while (true)
+            {
+                cout << "Confirm Delete Student? [Y/N]" << endl;
+                cin >> conChoice;
+
+                if (toupper(conChoice) == 'Y')
+                {
+                    sNode.DeleteStudent(to_string(idToDelete));
+
+                    cout << endl
+                         << "Successfully Deleted" << endl
+                         << endl;
+                    break; // Exit loop after deleting student
+                }
+                else if (toupper(conChoice) == 'N')
+                {
+                    cout << "Delete Student Cancelled" << endl;
+                    break; // Exit loop without deleting student
+                }
+                else
+                {
+                    cout << "Invalid Input. Y or N only." << endl;
+                }
+            }
+
+            sNode.Pause();
+            system("clear");
 
             break;
-        } 
+        }
         }
     }
 }
