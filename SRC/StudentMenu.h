@@ -2,7 +2,6 @@
 #include <fstream>
 #include <cctype>
 #include <string>
-#include <cstdio>
 
 using namespace std;
 class StudentDetails
@@ -25,7 +24,9 @@ private:
 
 public:
     StudentNode *root;
+    void Pause();
     // Add input validation functions.
+    bool ConfirmScreen(char);
     bool IsValidStudentNum(int);
     bool IsValidName(string);
     bool IsValidGender(string);
@@ -49,6 +50,23 @@ public:
     void InsertSorted(StudentNode *);
     void ViewStudents();
 };
+
+void StudentDetails::Pause() // Function to replace "system("pause")"
+{
+    cout << "Press Enter to continue...";
+    cin.ignore();
+    cin.get(); // Wait for the user to press Enter
+}
+
+bool StudentDetails::ConfirmScreen(char choice) // Function for confirmation screen
+{
+    if (toupper(choice) == 'Y') // Returns true, proceeds to do the func to perform
+        return true;
+    else if (toupper(choice) == 'N') // Returns false, proceeds to do the func to perform
+        return false;
+    else
+        return false; // Handle invalid inputs as false
+}
 
 bool StudentDetails::IsValidStudentNum(int idNumber) // Function to check if the id number input is valid
 {
@@ -464,7 +482,7 @@ void StudentDetails::ViewDetails(string idNum) // Preview details inside the stu
         i++;
     }
     // Prints the details stored in the string array
-    cout << "\n\nStudent Number: " << s[0] << endl;
+    cout << "Student Number: " << s[0] << endl;
     cout << "First Name: " << s[1] << endl;
     cout << "Middle Name: " << s[2] << endl;
     cout << "Last Name: " << s[3] << endl;
@@ -531,7 +549,7 @@ void StudentDetails::EditStudent(string idToEdit)
             cin >> idNum;
             cin.ignore();
 
-            if (IsValidStudentNum(idNum))    
+            if (IsValidStudentNum(idNum))
                 break;
         }
 
@@ -760,20 +778,20 @@ void StudentDetails::InOrderTraversal(StudentNode *node) // Performs an in order
         return;
     }
     InOrderTraversal(node->left); // Left, Root, Right traversal
-    InsertSorted(node); // Inserts the current node to the Linked List
+    InsertSorted(node);           // Inserts the current node to the Linked List
     InOrderTraversal(node->right);
 }
 
 void StudentDetails::InsertSorted(StudentNode *student) // Inserts the sorted StudentNodes into the linked list for last name based sorting
 {
     ListNode *newNode = new ListNode; // Creates a new node
-    newNode->student = student; // Sets the new node value as the students' data
+    newNode->student = student;       // Sets the new node value as the students' data
     newNode->next = NULL;
 
     if (head == NULL || head->student->lastName > student->lastName) // If the list is empty or if the new student's last name should be on top
     {
         newNode->next = head; // Sets the val of the new node next pointer to the current head
-        head = newNode; // Sets the newNode as the new head
+        head = newNode;       // Sets the newNode as the new head
     }
     else // Finds the correct position if not in front
     {
@@ -783,7 +801,7 @@ void StudentDetails::InsertSorted(StudentNode *student) // Inserts the sorted St
             current = current->next;
         }
         newNode->next = current->next; // Sets the val of the new node next pointer to the current node's next node
-        current->next = newNode; // Sets the current node's next node to the new node value
+        current->next = newNode;       // Sets the current node's next node to the new node value
     }
 }
 
@@ -804,8 +822,8 @@ void StudentDetails::ViewStudentsSortedByLastName() // This shows ID Number and 
     while (head != NULL)
     {
         ListNode *temp = head; // Stores the current head node in a temp var
-        head = head->next; // Moves from head to the next node
-        delete temp; // Delete to free memory
+        head = head->next;     // Moves from head to the next node
+        delete temp;           // Delete to free memory
     }
 }
 
@@ -817,24 +835,25 @@ void StudentDetails::ViewStudents() // This function is for viewing student list
     cout << "2. Last Name" << endl;
     cin >> choice;
 
+    system("clear");
     switch (choice)
     {
-        case 1:
-        {
-            cout << "\n\nDisplaying Students in order of Student Number:\n";
-            cout << "Student Number\t\tName" << endl;
-            ViewStudentsSortedByIDNumber(root); // Calls function to display student list by id num
-            cout << endl;
-            break;
-        }
+    case 1:
+    {
+        cout << "Displaying Students in order of Student Number:\n";
+        cout << "Student Number\t\tName" << endl;
+        ViewStudentsSortedByIDNumber(root); // Calls function to display student list by id num
+        cout << endl;
+        break;
+    }
 
-        case 2:
-        {
-            cout << "\n\nDisplaying Students in order of Last Name:\n";
-            cout << "Student Number\t\tName" << endl;
-            ViewStudentsSortedByLastName(); // Calls function to display student list by last name
-            cout << endl;
-            break;
-        }
+    case 2:
+    {
+        cout << "Displaying Students in order of Last Name:\n";
+        cout << "Student Number\t\tName" << endl;
+        ViewStudentsSortedByLastName(); // Calls function to display student list by last name
+        cout << endl;
+        break;
+    }
     }
 }
