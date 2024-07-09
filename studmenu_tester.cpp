@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cctype>
 #include <string>
-#include "src\StudentMenu.h"
+#include "SRC/StudentMenu.h"
 
 using namespace std;
 

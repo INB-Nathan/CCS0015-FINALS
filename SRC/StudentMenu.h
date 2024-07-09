@@ -2,6 +2,7 @@
 #include <fstream>
 #include <cctype>
 #include <string>
+#include <vector>
 
 using namespace std;
 class StudentDetails
@@ -49,6 +50,10 @@ public:
     void InOrderTraversal(StudentNode *);
     void InsertSorted(StudentNode *);
     void ViewStudents();
+    void FilterByYearHelper(StudentNode *node, int year);
+    void FilterByLastNameInitialHelper(StudentNode *node, char initial);
+    void FilterByYear(int year);
+    void FilterByLastNameInitial(char initial);
 };
 
 void StudentDetails::Pause() // Function to replace "system("pause")"
@@ -287,7 +292,7 @@ void StudentDetails::AddStudent(string fName, string lName, string mName, string
             }
             else
             {
-                cout << "Duplicate values are not allowed in trees.";
+                cout << "Duplicate students are not allowed.\n";
                 return;
             }
         }
@@ -829,31 +834,117 @@ void StudentDetails::ViewStudentsSortedByLastName() // This shows ID Number and 
 
 void StudentDetails::ViewStudents() // This function is for viewing student list, giving the user a choice if they want to view sorted by last name or student num
 {
-    int choice;
-    cout << "Sort by: " << endl;
-    cout << "1. Student Number" << endl;
-    cout << "2. Last Name" << endl;
-    cin >> choice;
-
+    int sortChoice, choice;
     system("clear");
+    cout << "View Students Menu" << endl;
+    cout << "1. View All Students" << endl;
+    cout << "2. Filter by Year" << endl;
+    cout << "3. Filter by Last Name Initial" << endl;
+    cout << "0. Back to Main Menu" << endl;
+    cin >> choice;
+    cin.ignore();
+
     switch (choice)
     {
+    case 0:
+        return; // Return to main menu
     case 1:
-    {
-        cout << "Displaying Students in order of Student Number:\n";
-        cout << "Student Number\t\tName" << endl;
-        ViewStudentsSortedByIDNumber(root); // Calls function to display student list by id num
-        cout << endl;
-        break;
-    }
+        system("clear");
+        cout << "Sort by: " << endl;
+        cout << "1. Student Number" << endl;
+        cout << "2. Last Name" << endl;
+        cin >> sortChoice;
 
+        system("clear");
+        switch (sortChoice)
+        {
+        case 1:
+        {
+            cout << "Displaying Students in order of Student Number:\n";
+            cout << "Student Number\t\tName" << endl;
+            ViewStudentsSortedByIDNumber(root); // Calls function to display student list by id num
+            cout << endl;
+            break;
+        }
+
+        case 2:
+        {
+            cout << "Displaying Students in order of Last Name:\n";
+            cout << "Student Number\t\tName" << endl;
+            ViewStudentsSortedByLastName(); // Calls function to display student list by last name
+            cout << endl;
+            break;
+        }
+        }
+        break;
     case 2:
     {
-        cout << "Displaying Students in order of Last Name:\n";
+        // Filter by year
+        int yearFilter;
+        cout << "Enter Year to Filter (2015-2024): ";
+        cin >> yearFilter;
+        cin.ignore();
+        system("clear");
+        cout << "Displaying Students with ID Numbers starting in " << yearFilter << ".\n";
         cout << "Student Number\t\tName" << endl;
-        ViewStudentsSortedByLastName(); // Calls function to display student list by last name
+        FilterByYear(yearFilter);
         cout << endl;
         break;
     }
+    case 3:
+    {
+        // Filter by last name initial
+        char lastNameInitial;
+        cout << "Enter Last Name Initial to Filter: ";
+        cin >> lastNameInitial;
+        cin.ignore();
+        system("clear");
+        cout << "Displaying Students with Last Names starting in " << lastNameInitial << ".\n";
+        cout << "Student Number\t\tName" << endl;
+        FilterByLastNameInitial(lastNameInitial);
+        cout << endl;
+        break;
+    }
+    default:
+        cout << "Invalid choice. Please enter a valid option." << endl;
+        break;
+    }
+}
+
+void StudentDetails::FilterByYear(int year)
+{
+    FilterByYearHelper(root, year);
+}
+
+void StudentDetails::FilterByYearHelper(StudentNode *node, int year)
+{
+    int studentYear;
+    if (node != NULL)
+    {
+        FilterByYearHelper(node->left, year);
+        studentYear = node->idNumber / 100000;
+        if (studentYear == year)
+        {
+            cout << node->idNumber << "\t\t" << node->firstName << " " << node->middleName << " " << node->lastName << endl;
+        }
+        FilterByYearHelper(node->right, year);
+    }
+}
+
+void StudentDetails::FilterByLastNameInitial(char initial)
+{
+    FilterByLastNameInitialHelper(root, initial);
+}
+
+void StudentDetails::FilterByLastNameInitialHelper(StudentNode *node, char initial)
+{
+    if (node != NULL)
+    {
+        FilterByLastNameInitialHelper(node->left, initial);
+        if (toupper(node->lastName[0]) == toupper(initial))
+        {
+            cout << node->idNumber << "\t\t" << node->firstName << " " << node->middleName << " " << node->lastName << endl;
+        }
+        FilterByLastNameInitialHelper(node->right, initial);
     }
 }
