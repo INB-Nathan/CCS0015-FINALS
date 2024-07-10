@@ -54,5 +54,6 @@
         "xutility": "cpp",
         "__locale": "cpp",
         "string": "cpp"
-    }
+    },
+    "liveServer.settings.multiRootWorkspaceName": "CCS0015-FINALS"
 }
