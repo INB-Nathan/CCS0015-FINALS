@@ -13,10 +13,15 @@ int main(){
     cin >> choice;
     switch (choice){
         case 1:
+            cout << "Enroll Student\n";
+            while (true){
             cout << "Enter student ID: ";
             cin >> studentID;
+            if (eMenu.isExisting(studentID)){
             eMenu.EnrollStudent(studentID);
             break;
+            }
+            }
         case 2:
             eMenu.ViewEnrollees();
             break;

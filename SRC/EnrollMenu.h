@@ -17,6 +17,23 @@ class EnrollMenu
         void ViewEnrollees();
 };
 
+bool EnrollMenu::isExisting(string studentID)
+{
+    ifstream file("Students\\StudentList.txt");
+    string line;
+    while (getline(file, line))
+    {
+        if (line.find(studentID) != string::npos)
+        {
+            file.close();
+            return true;
+        }
+    }
+    file.close();
+    cout<< "Student ID not found.\n";
+    return false;
+}
+
 bool EnrollMenu::isEnrolled(string studentID, string courseCode, string courseSchedule, string blockSection)
 {
     ifstream file("Students\\Enrolled Courses" + blockSection + "-" + courseCode + "-" + courseSchedule + "list.txt");
@@ -38,17 +55,17 @@ void EnrollMenu::EnrollStudent(string studentID)
     BinaryTree tree;
     loadCourses(tree);
     string courseCode, courseSchedule, blockSection;
-    cout << "Enter block section: ";
-    cin >> blockSection;
-    cout << "Enter course code to enroll: ";
-    cin >> courseCode;
-    cout << "Enter course schedule: ";
-    cin >> courseSchedule;
     if (isEnrolled(studentID, blockSection, courseCode, courseSchedule))
     {
         cout << "Student is already enrolled in the course.\n";
         return;
     }
+    cout << "Enter course code to enroll: ";
+    cin >> courseCode;
+    cout << "Enter block section: ";
+    cin >> blockSection;
+    cout << "Enter course schedule: ";
+    cin >> courseSchedule;
     ofstream file("Students\\Enrolled Courses\\" + blockSection + "_" + courseCode + "_" + courseSchedule + "_LIST.txt", ios::app);
     if (file.is_open())
     {
@@ -67,20 +84,22 @@ void EnrollMenu::ViewEnrollees()
     string courseCode, courseSchedule, blockSection;
     cout << "Enter the course code: ";
     cin >> courseCode;
-    cout << "Enter the course schedule: ";
-    cin >> courseSchedule;
     cout << "Enter the block section: ";
     cin >> blockSection;
-    ifstream file("Students\\Enrolled Courses\\" + blockSection + "_" + courseCode + "_" + courseSchedule + "_list.txt");
+    cout << "Enter the course schedule: ";
+    cin >> courseSchedule;
+    ifstream file("Students\\Enrolled Courses\\" + blockSection + "_" + courseCode + "_" + courseSchedule + "_LIST.txt");
     string line;
     if (!file.is_open())
     {
         cerr << "File is not existing.\n";
         return;
     }
+    cout << "Enrolled Students in " << courseCode << " " << blockSection << " " << courseSchedule << ":\n";
     while (getline(file, line))
     {
-        cout << line << endl;
+        cout<<"Student ID: "<<line<<"\n";
+
     }
     file.close();
 }
