@@ -50,10 +50,8 @@ public:
     void InOrderTraversal(StudentNode *);
     void InsertSorted(StudentNode *);
     void ViewStudents();
-    void FilterByYearHelper(StudentNode *node, int year);
-    void FilterByLastNameInitialHelper(StudentNode *node, char initial);
-    void FilterByYear(int year);
-    void FilterByLastNameInitial(char initial);
+    void FilterByYear(StudentNode *, int);
+    void FilterByLastNameInitial(StudentNode *, char);
 };
 
 void StudentDetails::Pause() // Function to replace "system("pause")"
@@ -881,13 +879,13 @@ void StudentDetails::ViewStudents() // This function is for viewing student list
     {
         // Filter by year
         int yearFilter;
-        cout << "Enter Year to Filter (2015-2024): ";
+        cout << "Enter Year to Filter (2015-2024): "; // Asks for the year input
         cin >> yearFilter;
         cin.ignore();
         system("clear");
         cout << "Displaying Students with ID Numbers starting in " << yearFilter << ".\n";
         cout << "Student Number\t\tName" << endl;
-        FilterByYear(yearFilter);
+        FilterByYear(root, yearFilter); // Calls function to display student list of those that have the input year
         cout << endl;
         break;
     }
@@ -895,13 +893,13 @@ void StudentDetails::ViewStudents() // This function is for viewing student list
     {
         // Filter by last name initial
         char lastNameInitial;
-        cout << "Enter Last Name Initial to Filter: ";
+        cout << "Enter Last Name Initial to Filter: ";  // Asks for the initial input
         cin >> lastNameInitial;
         cin.ignore();
         system("clear");
         cout << "Displaying Students with Last Names starting in " << lastNameInitial << ".\n";
         cout << "Student Number\t\tName" << endl;
-        FilterByLastNameInitial(lastNameInitial);
+        FilterByLastNameInitial(root, lastNameInitial);  // Calls function to display student list of those that have the input initial
         cout << endl;
         break;
     }
@@ -911,40 +909,30 @@ void StudentDetails::ViewStudents() // This function is for viewing student list
     }
 }
 
-void StudentDetails::FilterByYear(int year)
-{
-    FilterByYearHelper(root, year);
-}
-
-void StudentDetails::FilterByYearHelper(StudentNode *node, int year)
+void StudentDetails::FilterByYear(StudentNode *node, int year) // Function to traverse tree and print the students with student num that starts with the given year
 {
     int studentYear;
-    if (node != NULL)
-    {
-        FilterByYearHelper(node->left, year);
-        studentYear = node->idNumber / 100000;
+    if (node != NULL) // Checks if current node is not null
+    { // Traverses inorder-ly
+        FilterByYear(node->left, year); 
+        studentYear = node->idNumber / 100000; // Divides student num that returns an int, so it checks if the first 4 numbers corresponds to the year
         if (studentYear == year)
         {
-            cout << node->idNumber << "\t\t" << node->firstName << " " << node->middleName << " " << node->lastName << endl;
+            cout << node->idNumber << "\t\t" << node->firstName << " " << node->middleName << " " << node->lastName << endl; // Prints those who have that year
         }
-        FilterByYearHelper(node->right, year);
+        FilterByYear(node->right, year);
     }
 }
 
-void StudentDetails::FilterByLastNameInitial(char initial)
+void StudentDetails::FilterByLastNameInitial(StudentNode *node, char initial) // Function to traverse tree and print the students with last names that starts with the given initial
 {
-    FilterByLastNameInitialHelper(root, initial);
-}
-
-void StudentDetails::FilterByLastNameInitialHelper(StudentNode *node, char initial)
-{
-    if (node != NULL)
-    {
-        FilterByLastNameInitialHelper(node->left, initial);
-        if (toupper(node->lastName[0]) == toupper(initial))
+    if (node != NULL) // Checks if current node is not null
+    { // Traverses inorder-ly
+        FilterByLastNameInitial(node->left, initial);
+        if (toupper(node->lastName[0]) == toupper(initial)) // Checks if the last name starts with the initial given, uses toupper function to make it case-insensitive
         {
             cout << node->idNumber << "\t\t" << node->firstName << " " << node->middleName << " " << node->lastName << endl;
         }
-        FilterByLastNameInitialHelper(node->right, initial);
+        FilterByLastNameInitial(node->right, initial);
     }
 }
