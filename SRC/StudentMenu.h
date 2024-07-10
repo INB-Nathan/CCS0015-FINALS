@@ -2,7 +2,7 @@
 #include <fstream>
 #include <cctype>
 #include <string>
-#include <cstdio>
+#include <vector>
 
 using namespace std;
 class StudentDetails
@@ -25,7 +25,9 @@ private:
 
 public:
     StudentNode *root;
+    void Pause();
     // Add input validation functions.
+    bool ConfirmScreen(char);
     bool IsValidStudentNum(int);
     bool IsValidName(string);
     bool IsValidGender(string);
@@ -48,7 +50,26 @@ public:
     void InOrderTraversal(StudentNode *);
     void InsertSorted(StudentNode *);
     void ViewStudents();
+    void FilterByYear(StudentNode *, int);
+    void FilterByLastNameInitial(StudentNode *, char);
 };
+
+void StudentDetails::Pause() // Function to replace "system("pause")"
+{
+    cout << "Press Enter to continue...";
+    cin.ignore();
+    cin.get(); // Wait for the user to press Enter
+}
+
+bool StudentDetails::ConfirmScreen(char choice) // Function for confirmation screen
+{
+    if (toupper(choice) == 'Y') // Returns true, proceeds to do the func to perform
+        return true;
+    else if (toupper(choice) == 'N') // Returns false, proceeds to do the func to perform
+        return false;
+    else
+        return false; // Handle invalid inputs as false
+}
 
 bool StudentDetails::IsValidStudentNum(int idNumber) // Function to check if the id number input is valid
 {
@@ -66,7 +87,8 @@ bool StudentDetails::IsValidStudentNum(int idNumber) // Function to check if the
 bool StudentDetails::IsValidName(string str) // Function for checking if the input is Alpha or a Space mostly used for names and such
 {
     // Convert the string to lowercase manually
-    for (int i = 0; i < str.length(); i++)
+    int i;
+    for (i = 0; i < str.length(); i++)
     {
         if (!isalpha(str[i]) && !isspace(str[i])) // Check if alpha or a space
         {
@@ -81,7 +103,8 @@ bool StudentDetails::IsValidName(string str) // Function for checking if the inp
 bool StudentDetails::IsValidGender(string str) // Function to check if the input is either male or female regardless of the case
 {
     // Convert the string to lowercase manually
-    for (int i = 0; i < str.length(); ++i)
+    int i;
+    for (i = 0; i < str.length(); ++i)
     {
         str[i] = tolower(str[i]);
     }
@@ -269,14 +292,14 @@ void StudentDetails::AddStudent(string fName, string lName, string mName, string
             }
             else
             {
-                cout << "Duplicate values are not allowed in trees.";
+                cout << "Duplicate students are not allowed.\n";
                 return;
             }
         }
     }
 
     // Generate a filename from the input id, use to_string function to convert int to string
-    filename = to_string(idNum) + ".txt";
+    filename = "Students\\" + to_string(idNum) + ".txt";
     // Create the file object and open the file
     ofstream ofile(filename);
     if (!ofile) // Error display if the file won't open
@@ -303,7 +326,7 @@ void StudentDetails::AddStudent(string fName, string lName, string mName, string
 void StudentDetails::SaveIDToList() // Saves the Stud num to a list for reading purposes
 {
     // Create another file to store all of the student numbers
-    ofstream ofile("idlist.txt", ios::app);
+    ofstream ofile("Students\\idlist.txt", ios::app);
     if (!ofile) // Error display if the file won't open
     {
         cerr << "Error opening file" << endl;
@@ -332,7 +355,7 @@ void StudentDetails::FetchStudentInfo() // Reads the idlist file to traverse thr
 {
     string filename;
     // Open a ifstream object and open the idlist file
-    ifstream ifile("idlist.txt");
+    ifstream ifile("Students\\idlist.txt");
     if (!ifile) // Error display if the file won't open
     {
         cerr << "Error opening file" << endl;
@@ -352,7 +375,7 @@ void StudentDetails::FetchEachStudentFile(string idOfFile) // Reads each student
     string fName, mName, lName, bDay, sGender, sAddress, dProgram;
     string *s = new string[9];
 
-    ifstream ifile(idOfFile + ".txt"); // Opens the student file given by the FetchStudentInfo func
+    ifstream ifile("Students\\" + idOfFile + ".txt"); // Opens the student file given by the FetchStudentInfo func
     if (!ifile)                        // Error display if the file won't open
     {
         cerr << "Error opening file" << endl;
@@ -453,7 +476,7 @@ void StudentDetails::ViewDetails(string idNum) // Preview details inside the stu
 {
     int i = 0;
     string *s = new string[9];
-    ifstream ifile(idNum + ".txt");
+    ifstream ifile("Students\\" + idNum + ".txt");
     if (!ifile) // Error display if the file won't open
     {
         cerr << "Error opening file" << endl;
@@ -464,7 +487,7 @@ void StudentDetails::ViewDetails(string idNum) // Preview details inside the stu
         i++;
     }
     // Prints the details stored in the string array
-    cout << "\n\nStudent Number: " << s[0] << endl;
+    cout << "Student Number: " << s[0] << endl;
     cout << "First Name: " << s[1] << endl;
     cout << "Middle Name: " << s[2] << endl;
     cout << "Last Name: " << s[3] << endl;
@@ -483,7 +506,7 @@ void StudentDetails::EditStudent(string idToEdit)
     string fName, mName, lName, bDay, sGender, sAddress, dProgram, birthMonthName, fullBirthday, filename, temp;
     int idNum, yrLvl, choice, birthDay, birthYear, birthMonthNum, i = 0;
     string *s = new string[9];
-    ifstream ifile(idToEdit + ".txt");
+    ifstream ifile("Students\\" + idToEdit + ".txt");
     if (!ifile) // Error display if the file won't open
     {
         cerr << "Error opening file" << endl;
@@ -531,12 +554,12 @@ void StudentDetails::EditStudent(string idToEdit)
             cin >> idNum;
             cin.ignore();
 
-            if (IsValidStudentNum(idNum))    
+            if (IsValidStudentNum(idNum))
                 break;
         }
 
-        ifstream ifile("idlist.txt");
-        ofstream ofile("temp.txt");
+        ifstream ifile("Students\\idlist.txt");
+        ofstream ofile("Students\\temp.txt");
 
         if (!ifile || !ofile) // Error display if the file/s won't open
         {
@@ -562,11 +585,11 @@ void StudentDetails::EditStudent(string idToEdit)
 
         // Replace the original idlist.txt with the temporary file
         // Error display if it doesn't go through
-        if (remove("idlist.txt") != 0)
+        if (remove("Students\\idlist.txt") != 0)
         {
             cerr << "Error deleting file: idlist.txt" << endl;
         }
-        if (rename("temp.txt", "idlist.txt") != 0)
+        if (rename("Students\\temp.txt", "Students\\idlist.txt") != 0)
         {
             cerr << "Error renaming file: temp.txt to idlist.txt" << endl;
         }
@@ -695,7 +718,7 @@ void StudentDetails::EditStudent(string idToEdit)
     }
 
     // Generate a filename from the input id, use to_string function to convert int to string
-    filename = to_string(idNum) + ".txt";
+    filename = "Students\\" + to_string(idNum) + ".txt";
     // Create the file object and open the file
     ofstream ofile(filename);
 
@@ -719,8 +742,8 @@ void StudentDetails::DeleteStudent(string idNum)
     string filename = idNum + ".txt";
     remove(filename.c_str());
 
-    ifstream ifile("idlist.txt");
-    ofstream ofile("temp.txt");
+    ifstream ifile("Students\\idlist.txt");
+    ofstream ofile("Students\\temp.txt");
 
     if (!ifile || !ofile) // Error display if the file/s won't open
     {
@@ -743,11 +766,11 @@ void StudentDetails::DeleteStudent(string idNum)
 
     // Replace the original idlist.txt with the temporary file
     // Error display if it doesn't go through
-    if (remove("idlist.txt") != 0)
+    if (remove("Students\\idlist.txt") != 0)
     {
         cerr << "Error deleting file: idlist.txt" << endl;
     }
-    if (rename("temp.txt", "idlist.txt") != 0)
+    if (rename("Students\\temp.txt", "Students\\idlist.txt") != 0)
     {
         cerr << "Error renaming file: temp.txt to idlist.txt" << endl;
     }
@@ -760,20 +783,20 @@ void StudentDetails::InOrderTraversal(StudentNode *node) // Performs an in order
         return;
     }
     InOrderTraversal(node->left); // Left, Root, Right traversal
-    InsertSorted(node); // Inserts the current node to the Linked List
+    InsertSorted(node);           // Inserts the current node to the Linked List
     InOrderTraversal(node->right);
 }
 
 void StudentDetails::InsertSorted(StudentNode *student) // Inserts the sorted StudentNodes into the linked list for last name based sorting
 {
     ListNode *newNode = new ListNode; // Creates a new node
-    newNode->student = student; // Sets the new node value as the students' data
+    newNode->student = student;       // Sets the new node value as the students' data
     newNode->next = NULL;
 
     if (head == NULL || head->student->lastName > student->lastName) // If the list is empty or if the new student's last name should be on top
     {
         newNode->next = head; // Sets the val of the new node next pointer to the current head
-        head = newNode; // Sets the newNode as the new head
+        head = newNode;       // Sets the newNode as the new head
     }
     else // Finds the correct position if not in front
     {
@@ -783,7 +806,7 @@ void StudentDetails::InsertSorted(StudentNode *student) // Inserts the sorted St
             current = current->next;
         }
         newNode->next = current->next; // Sets the val of the new node next pointer to the current node's next node
-        current->next = newNode; // Sets the current node's next node to the new node value
+        current->next = newNode;       // Sets the current node's next node to the new node value
     }
 }
 
@@ -804,24 +827,40 @@ void StudentDetails::ViewStudentsSortedByLastName() // This shows ID Number and 
     while (head != NULL)
     {
         ListNode *temp = head; // Stores the current head node in a temp var
-        head = head->next; // Moves from head to the next node
-        delete temp; // Delete to free memory
+        head = head->next;     // Moves from head to the next node
+        delete temp;           // Delete to free memory
     }
 }
 
 void StudentDetails::ViewStudents() // This function is for viewing student list, giving the user a choice if they want to view sorted by last name or student num
 {
-    int choice;
-    cout << "Sort by: " << endl;
-    cout << "1. Student Number" << endl;
-    cout << "2. Last Name" << endl;
+    int sortChoice, choice;
+    system("clear");
+    cout << "View Students Menu" << endl;
+    cout << "1. View All Students" << endl;
+    cout << "2. Filter by Year" << endl;
+    cout << "3. Filter by Last Name Initial" << endl;
+    cout << "0. Back to Main Menu" << endl;
     cin >> choice;
+    cin.ignore();
 
     switch (choice)
     {
+    case 0:
+        return; // Return to main menu
+    case 1:
+        system("clear");
+        cout << "Sort by: " << endl;
+        cout << "1. Student Number" << endl;
+        cout << "2. Last Name" << endl;
+        cin >> sortChoice;
+
+        system("clear");
+        switch (sortChoice)
+        {
         case 1:
         {
-            cout << "\n\nDisplaying Students in order of Student Number:\n";
+            cout << "Displaying Students in order of Student Number:\n";
             cout << "Student Number\t\tName" << endl;
             ViewStudentsSortedByIDNumber(root); // Calls function to display student list by id num
             cout << endl;
@@ -830,11 +869,72 @@ void StudentDetails::ViewStudents() // This function is for viewing student list
 
         case 2:
         {
-            cout << "\n\nDisplaying Students in order of Last Name:\n";
+            cout << "Displaying Students in order of Last Name:\n";
             cout << "Student Number\t\tName" << endl;
             ViewStudentsSortedByLastName(); // Calls function to display student list by last name
             cout << endl;
             break;
         }
+        }
+        break;
+    case 2:
+    {
+        // Filter by year
+        int yearFilter;
+        cout << "Enter Year to Filter (2015-2024): "; // Asks for the year input
+        cin >> yearFilter;
+        cin.ignore();
+        system("clear");
+        cout << "Displaying Students with ID Numbers starting in " << yearFilter << ".\n";
+        cout << "Student Number\t\tName" << endl;
+        FilterByYear(root, yearFilter); // Calls function to display student list of those that have the input year
+        cout << endl;
+        break;
+    }
+    case 3:
+    {
+        // Filter by last name initial
+        char lastNameInitial;
+        cout << "Enter Last Name Initial to Filter: ";  // Asks for the initial input
+        cin >> lastNameInitial;
+        cin.ignore();
+        system("clear");
+        cout << "Displaying Students with Last Names starting in " << lastNameInitial << ".\n";
+        cout << "Student Number\t\tName" << endl;
+        FilterByLastNameInitial(root, lastNameInitial);  // Calls function to display student list of those that have the input initial
+        cout << endl;
+        break;
+    }
+    default:
+        cout << "Invalid choice. Please enter a valid option." << endl;
+        break;
+    }
+}
+
+void StudentDetails::FilterByYear(StudentNode *node, int year) // Function to traverse tree and print the students with student num that starts with the given year
+{
+    int studentYear;
+    if (node != NULL) // Checks if current node is not null
+    { // Traverses inorder-ly
+        FilterByYear(node->left, year); 
+        studentYear = node->idNumber / 100000; // Divides student num that returns an int, so it checks if the first 4 numbers corresponds to the year
+        if (studentYear == year)
+        {
+            cout << node->idNumber << "\t\t" << node->firstName << " " << node->middleName << " " << node->lastName << endl; // Prints those who have that year
+        }
+        FilterByYear(node->right, year);
+    }
+}
+
+void StudentDetails::FilterByLastNameInitial(StudentNode *node, char initial) // Function to traverse tree and print the students with last names that starts with the given initial
+{
+    if (node != NULL) // Checks if current node is not null
+    { // Traverses inorder-ly
+        FilterByLastNameInitial(node->left, initial);
+        if (toupper(node->lastName[0]) == toupper(initial)) // Checks if the last name starts with the initial given, uses toupper function to make it case-insensitive
+        {
+            cout << node->idNumber << "\t\t" << node->firstName << " " << node->middleName << " " << node->lastName << endl;
+        }
+        FilterByLastNameInitial(node->right, initial);
     }
 }
