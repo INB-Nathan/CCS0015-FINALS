@@ -3,6 +3,7 @@
 #include <fstream>
 #include <string>
 #include <iomanip>
+#include <conio.h>
 #include "CourseMenu.h"
 using namespace std;
 
@@ -22,6 +23,8 @@ class Schedule {
     Schedule();
     int ScheduleMenu();
     int EditMenu();
+    void Pause();
+    char EndTrail();
 
     void AddScheduleData();
     void AddScheduleRecord(string, string, string, string, string, int, int, int, int, int, int);
@@ -60,6 +63,7 @@ int Schedule::ScheduleMenu() {
         cin >> choice;
         cin.ignore();
     } while (choice < 0 || choice > 4);
+    system("cls");
     return choice;
 }
 
@@ -275,6 +279,8 @@ void Schedule::ViewSchedule() {
     } else {
         cout << "Failed to open SCHEDULES.txt file." << endl;
     }
+    Pause();
+
 }
 
 void Schedule::EditSchedule() {
@@ -654,3 +660,21 @@ bool Schedule::IsValidSection(string section) {
         return false;
     }
 }
+
+char Schedule::EndTrail() {
+    char continueChoice ='Y';
+
+    cout << "Do you want to Continue [Y/N]: ";
+    cin >> continueChoice;
+    continueChoice = toupper(continueChoice);
+    system("cls");
+
+    return continueChoice;
+}
+
+void Schedule::Pause() {
+    cout << "Press Enter to continue...";
+    _getch();
+    system("cls");
+}
+
