@@ -4,10 +4,8 @@
 #include <sstream>
 #include <string>
 #include <cctype>
-#include <filesystem>
 
 using namespace std;
-namespace fs = std::filesystem;
 
 class Course {
 public:
@@ -59,10 +57,7 @@ void EditCourse(BinaryTree& tree);
 void DeleteCourse(BinaryTree& tree);
 void LoadCourses(BinaryTree& tree);
 void CourseCodeMenu();
-
-
-
-// Function definitions
+void UpdateRecordList(const string& courseCode, bool isAdding);
 
 void Course::Display() const {
     cout << "| " << setw(11) << CourseCode << " | " << setw(60) << CourseTitle << " | "
@@ -71,7 +66,7 @@ void Course::Display() const {
 }
 
 string Course::GetFileName() const {
-    return "CourseRecords/" + CourseCode + "_" + CourseTitle + ".txt";
+    return "CourseRecords/" + CourseCode + ".txt";
 }
 
 void Course::SaveToFile() const {
@@ -79,6 +74,7 @@ void Course::SaveToFile() const {
     if (file.is_open()) {
         file << CourseCode << "," << CourseTitle << "," << Units << "," << YearLevel << "\n";
         file.close();
+        UpdateRecordList(CourseCode, true);
     } else {
         cerr << "Unable to open file for writing: " << GetFileName() << endl;
     }
@@ -163,13 +159,15 @@ Node* BinaryTree::Remove(Node* node, const string& CourseCode) {
     } else {
         if (node->left == nullptr) {
             Node* temp = node->right;
+            UpdateRecordList(node->course.CourseCode, false);
+            remove(node->course.GetFileName().c_str());
             delete node;
-            fs::remove(node->course.GetFileName());
             return temp;
         } else if (node->right == nullptr) {
             Node* temp = node->left;
+            UpdateRecordList(node->course.CourseCode, false);
+            remove(node->course.GetFileName().c_str());
             delete node;
-            fs::remove(node->course.GetFileName());
             return temp;
         }
 
@@ -223,7 +221,6 @@ void AddCourse(BinaryTree& tree) {
         if (isValid) {
             break;
         } else {
-            system("cls");
             cout << "Invalid input! \nCourse title must contain at least one alphanumeric character." << endl;
         }
     }
@@ -275,7 +272,6 @@ void EditCourse(BinaryTree& tree) {
         return;
     }
 
-
     cout << "Enter new course title: ";
     getline(cin, title);
 
@@ -326,7 +322,6 @@ void DeleteCourse(BinaryTree& tree) {
     }
 
     tree.Remove(code);
-    fs::remove(node->course.GetFileName());
 
     system("cls");
     cout << "Course deleted successfully!" << endl;
@@ -334,15 +329,39 @@ void DeleteCourse(BinaryTree& tree) {
 }
 
 void LoadCourses(BinaryTree& tree) {
-    if (!fs::exists("CourseRecords")) {
-        fs::create_directory("CourseRecords");
-    }
-
-    for (const auto& entry : fs::directory_iterator("CourseRecords")) {
+    ifstream recordList("CourseRecords/recordlist.txt");
+    string code;
+    while (getline(recordList, code)) {
         Course course;
-        course.LoadFromFile(entry.path().string());
+        course.LoadFromFile("CourseRecords/" + code + ".txt");
         tree.Insert(course);
     }
+    recordList.close();
+}
+
+void UpdateRecordList(const string& courseCode, bool isAdding) {
+    ifstream inFile("CourseRecords/recordlist.txt");
+    ofstream tempFile("CourseRecords/temp.txt");
+
+    string line;
+    bool found = false;
+    while (getline(inFile, line)) {
+        if (line == courseCode) {
+            found = true;
+            if (!isAdding) continue;
+        }
+        tempFile << line << endl;
+    }
+
+    if (isAdding && !found) {
+        tempFile << courseCode << endl;
+    }
+
+    inFile.close();
+    tempFile.close();
+
+    remove("CourseRecords/recordlist.txt");
+    rename("CourseRecords/temp.txt", "CourseRecords/recordlist.txt");
 }
 
 void CourseCodeMenu() {

@@ -23,6 +23,7 @@ int main() {
                     break;
                 }
             }
+            system("cls");
             cout << "Invalid input! \nPlease enter a number between 0 and 4." << endl;
             cin.clear(); 
         }
