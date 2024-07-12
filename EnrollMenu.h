@@ -87,7 +87,7 @@ void EnrollMenu::EnrollStudent(string studentID)
     }
     else
     {
-        cerr << "Unable to open file for writing.\n";
+       cout << "Unable to open file for writing.\n";
     }
     cout << "Student enrolled successfully.\n";
 }
@@ -106,7 +106,7 @@ void EnrollMenu::ViewEnrollees()
     string line;
     if (!file.is_open())
     {
-        cerr << "File is not existing.\n";
+        cout << "File is not existing.\n";
         return;
     }
     tolower(courseCode, blockSection, courseSchedule);

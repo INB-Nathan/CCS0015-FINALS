@@ -4,7 +4,7 @@
 #include <string>
 #include <iomanip>
 #include <conio.h>
-#include "CourseMenu.h"
+#include "CourseCode.h"
 using namespace std;
 
 class Schedule {
@@ -85,23 +85,46 @@ int Schedule::EditMenu() {
 
 void Schedule::AddScheduleData() {
     int schedHour, schedMinute, schedSecond, amountMinute, numUnits, yearLevel;
-    string courseTitle, courseCode, section, weekDay, roomNumber;
+    string courseTitle, courseCode, section, weekDay, roomNumber, fileName;
+    bool courseFound = false;
 
     cout << "Enter Course Code: ";
     getline(cin, courseCode);
-    cout << "Enter Course Name: ";
-    getline(cin, courseTitle);
-    while (true) {
-    cout << "Enter Section: ";
-    getline(cin, section);
-    UpperString(section);
-    if(IsValidSection(section)) {
-        break;
+    UpperString(courseCode);
+
+    fileName = "CourseRecords\\" + courseCode + ".txt";
+    ifstream ifile(fileName);
+    if (ifile.is_open()) {
+        string line;
+        getline(ifile, line);
+        stringstream ss(line);
+        getline(ss, courseCode, ',');
+        getline(ss, courseTitle, ',');
+        getline(ss, line, ',');
+        numUnits = stoi(line);
+        getline(ss, line, ',');
+        yearLevel = stoi(line);
+        ifile.close();
+        courseFound = true;
     }
-    else {
-        cout << "Please enter a valid Section (up to 5 alphanumeric characters).\n";
+
+    if (!courseFound) {
+        cout << "Invalid course code. Please try again." << endl;
+        return;
     }
-}
+
+    while(true){
+        cout << "Enter Section: ";
+        getline(cin, section);
+        UpperString(section);
+        if(IsValidSection(section)){
+            break;
+        }
+        else {
+            cout << "Please Enter a Valid Section.\n";
+        }
+    }
+
     while (true) {
         cout << "Enter Day the Course to be scheduled for: ";
         getline(cin, weekDay);
@@ -110,10 +133,10 @@ void Schedule::AddScheduleData() {
             break;
         }
         else {
-            cout << "Please enter a Valid Week Day.\n";
+            cout << "Please enter a valid Week Day.\n";
         }
     }
-    
+
     while (true) {
         cout << "Enter Room Number: ";
         getline(cin, roomNumber);
@@ -125,12 +148,6 @@ void Schedule::AddScheduleData() {
             cout << "Please enter a valid Room Number (up to 5 alphanumeric characters or 'ONLINE').\n";
         }
     }
-    cout << "Enter Number of Units: ";
-    cin >> numUnits;
-    cin.ignore();
-    cout << "Enter Year Level: ";
-    cin >> yearLevel;
-    cin.ignore();
 
     while (true) {
         cout << "Enter Start Hour of the schedule: ";
@@ -176,12 +193,9 @@ void Schedule::AddScheduleData() {
         }
     }
 
-    UpperString(courseCode);
     UpperString(courseTitle);
-    
     AddScheduleRecord(courseTitle, section, weekDay, courseCode, roomNumber, numUnits, yearLevel, schedHour, schedMinute, schedSecond, amountMinute);
 }
-
 void Schedule::AddScheduleRecord(string courseName, string block, string day, string courseId, string rNumber, int units, int yLevel, int sHour, int sMin, int sSec, int amountMinute) {
     string schedFile, time, sectionChecker; 
     SchedNode* parent = NULL;
@@ -607,19 +621,19 @@ bool Schedule::IsValidHour(int hour) {
         return false;
 }
 bool Schedule::IsValidMinute(int minute) {
-    if (minute > 0 && minute <= 59) 
+    if (minute >= 0 && minute <= 59) 
         return true;
     else 
         return false;
 }
 bool Schedule::IsValidSecond(int second) {
-    if (second > 0 && second <= 59) 
+    if (second >= 0 && second <= 59) 
         return true;
     else 
         return false;
 }
 bool Schedule::IsValidAmountMinute(int amountMinute) {
-    if (amountMinute > 0 || amountMinute <= 999) 
+    if (amountMinute > 0 && amountMinute <= 999) 
         return true;
     else 
         return false;
