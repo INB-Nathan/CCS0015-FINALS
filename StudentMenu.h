@@ -374,7 +374,7 @@ void StudentDetails::FetchStudentInfo() // Reads the idlist file to traverse thr
 {
     string filename;
     // Open a ifstream object and open the idlist file
-    ifstream ifile("Students//idlist.txt");
+    ifstream ifile("Students\\idlist.txt");
     if (!ifile) // Error display if the file won't open
     {
         cerr << "Error opening file" << endl;

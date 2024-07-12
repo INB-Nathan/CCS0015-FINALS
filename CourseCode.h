@@ -4,8 +4,10 @@
 #include <sstream>
 #include <string>
 #include <cctype>
+#include <filesystem>
 
 using namespace std;
+namespace fs = std::filesystem;
 
 class Course {
 public:
@@ -57,16 +59,19 @@ void EditCourse(BinaryTree& tree);
 void DeleteCourse(BinaryTree& tree);
 void LoadCourses(BinaryTree& tree);
 void CourseCodeMenu();
-void UpdateRecordList(const string& courseCode, bool isAdding);
+
+
+
+// Function definitions
 
 void Course::Display() const {
-    cout << "| " << setw(11) << CourseCode << " | " << setw(60) << CourseTitle << " | "
+    cout << "| " << setw(11) << CourseCode << " | " << setw(50) << CourseTitle << " | "
          << setw(5) << Units << " | " << setw(10) << YearLevel << " |\n";
-    cout << "+" << setw(97) << setfill('-') << "" << setfill(' ') << "+" << endl;
+    cout << "+" << setw(87) << setfill('-') << "" << setfill(' ') << "+" << endl;
 }
 
 string Course::GetFileName() const {
-    return "CourseRecords/" + CourseCode + ".txt";
+    return "CourseRecords/" + CourseCode + "_" + CourseTitle + ".txt";
 }
 
 void Course::SaveToFile() const {
@@ -74,7 +79,6 @@ void Course::SaveToFile() const {
     if (file.is_open()) {
         file << CourseCode << "," << CourseTitle << "," << Units << "," << YearLevel << "\n";
         file.close();
-        UpdateRecordList(CourseCode, true);
     } else {
         cerr << "Unable to open file for writing: " << GetFileName() << endl;
     }
@@ -107,11 +111,11 @@ void BinaryTree::ViewCourses() const {
         return;
     }
     cout << endl;
-    cout << "+" << setw(97) << setfill('=') << "" << setfill(' ') << "+\n";
-    cout << "|                                         COURSE RECORDS                                          |\n";
-    cout << "+" << setw(97) << setfill('=') << "" << setfill(' ') << "+\n";
-    cout << "| Course Code |                           Course Title                       | Units | Year Level |\n";
-    cout << "|" << setw(97) << setfill('=') << "" << setfill(' ') << "+\n";
+    cout << "+" << setw(87) << setfill('=') << "" << setfill(' ') << "+\n";
+    cout << "|                                    COURSE RECORDS                                     |\n";
+    cout << "+" << setw(87) << setfill('=') << "" << setfill(' ') << "+\n";
+    cout << "| Course Code |                      Course Title                  | Units | Year Level |\n";
+    cout << "|" << setw(87) << setfill('=') << "" << setfill(' ') << "+\n";
 
     InOrder(root);
     cout << endl;
@@ -159,15 +163,13 @@ Node* BinaryTree::Remove(Node* node, const string& CourseCode) {
     } else {
         if (node->left == nullptr) {
             Node* temp = node->right;
-            UpdateRecordList(node->course.CourseCode, false);
-            remove(node->course.GetFileName().c_str());
             delete node;
+            fs::remove(node->course.GetFileName());
             return temp;
         } else if (node->right == nullptr) {
             Node* temp = node->left;
-            UpdateRecordList(node->course.CourseCode, false);
-            remove(node->course.GetFileName().c_str());
             delete node;
+            fs::remove(node->course.GetFileName());
             return temp;
         }
 
@@ -221,6 +223,7 @@ void AddCourse(BinaryTree& tree) {
         if (isValid) {
             break;
         } else {
+            system("cls");
             cout << "Invalid input! \nCourse title must contain at least one alphanumeric character." << endl;
         }
     }
@@ -272,6 +275,7 @@ void EditCourse(BinaryTree& tree) {
         return;
     }
 
+
     cout << "Enter new course title: ";
     getline(cin, title);
 
@@ -322,6 +326,7 @@ void DeleteCourse(BinaryTree& tree) {
     }
 
     tree.Remove(code);
+    fs::remove(node->course.GetFileName());
 
     system("cls");
     cout << "Course deleted successfully!" << endl;
@@ -329,50 +334,26 @@ void DeleteCourse(BinaryTree& tree) {
 }
 
 void LoadCourses(BinaryTree& tree) {
-    ifstream recordList("CourseRecords/recordlist.txt");
-    string code;
-    while (getline(recordList, code)) {
+    if (!fs::exists("CourseRecords")) {
+        fs::create_directory("CourseRecords");
+    }
+
+    for (const auto& entry : fs::directory_iterator("CourseRecords")) {
         Course course;
-        course.LoadFromFile("CourseRecords/" + code + ".txt");
+        course.LoadFromFile(entry.path().string());
         tree.Insert(course);
     }
-    recordList.close();
-}
-
-void UpdateRecordList(const string& courseCode, bool isAdding) {
-    ifstream inFile("CourseRecords/recordlist.txt");
-    ofstream tempFile("CourseRecords/temp.txt");
-
-    string line;
-    bool found = false;
-    while (getline(inFile, line)) {
-        if (line == courseCode) {
-            found = true;
-            if (!isAdding) continue;
-        }
-        tempFile << line << endl;
-    }
-
-    if (isAdding && !found) {
-        tempFile << courseCode << endl;
-    }
-
-    inFile.close();
-    tempFile.close();
-
-    remove("CourseRecords/recordlist.txt");
-    rename("CourseRecords/temp.txt", "CourseRecords/recordlist.txt");
 }
 
 void CourseCodeMenu() {
     cout << endl;
-    cout << "+" << setw(97) << setfill('=') << "" << setfill(' ') << "+\n";
-    cout << "|                                          COURSE MENU                                            |\n";
-    cout << "+" << setw(97) << setfill('=') << "" << setfill(' ') << "+" << endl;
-    cout << "|" << setw(10) << right << "[1] " << setw(87) << left << "Add Course" << "|" << endl;
-    cout << "|" << setw(10) << right << "[2] " << setw(87) << left << "View Courses" << "|" << endl;
-    cout << "|" << setw(10) << right << "[3] " << setw(87) << left << "Edit Course" << "|" << endl;
-    cout << "|" << setw(10) << right << "[4] " << setw(87) << left << "Delete Course" << "|" << endl;
-    cout << "|" << setw(10) << right << "[0] " << setw(87) << left << "Exit" << "|\n";
-    cout << "+" << setw(97) << setfill('-') << "" << setfill(' ') << "+" << endl;
+    cout << "+" << setw(87) << setfill('=') << "" << setfill(' ') << "+\n";
+    cout << "|                                     COURSE MENU                                       |\n";
+    cout << "+" << setw(87) << setfill('=') << "" << setfill(' ') << "+" << endl;
+    cout << "|" << setw(10) << right << "[1] " << setw(77) << left << "Add Course" << "|" << endl;
+    cout << "|" << setw(10) << right << "[2] " << setw(77) << left << "View Courses" << "|" << endl;
+    cout << "|" << setw(10) << right << "[3] " << setw(77) << left << "Edit Course" << "|" << endl;
+    cout << "|" << setw(10) << right << "[4] " << setw(77) << left << "Delete Course" << "|" << endl;
+    cout << "|" << setw(10) << right << "[0] " << setw(77) << left << "Exit" << "|\n";
+    cout << "+" << setw(87) << setfill('-') << "" << setfill(' ') << "+" << endl;
 }
