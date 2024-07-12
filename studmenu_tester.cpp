@@ -171,9 +171,9 @@ int main()
         }
         case 3:
         {
-            sNode.ViewStudents();
+            sNode.ViewStudentsForInputFunctions();
             cout << endl;
-
+            
             while (true) // to edit
             {
                 cout << "Enter Student Number to View: ";
@@ -192,7 +192,7 @@ int main()
         }
         case 4:
         {
-            sNode.ViewStudents();
+            sNode.ViewStudentsForInputFunctions();
             cout << endl;
 
             while (true) // to edit
@@ -236,7 +236,7 @@ int main()
         }
         case 5:
         {
-            sNode.ViewStudents();
+            sNode.ViewStudentsForInputFunctions();
             cout << endl;
 
             while (true) // to edit

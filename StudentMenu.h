@@ -35,6 +35,8 @@ public:
     bool IsValidBirthMonth(string &);
     bool IsValidBirthDate(int, string &, int);
     bool IsValidCourse(string);
+    bool HasStudentsWithYear(StudentNode *, int);
+    bool HasStudentsWithLastNameInitial(StudentNode *, char);
     // Constructor
     StudentDetails();
     // Add main functions
@@ -51,6 +53,7 @@ public:
     void InOrderTraversal(StudentNode *);
     void InsertSorted(StudentNode *);
     void ViewStudents();
+    void ViewStudentsForInputFunctions();
     void FilterByYear(StudentNode *, int);
     void FilterByLastNameInitial(StudentNode *, char);
 };
@@ -241,6 +244,33 @@ bool StudentDetails::IsValidCourse(string degreeProg)
     }
 }
 
+bool StudentDetails::HasStudentsWithYear(StudentNode *node, int year)
+{
+    if (node == NULL)
+    {
+        return false;
+    }
+    int studentYear = node->idNumber / 100000;
+    if (studentYear == year)
+    {
+        return true;
+    }
+    return HasStudentsWithYear(node->left, year) || HasStudentsWithYear(node->right, year);
+}
+
+bool StudentDetails::HasStudentsWithLastNameInitial(StudentNode *node, char initial)
+{
+    if (node == NULL)
+    {
+        return false;
+    }
+    if (toupper(node->lastName[0]) == toupper(initial))
+    {
+        return true;
+    }
+    return HasStudentsWithLastNameInitial(node->left, initial) || HasStudentsWithLastNameInitial(node->right, initial);
+}
+
 StudentDetails::StudentDetails() // Constructor
 {
     root = NULL;
@@ -395,7 +425,7 @@ void StudentDetails::FetchEachStudentFile(string idOfFile) // Reads each student
     string *s = new string[9];
 
     ifstream ifile("output/Students/" + idOfFile + ".txt"); // Opens the student file given by the FetchStudentInfo func
-    if (!ifile)                        // Error display if the file won't open
+    if (!ifile)                                             // Error display if the file won't open
     {
         cerr << "Error opening file" << endl;
         return;
@@ -900,13 +930,30 @@ void StudentDetails::ViewStudents() // This function is for viewing student list
     {
         // Filter by year
         int yearFilter;
-        cout << "Enter Year to Filter (2015-2024): "; // Asks for the year input
-        cin >> yearFilter;
-        cin.ignore();
+        while (true)
+        {
+            cout << "Enter Year to Filter (2015-2024): "; // Asks for the year input
+            cin >> yearFilter;
+            cin.ignore();
+            if (yearFilter >= 2015 && yearFilter <= 2024)
+            {
+                break; // Valid year, exit loop
+            }
+            else
+            {
+                cout << "Invalid year. Please enter a year between 2015 and 2024." << endl;
+            }
+        }
         system("clear");
         cout << "Displaying Students with ID Numbers starting in " << yearFilter << ".\n";
         cout << "Student Number\t\tName" << endl;
         FilterByYear(root, yearFilter); // Calls function to display student list of those that have the input year
+        if (!HasStudentsWithYear(root, yearFilter))
+        {
+            cout << "No students found with ID Numbers starting in " << yearFilter << "." << endl;
+            Pause();
+            ViewStudents();
+        }
         cout << endl;
         break;
     }
@@ -914,13 +961,140 @@ void StudentDetails::ViewStudents() // This function is for viewing student list
     {
         // Filter by last name initial
         char lastNameInitial;
-        cout << "Enter Last Name Initial to Filter: ";  // Asks for the initial input
-        cin >> lastNameInitial;
-        cin.ignore();
+        while (true)
+        {
+            cout << "Enter Last Name Initial to Filter: "; // Asks for the initial input
+            cin >> lastNameInitial;
+            cin.ignore();
+            if (isalpha(lastNameInitial))
+            {
+                break; // Valid letter, exit loop
+            }
+            else
+            {
+                cout << "Invalid input. Please enter a single letter." << endl;
+            }
+        }
         system("clear");
         cout << "Displaying Students with Last Names starting in " << lastNameInitial << ".\n";
         cout << "Student Number\t\tName" << endl;
-        FilterByLastNameInitial(root, lastNameInitial);  // Calls function to display student list of those that have the input initial
+        FilterByLastNameInitial(root, lastNameInitial); // Calls function to display student list of those that have the input initial
+        if (!HasStudentsWithLastNameInitial(root, lastNameInitial))
+        {
+            cout << "No students found with Last Names starting in " << lastNameInitial << "." << endl;
+            Pause();
+            ViewStudents();
+        }
+        cout << endl;
+        break;
+    }
+    default:
+        cout << "Invalid choice. Please enter a valid option." << endl;
+        break;
+    }
+}
+
+void StudentDetails::ViewStudentsForInputFunctions() // This version of view students function is for those functions with input like EditStudent and others
+{
+    int sortChoice, choice;
+    system("clear");
+    cout << "View Students Menu" << endl;
+    cout << "1. View All Students" << endl;
+    cout << "2. Filter by Year" << endl;
+    cout << "3. Filter by Last Name Initial" << endl;
+    cin >> choice;
+    cin.ignore();
+
+    switch (choice)
+    {
+    case 1:
+        system("clear");
+        cout << "Sort by: " << endl;
+        cout << "1. Student Number" << endl;
+        cout << "2. Last Name" << endl;
+        cin >> sortChoice;
+
+        system("clear");
+        switch (sortChoice)
+        {
+        case 1:
+        {
+            cout << "Displaying Students in order of Student Number:\n";
+            cout << "Student Number\t\tName" << endl;
+            ViewStudentsSortedByIDNumber(root); // Calls function to display student list by id num
+            cout << endl;
+            break;
+        }
+
+        case 2:
+        {
+            cout << "Displaying Students in order of Last Name:\n";
+            cout << "Student Number\t\tName" << endl;
+            ViewStudentsSortedByLastName(); // Calls function to display student list by last name
+            cout << endl;
+            break;
+        }
+        }
+        break;
+    case 2:
+    {
+        // Filter by year
+        int yearFilter;
+        while (true)
+        {
+            cout << "Enter Year to Filter (2015-2024): "; // Asks for the year input
+            cin >> yearFilter;
+            cin.ignore();
+            if (yearFilter >= 2015 && yearFilter <= 2024)
+            {
+                break; // Valid year, exit loop
+            }
+            else
+            {
+                cout << "Invalid year. Please enter a year between 2015 and 2024." << endl;
+            }
+        }
+        system("clear");
+        cout << "Displaying Students with ID Numbers starting in " << yearFilter << ".\n";
+        cout << "Student Number\t\tName" << endl;
+        FilterByYear(root, yearFilter); // Calls function to display student list of those that have the input year
+        if (!HasStudentsWithYear(root, yearFilter))
+        {
+            cout << "No students found with ID Numbers starting in " << yearFilter << "." << endl;
+            Pause();
+            ViewStudentsForInputFunctions();
+        }
+        cout << endl;
+        break;
+    }
+    case 3:
+    {
+        // Filter by last name initial
+        char lastNameInitial;
+        while (true)
+        {
+            cout << "Enter Last Name Initial to Filter: "; // Asks for the initial input
+            cin >> lastNameInitial;
+            cin.ignore();
+            if (isalpha(lastNameInitial))
+            {
+                break; // Valid letter, exit loop
+            }
+            else
+            {
+                cout << "Invalid input. Please enter a single letter." << endl;
+            }
+        }
+        system("clear");
+        cout << "Displaying Students with Last Names starting in " << lastNameInitial << ".\n";
+        cout << "Student Number\t\tName" << endl;
+        FilterByLastNameInitial(root, lastNameInitial); // Calls function to display student list of those that have the input initial
+        if (!HasStudentsWithLastNameInitial(root, lastNameInitial))
+        {
+            cout << "No students found with Last Names starting in " << lastNameInitial << "." << endl;
+            Pause();
+            ViewStudentsForInputFunctions();
+        }
         cout << endl;
         break;
     }
@@ -934,8 +1108,8 @@ void StudentDetails::FilterByYear(StudentNode *node, int year) // Function to tr
 {
     int studentYear;
     if (node != NULL) // Checks if current node is not null
-    { // Traverses inorder-ly
-        FilterByYear(node->left, year); 
+    {                 // Traverses inorder-ly
+        FilterByYear(node->left, year);
         studentYear = node->idNumber / 100000; // Divides student num that returns an int, so it checks if the first 4 numbers corresponds to the year
         if (studentYear == year)
         {
@@ -948,7 +1122,7 @@ void StudentDetails::FilterByYear(StudentNode *node, int year) // Function to tr
 void StudentDetails::FilterByLastNameInitial(StudentNode *node, char initial) // Function to traverse tree and print the students with last names that starts with the given initial
 {
     if (node != NULL) // Checks if current node is not null
-    { // Traverses inorder-ly
+    {                 // Traverses inorder-ly
         FilterByLastNameInitial(node->left, initial);
         if (toupper(node->lastName[0]) == toupper(initial)) // Checks if the last name starts with the initial given, uses toupper function to make it case-insensitive
         {
