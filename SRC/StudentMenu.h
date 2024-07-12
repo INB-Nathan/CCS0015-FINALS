@@ -34,6 +34,7 @@ public:
     int MonthNameToNumber(string &);
     bool IsValidBirthMonth(string &);
     bool IsValidBirthDate(int, string &, int);
+    bool IsValidCourse(string);
     // Constructor
     StudentDetails();
     // Add main functions
@@ -219,6 +220,24 @@ bool StudentDetails::IsValidBirthDate(int birthday, string &month, int year) // 
     else
     {
         return true; // All other months have 31 days
+    }
+}
+
+bool StudentDetails::IsValidCourse(string degreeProg)
+{
+    for (int i = 0; i < degreeProg.length(); ++i)
+    {
+        degreeProg[i] = tolower(degreeProg[i]);
+    }
+
+    if (degreeProg == "BSITCST" || degreeProg == "BSITWMA" || degreeProg == "BSITBA" || degreeProg == "BSITAGD")
+    {
+        return true;
+    }
+    else
+    {
+        cout << "Please Enter a Valid Degree Program. (BSITCST, BSITWMA, BSITBA, BSITAGD)" << endl;
+        return false;
     }
 }
 
