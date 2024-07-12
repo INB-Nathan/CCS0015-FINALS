@@ -24,6 +24,7 @@ class Schedule {
     int EditMenu();
     void Pause();
     char EndTrail();
+    int ScheduleFunctionalities();
 
     void AddScheduleData();
     void AddScheduleRecord(string, string, string, string, int, int, int, int);
@@ -49,6 +50,32 @@ Schedule::Schedule() {
     LoadFiles();
 }
 
+int Schedule::ScheduleFunctionalities() {
+    while (true) {
+        switch(ScheduleMenu()){
+            case 1:
+            AddScheduleData();
+            break;
+            case 2:
+            ViewSchedule();
+            break;
+            case 3:
+            EditSchedule();
+            break;
+            case 4:
+            DeleteSchedule();
+            break;
+            case 0:
+            return 0;
+            break;
+            default:
+            return 0;
+            break;
+        }
+    }
+    return 0;
+}
+
 int Schedule::ScheduleMenu() {
     int choice;
 
@@ -58,7 +85,7 @@ int Schedule::ScheduleMenu() {
         cout << "[2] View Schedules\n";
         cout << "[3] Edit a Schedule\n";
         cout << "[4] Delete a Schedule\n";
-        cout << "[0] Return to Main Menu\n";
+        cout << "[0] Return to Main Menu\n\n";
         cout << ":: ";
         cin >> choice;
         cin.ignore();
@@ -75,11 +102,12 @@ int Schedule::EditMenu() {
         cout << "[2] Edit Time\n";
         cout << "[3] Edit Section\n";
         cout << "[4] Edit Room\n";
-        cout << "[0] Return to Schedule Menu\n";
+        cout << "[0] Return to Schedule Menu\n\n";
         cout << ":: ";
         cin >> choice;
         cin.ignore();
     } while (choice < 0 || choice > 4);
+    system("cls");
     return choice;
 }
 

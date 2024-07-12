@@ -12,6 +12,9 @@ private:
     string studentID, studentName, courseCode, courseTitle, courseUnits, courseYearLevel, courseSchedule, blockSection;
 
 public:
+    int EnrollmentMenu();
+    int EnrollFunctionalities();
+
     // Validation Functions
     bool isEnrolled(string, string, string, string);
     bool isExisting(string);
@@ -23,6 +26,48 @@ public:
     void ViewEnrollees();
     int ViewSchedules(string,int);
 };
+
+int EnrollMenu::EnrollmentMenu() {
+    int choice;
+    do {
+        cout << "-- Enrollment Menu --";
+        cout << "[1] Enroll Students\n";
+        cout << "[2] View Enrollee\n";
+        cout << "[0] Return To Main Menu\n\n";
+        cout << ":: ";
+        cin >> choice;
+        cin.ignore();
+    } while (choice < 0 || choice > 2);
+    system("cls");
+    return choice;
+}
+
+int EnrollMenu::EnrollFunctionalities() {
+    string studentID;
+    while (true) {
+        switch (EnrollmentMenu()) {
+            case 1:
+            while (true){
+            cout << "Enter student ID: ";
+            cin >> studentID;
+            if (isExisting(studentID)){
+            EnrollStudent(studentID);
+            }
+            }
+            break;
+            case 2:
+            ViewEnrollees();
+            break;
+            case 0:
+            return 0;
+            break;
+            default:
+            return 0;
+            break;
+        }
+    }
+    return 0;
+}
 
 int EnrollMenu::ViewSchedules(string courseCode, int identifier) {
     string schedFile;
@@ -271,4 +316,5 @@ void EnrollMenu::ViewEnrollees()
         cout << studentID << " " << studentLastName << ", " << studentFirstName << " " << studentMiddlename << "\n";
     }
     file.close();
+    system("pause");
 }

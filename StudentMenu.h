@@ -28,6 +28,7 @@ public:
     StudentNode *root;
     int StudMenu();
     void Pause();
+    int StudentFunctionalities();
     // Add input validation functions.
     bool ConfirmScreen(char);
     bool IsValidStudentNum(int);
@@ -69,6 +70,7 @@ int StudentDetails::StudMenu()
     int choice;
 
     HeaderDesign();
+    do {
     cout << endl;
     cout << "1. Add Student" << endl;
     cout << "2. View Student List" << endl;
@@ -76,10 +78,48 @@ int StudentDetails::StudMenu()
     cout << "4. Edit Student Info" << endl;
     cout << "5. Delete Student" << endl
          << endl;
-    cout << "0. Exit" << endl;
+    cout << "0. Return to Main Menu" << endl << endl;
+    cout << ":: ";
     cin >> choice;
     cin.ignore();
+    } while (choice < 0 || choice > 5);
+    system("cls");
     return choice;
+}
+
+int StudentDetails::StudentFunctionalities() {
+    while (true) {
+        switch (StudMenu()) {
+            case 1:
+            AddStudentInput();
+            break;
+            case 2:
+            ViewStudents();
+            break;
+            case 3:
+            ViewStudentsForInputFunctions();
+            cout << "\n";
+            ViewDetailsInput();
+            break;
+            case 4:
+            ViewStudentsForInputFunctions();
+            cout << "\n";
+            EditStudentInput();
+            break;
+            case 5:
+            ViewStudentsForInputFunctions();
+            cout << "\n";
+            DeleteStudentInput();
+            break;
+            case 0:
+            return 0;
+            break;
+            default:
+            return 0;
+            break;
+        }
+    }
+    return 0;
 }
 
 void StudentDetails::Pause() // Function to replace "system("pause")"
@@ -299,6 +339,7 @@ bool StudentDetails::HasStudentsWithLastNameInitial(StudentNode *node, char init
 StudentDetails::StudentDetails() // Constructor
 {
     root = NULL;
+    FetchStudentInfo();
 }
 
 void StudentDetails::AddStudentInput() // Function to take inputs for AddStudent Function
