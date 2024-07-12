@@ -3,7 +3,6 @@
 #include <fstream>
 #include <string>
 #include <iomanip>
-#include "CourseCode.h"
 using namespace std;
 
 class Schedule {

@@ -67,7 +67,8 @@ void AddCourse(BinaryTree& tree);
 void EditCourse(BinaryTree& tree);
 void DeleteCourse(BinaryTree& tree);
 void LoadCourses(BinaryTree& tree);
-void CourseCodeMenu();
+int CourseCodeMenu();
+int CourseFunctionalities();
 void UpdateRecordList(const string& courseCode, bool isAdding);
 
 void Course::Display() const {
@@ -400,8 +401,9 @@ void UpdateRecordList(const string& courseCode, bool isAdding) {
     rename("CourseRecords/temp.txt", "CourseRecords/recordlist.txt");
 }
 
-
-void CourseCodeMenu() {
+int CourseCodeMenu() {
+    int choice;
+    do {
     cout << endl;
     cout << "+" << setw(97) << setfill('=') << "" << setfill(' ') << "+\n";
     cout << "|                                          COURSE MENU                                            |\n";
@@ -410,8 +412,42 @@ void CourseCodeMenu() {
     cout << "|" << setw(10) << right << "[2] " << setw(87) << left << "View Courses" << "|" << endl;
     cout << "|" << setw(10) << right << "[3] " << setw(87) << left << "Edit Course" << "|" << endl;
     cout << "|" << setw(10) << right << "[4] " << setw(87) << left << "Delete Course" << "|" << endl;
-    cout << "|" << setw(10) << right << "[0] " << setw(87) << left << "Exit" << "|\n";
-    cout << "+" << setw(97) << setfill('-') << "" << setfill(' ') << "+" << endl;
+    cout << "|" << setw(10) << right << "[0] " << setw(87) << left << "Return To Menu" << "|\n";
+    cout << "+" << setw(97) << setfill('-') << "" << setfill(' ') << "+" << endl << endl << endl;
+    cout << ":: ";
+    cin >> choice;
+    cin.ignore();
+    } while (choice < 0 || choice > 4);
+    system("cls");
+    return choice;
 }
+
+int CourseFunctionalities() {
+    BinaryTree tree;
+    
+    while (true) {
+        switch (CourseCodeMenu()) {
+            case 1:
+            AddCourse(tree);
+            break;
+            case 2:
+            tree.ViewCourses();
+            break;
+            case 3:
+            EditCourse(tree);
+            break;
+            case 4:
+            DeleteCourse(tree);
+            break;
+            case 0:
+            return 0;
+            default:
+            return 0;
+        }
+    }
+    return 0;
+}
+
+
 
 

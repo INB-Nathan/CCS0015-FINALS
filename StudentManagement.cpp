@@ -19,7 +19,7 @@ int main() {
             student.StudentFunctionalities();
             break;
             case 3:
-            // Course
+            CourseFunctionalities();
             break;
             case 4:
             sched.ScheduleFunctionalities();
@@ -39,7 +39,7 @@ int StudentManagementMenu() {
     int choice;
 
     do {
-        cout << "-- Student Management --\n";
+        cout << "-- Student Management --\n\n";
         cout << "[1] Enroll Students\n";
         cout << "[2] Manage Students\n";
         cout << "[3] Manage Course\n";

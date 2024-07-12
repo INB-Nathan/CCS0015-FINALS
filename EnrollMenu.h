@@ -30,7 +30,7 @@ public:
 int EnrollMenu::EnrollmentMenu() {
     int choice;
     do {
-        cout << "-- Enrollment Menu --";
+        cout << "-- Enrollment Menu --\n\n";
         cout << "[1] Enroll Students\n";
         cout << "[2] View Enrollee\n";
         cout << "[0] Return To Main Menu\n\n";
