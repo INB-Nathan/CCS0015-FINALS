@@ -724,7 +724,7 @@ char Schedule::EndTrail() {
 }
 
 void Schedule::Pause() {
-    cout << "Press any key to continue...";
+    cout << "Press Enter to continue...";
     cin.ignore();
     cin.get();
     system("cls");
