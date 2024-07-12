@@ -227,7 +227,7 @@ bool StudentDetails::IsValidCourse(string degreeProg)
 {
     for (int i = 0; i < degreeProg.length(); ++i)
     {
-        degreeProg[i] = tolower(degreeProg[i]);
+        degreeProg[i] = toupper(degreeProg[i]);
     }
 
     if (degreeProg == "BSITCST" || degreeProg == "BSITWMA" || degreeProg == "BSITBA" || degreeProg == "BSITAGD")
@@ -318,7 +318,7 @@ void StudentDetails::AddStudent(string fName, string lName, string mName, string
     }
 
     // Generate a filename from the input id, use to_string function to convert int to string
-    filename = "Students\\" + to_string(idNum) + ".txt";
+    filename = "output/Students/" + to_string(idNum) + ".txt";
     // Create the file object and open the file
     ofstream ofile(filename);
     if (!ofile) // Error display if the file won't open
@@ -345,7 +345,7 @@ void StudentDetails::AddStudent(string fName, string lName, string mName, string
 void StudentDetails::SaveIDToList() // Saves the Stud num to a list for reading purposes
 {
     // Create another file to store all of the student numbers
-    ofstream ofile("Students\\idlist.txt", ios::app);
+    ofstream ofile("output/Students/idlist.txt", ios::app);
     if (!ofile) // Error display if the file won't open
     {
         cerr << "Error opening file" << endl;
@@ -374,7 +374,7 @@ void StudentDetails::FetchStudentInfo() // Reads the idlist file to traverse thr
 {
     string filename;
     // Open a ifstream object and open the idlist file
-    ifstream ifile("Students\\idlist.txt");
+    ifstream ifile("output/Students/idlist.txt");
     if (!ifile) // Error display if the file won't open
     {
         cerr << "Error opening file" << endl;
@@ -394,7 +394,7 @@ void StudentDetails::FetchEachStudentFile(string idOfFile) // Reads each student
     string fName, mName, lName, bDay, sGender, sAddress, dProgram;
     string *s = new string[9];
 
-    ifstream ifile("Students\\" + idOfFile + ".txt"); // Opens the student file given by the FetchStudentInfo func
+    ifstream ifile("output/Students/" + idOfFile + ".txt"); // Opens the student file given by the FetchStudentInfo func
     if (!ifile)                        // Error display if the file won't open
     {
         cerr << "Error opening file" << endl;
@@ -495,7 +495,7 @@ void StudentDetails::ViewDetails(string idNum) // Preview details inside the stu
 {
     int i = 0;
     string *s = new string[9];
-    ifstream ifile("Students\\" + idNum + ".txt");
+    ifstream ifile("output/Students/" + idNum + ".txt");
     if (!ifile) // Error display if the file won't open
     {
         cerr << "Error opening file" << endl;
@@ -525,7 +525,7 @@ void StudentDetails::EditStudent(string idToEdit)
     string fName, mName, lName, bDay, sGender, sAddress, dProgram, birthMonthName, fullBirthday, filename, temp;
     int idNum, yrLvl, choice, birthDay, birthYear, birthMonthNum, i = 0;
     string *s = new string[9];
-    ifstream ifile("Students\\" + idToEdit + ".txt");
+    ifstream ifile("output/Students/" + idToEdit + ".txt");
     if (!ifile) // Error display if the file won't open
     {
         cerr << "Error opening file" << endl;
@@ -577,8 +577,8 @@ void StudentDetails::EditStudent(string idToEdit)
                 break;
         }
 
-        ifstream ifile("Students\\idlist.txt");
-        ofstream ofile("Students\\temp.txt");
+        ifstream ifile("output/Students/idlist.txt");
+        ofstream ofile("output/Students/temp.txt");
 
         if (!ifile || !ofile) // Error display if the file/s won't open
         {
@@ -604,11 +604,11 @@ void StudentDetails::EditStudent(string idToEdit)
 
         // Replace the original idlist.txt with the temporary file
         // Error display if it doesn't go through
-        if (remove("Students\\idlist.txt") != 0)
+        if (remove("output/Students/idlist.txt") != 0)
         {
             cerr << "Error deleting file: idlist.txt" << endl;
         }
-        if (rename("Students\\temp.txt", "Students\\idlist.txt") != 0)
+        if (rename("output/Students/temp.txt", "output/Students/idlist.txt") != 0)
         {
             cerr << "Error renaming file: temp.txt to idlist.txt" << endl;
         }
@@ -737,7 +737,7 @@ void StudentDetails::EditStudent(string idToEdit)
     }
 
     // Generate a filename from the input id, use to_string function to convert int to string
-    filename = "Students\\" + to_string(idNum) + ".txt";
+    filename = "output/Students/" + to_string(idNum) + ".txt";
     // Create the file object and open the file
     ofstream ofile(filename);
 
@@ -761,8 +761,8 @@ void StudentDetails::DeleteStudent(string idNum)
     string filename = idNum + ".txt";
     remove(filename.c_str());
 
-    ifstream ifile("Students\\idlist.txt");
-    ofstream ofile("Students\\temp.txt");
+    ifstream ifile("output/Students/idlist.txt");
+    ofstream ofile("output/Students/temp.txt");
 
     if (!ifile || !ofile) // Error display if the file/s won't open
     {
@@ -785,11 +785,11 @@ void StudentDetails::DeleteStudent(string idNum)
 
     // Replace the original idlist.txt with the temporary file
     // Error display if it doesn't go through
-    if (remove("Students\\idlist.txt") != 0)
+    if (remove("output/Students/idlist.txt") != 0)
     {
         cerr << "Error deleting file: idlist.txt" << endl;
     }
-    if (rename("Students\\temp.txt", "Students\\idlist.txt") != 0)
+    if (rename("output/Students/temp.txt", "idlist.txt") != 0)
     {
         cerr << "Error renaming file: temp.txt to idlist.txt" << endl;
     }
