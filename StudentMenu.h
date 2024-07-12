@@ -40,10 +40,14 @@ public:
     // Constructor
     StudentDetails();
     // Add main functions
+    void AddStudentInput();
     void AddStudent(string, string, string, string, string, string, string, int, int);
     void SaveIDToList();
+    void ViewDetailsInput();
     void ViewDetails(string);
+    void EditStudentInput();
     void EditStudent(string);
+    void DeleteStudentInput();
     void DeleteStudent(string);
     void RestoreStudentInfo(int, string, string, string, string, string, string, string, int);
     void FetchEachStudentFile(string);
@@ -63,6 +67,7 @@ void StudentDetails::Pause() // Function to replace "system("pause")"
     cout << "Press Enter to continue...";
     cin.ignore();
     cin.get(); // Wait for the user to press Enter
+    system("clear");
 }
 
 bool StudentDetails::ConfirmScreen(char choice) // Function for confirmation screen
@@ -274,7 +279,140 @@ bool StudentDetails::HasStudentsWithLastNameInitial(StudentNode *node, char init
 StudentDetails::StudentDetails() // Constructor
 {
     root = NULL;
-    
+}
+
+void StudentDetails::AddStudentInput() //Function to take inputs for AddStudent Function
+{
+    string firstName, lastName, middleName, degreeProgram, studentGender, studentAddress, birthMonthName, fullBirthday;
+    int idNumber, yearLevel, birthDay, birthYear, birthMonthNum;
+    char conChoice = ' ';
+
+    system("clear");
+    while (true)
+    {
+        cout << "Enter First Name: ";
+        getline(cin, firstName);
+
+        if (IsValidName(firstName))
+            break;
+    }
+
+    while (true)
+    {
+        cout << "Enter Middle Name: ";
+        getline(cin, middleName);
+
+        if (IsValidName(middleName))
+            break;
+    }
+
+    while (true)
+    {
+        cout << "Enter Last Name: ";
+        getline(cin, lastName);
+
+        if (IsValidName(lastName))
+            break;
+    }
+
+    cout << "Enter Birth Month: ";
+    cin >> birthMonthName;
+    while (!IsValidBirthMonth(birthMonthName))
+    {
+        cout << "Invalid Month! Please enter a valid birth month." << endl;
+        cout << "Enter Birth Month: ";
+        cin >> birthMonthName;
+    }
+
+    cout << "Enter Birth Day: ";
+    cin >> birthDay;
+
+    cout << "Enter Birth Year: ";
+    cin >> birthYear;
+    while (!IsValidBirthDate(birthDay, birthMonthName, birthYear))
+    {
+        cout << "Invalid Birth Date! Please enter a valid Birth Date." << endl;
+        cout << "Enter Birth Month: ";
+        cin >> birthMonthName;
+        cout << "Enter Birth Day: ";
+        cin >> birthDay;
+        cout << "Enter Birth Year: ";
+        cin >> birthYear;
+    }
+
+    while (true)
+    {
+        cout << "Enter Gender (Male or Female): ";
+        cin >> studentGender;
+        cin.ignore();
+
+        if (IsValidGender(studentGender))
+            break;
+    }
+
+    while (true)
+    {
+        cout << "Enter City Address (ex. Manila City): ";
+        getline(cin, studentAddress);
+
+        if (IsValidName(studentAddress))
+            break;
+    }
+
+    while (true)
+    {
+        cout << "Enter ID Number (9-digit ID Number): ";
+        cin >> idNumber;
+
+        if (IsValidStudentNum(idNumber))
+            break;
+    }
+
+    while (true)
+    {
+        cout << "Enter Degree Program (BSITCST, BSITWMA, BSITBA, BSITAGD): ";
+        cin >> degreeProgram;
+
+        if (IsValidCourse(degreeProgram))
+            break;
+    }
+
+    while (true)
+    {
+        cout << "Enter Year Level (1-4): ";
+        cin >> yearLevel;
+        cin.ignore();
+
+        if (yearLevel >= 1 && yearLevel <= 4)
+            break;
+        else
+            cout << "Enter a Valid Year Level." << endl;
+    }
+
+    birthMonthNum = MonthNameToNumber(birthMonthName);                                                // Convert month name to number(int)
+    fullBirthday = to_string(birthMonthNum) + "/" + to_string(birthDay) + "/" + to_string(birthYear); // Convert into the full birthday format (string)
+
+    while (true)
+    {
+        cout << "Confirm Add Student? [Y/N]" << endl;
+        cin >> conChoice;
+
+        if (toupper(conChoice) == 'Y')
+        {
+            AddStudent(firstName, lastName, middleName, degreeProgram, studentGender, studentAddress, fullBirthday, idNumber, yearLevel);
+            break; // Exit loop after adding student
+        }
+        else if (toupper(conChoice) == 'N')
+        {
+            cout << "Add Student Cancelled" << endl;
+            break; // Exit loop without adding student
+        }
+        else
+        {
+            cout << "Invalid Input. Y or N only." << endl;
+        }
+    }
+    Pause();
 }
 
 void StudentDetails::AddStudent(string fName, string lName, string mName, string dProgram, string sGender, string sAddress, string bDay, int idNum, int yrLvl) // Function to add student into the tree and creates a file to store their data
@@ -472,7 +610,6 @@ void StudentDetails::RestoreStudentInfo(int idNum, string fName, string mName, s
     {
         // Set the new node as the root
         root = node;
-        cout << "Student Info Restored\n";
     }
     else
     {                   // If the tree has nodes already
@@ -487,7 +624,6 @@ void StudentDetails::RestoreStudentInfo(int idNum, string fName, string mName, s
                     // If the left pointer of the currrent node is empty
                     //   insert the new node to the left of the current node
                     current->left = node;
-                    cout << "Student Info Restored\n";
                     break;
                 }
                 else
@@ -504,7 +640,6 @@ void StudentDetails::RestoreStudentInfo(int idNum, string fName, string mName, s
                     // If the right pointer of the currrent node is empty
                     //   insert the new node to the right of the current node
                     current->right = node;
-                    cout << "Student Info Restored\n";
                     break;
                 }
                 else
@@ -520,6 +655,22 @@ void StudentDetails::RestoreStudentInfo(int idNum, string fName, string mName, s
             }
         }
     }
+}
+
+void StudentDetails::ViewDetailsInput() //Function to take inputs for ViewDetails Function
+{
+    int idToView;
+    while (true) // to edit
+    {
+        cout << "Enter Student Number to View: ";
+        cin >> idToView;
+
+        if (IsValidStudentNum(idToView))
+            break;
+    }
+    system("clear");
+    ViewDetails(to_string(idToView));
+    Pause();
 }
 
 void StudentDetails::ViewDetails(string idNum) // Preview details inside the student's record
@@ -549,6 +700,47 @@ void StudentDetails::ViewDetails(string idNum) // Preview details inside the stu
          << endl;
 
     ifile.close();
+}
+
+void StudentDetails::EditStudentInput() //Function to take inputs for EditStudent Function
+{
+    int idToEdit;
+    char conChoice = ' ';
+
+    while (true) // to edit
+    {
+        cout << "Enter Student Number to Edit: ";
+        cin >> idToEdit;
+
+        if (IsValidStudentNum(idToEdit))
+            break;
+    }
+
+    while (true)
+    {
+        cout << "Confirm Edit Student? [Y/N]" << endl;
+        cin >> conChoice;
+
+        if (toupper(conChoice) == 'Y')
+        {
+            EditStudent(to_string(idToEdit));
+
+            cout << endl
+                 << "Successfully Edited" << endl
+                 << endl;
+            break; // Exit loop after editing student
+        }
+        else if (toupper(conChoice) == 'N')
+        {
+            cout << "Edit Student Cancelled" << endl;
+            break; // Exit loop without editing student
+        }
+        else
+        {
+            cout << "Invalid Input. Y or N only." << endl;
+        }
+    }
+    Pause();
 }
 
 void StudentDetails::EditStudent(string idToEdit)
@@ -786,10 +978,50 @@ void StudentDetails::EditStudent(string idToEdit)
     ofile.close();
 }
 
+void StudentDetails::DeleteStudentInput() //Function to take inputs for DeleteStudent Function
+{
+    int idToDelete;
+    char conChoice = ' ';
+    while (true) // to edit
+    {
+        cout << "Enter Student Number to Delete: ";
+        cin >> idToDelete;
+
+        if (IsValidStudentNum(idToDelete))
+            break;
+    }
+
+    while (true)
+    {
+        cout << "Confirm Delete Student? [Y/N]" << endl;
+        cin >> conChoice;
+
+        if (toupper(conChoice) == 'Y')
+        {
+            DeleteStudent(to_string(idToDelete));
+
+            cout << endl
+                 << "Successfully Deleted" << endl
+                 << endl;
+            break; // Exit loop after deleting student
+        }
+        else if (toupper(conChoice) == 'N')
+        {
+            cout << "Delete Student Cancelled" << endl;
+            break; // Exit loop without deleting student
+        }
+        else
+        {
+            cout << "Invalid Input. Y or N only." << endl;
+        }
+    }
+    Pause();
+}
+
 void StudentDetails::DeleteStudent(string idNum)
 {
     string temp, line;
-    string filename = idNum + ".txt";
+    string filename = "output/Students/" + idNum + ".txt";
     remove(filename.c_str());
 
     ifstream ifile("output/Students/idlist.txt");
@@ -820,7 +1052,7 @@ void StudentDetails::DeleteStudent(string idNum)
     {
         cerr << "Error deleting file: idlist.txt" << endl;
     }
-    if (rename("output/Students/temp.txt", "idlist.txt") != 0)
+    if (rename("output/Students/temp.txt", "output/Students/idlist.txt") != 0)
     {
         cerr << "Error renaming file: temp.txt to idlist.txt" << endl;
     }
