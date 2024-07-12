@@ -3,7 +3,6 @@
 #include <fstream>
 #include <string>
 #include <iomanip>
-#include <conio.h>
 #include "CourseCode.h"
 using namespace std;
 
@@ -687,8 +686,9 @@ char Schedule::EndTrail() {
 }
 
 void Schedule::Pause() {
-    cout << "Press Enter to continue...";
-    _getch();
+    cout << "Press any key to continue...";
+    cin.ignore();
+    cin.get();
     system("cls");
 }
 
