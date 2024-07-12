@@ -1,5 +1,5 @@
 #include <iostream>
-#include "SRC\\ScheduleMenu.h"
+#include "ScheduleMenu.h"
 using namespace std;
 
 int main() {
