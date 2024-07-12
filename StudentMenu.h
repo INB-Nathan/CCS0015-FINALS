@@ -34,7 +34,7 @@ public:
     int MonthNameToNumber(string &);
     bool IsValidBirthMonth(string &);
     bool IsValidBirthDate(int, string &, int);
-    bool IsValidCourse(string);
+    bool IsValidDegreeProgram(string);
     bool HasStudentsWithYear(StudentNode *, int);
     bool HasStudentsWithLastNameInitial(StudentNode *, char);
     // Constructor
@@ -231,7 +231,7 @@ bool StudentDetails::IsValidBirthDate(int birthday, string &month, int year) // 
     }
 }
 
-bool StudentDetails::IsValidCourse(string degreeProg)
+bool StudentDetails::IsValidDegreeProgram(string degreeProg)
 {
     for (int i = 0; i < degreeProg.length(); ++i)
     {
@@ -373,7 +373,7 @@ void StudentDetails::AddStudentInput() //Function to take inputs for AddStudent 
         cout << "Enter Degree Program (BSITCST, BSITWMA, BSITBA, BSITAGD): ";
         cin >> degreeProgram;
 
-        if (IsValidCourse(degreeProgram))
+        if (IsValidDegreeProgram(degreeProgram))
             break;
     }
 
@@ -934,10 +934,10 @@ void StudentDetails::EditStudent(string idToEdit)
     {
         while (true)
         {
-            cout << "Enter new Degree Program (ex. BSITCST): ";
+            cout << "Enter new Degree Program (BSITCST, BSITWMA, BSITBA, BSITAGD): ";
             cin >> dProgram;
 
-            if (IsValidName(dProgram))
+            if (IsValidDegreeProgram(dProgram))
                 break;
         }
         break;
