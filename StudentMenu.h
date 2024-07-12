@@ -3,6 +3,7 @@
 #include <cctype>
 #include <string>
 #include <vector>
+#include "Design.h"
 
 using namespace std;
 class StudentDetails
@@ -25,6 +26,7 @@ private:
 
 public:
     StudentNode *root;
+    int StudMenu();
     void Pause();
     // Add input validation functions.
     bool ConfirmScreen(char);
@@ -61,6 +63,24 @@ public:
     void FilterByYear(StudentNode *, int);
     void FilterByLastNameInitial(StudentNode *, char);
 };
+
+int StudentDetails::StudMenu()
+{
+    int choice;
+
+    HeaderDesign();
+    cout << endl;
+    cout << "1. Add Student" << endl;
+    cout << "2. View Student List" << endl;
+    cout << "3. View Student's Record" << endl;
+    cout << "4. Edit Student Info" << endl;
+    cout << "5. Delete Student" << endl
+         << endl;
+    cout << "0. Exit" << endl;
+    cin >> choice;
+    cin.ignore();
+    return choice;
+}
 
 void StudentDetails::Pause() // Function to replace "system("pause")"
 {
@@ -281,13 +301,16 @@ StudentDetails::StudentDetails() // Constructor
     root = NULL;
 }
 
-void StudentDetails::AddStudentInput() //Function to take inputs for AddStudent Function
+void StudentDetails::AddStudentInput() // Function to take inputs for AddStudent Function
 {
     string firstName, lastName, middleName, degreeProgram, studentGender, studentAddress, birthMonthName, fullBirthday;
     int idNumber, yearLevel, birthDay, birthYear, birthMonthNum;
     char conChoice = ' ';
 
     system("clear");
+
+    HeaderDesign();
+    cout << endl;
     while (true)
     {
         cout << "Enter First Name: ";
@@ -657,7 +680,7 @@ void StudentDetails::RestoreStudentInfo(int idNum, string fName, string mName, s
     }
 }
 
-void StudentDetails::ViewDetailsInput() //Function to take inputs for ViewDetails Function
+void StudentDetails::ViewDetailsInput() // Function to take inputs for ViewDetails Function
 {
     int idToView;
     while (true) // to edit
@@ -669,6 +692,8 @@ void StudentDetails::ViewDetailsInput() //Function to take inputs for ViewDetail
             break;
     }
     system("clear");
+    HeaderDesign();
+    cout << endl;
     ViewDetails(to_string(idToView));
     Pause();
 }
@@ -702,11 +727,11 @@ void StudentDetails::ViewDetails(string idNum) // Preview details inside the stu
     ifile.close();
 }
 
-void StudentDetails::EditStudentInput() //Function to take inputs for EditStudent Function
+void StudentDetails::EditStudentInput() // Function to take inputs for EditStudent Function
 {
     int idToEdit;
     char conChoice = ' ';
-
+    
     while (true) // to edit
     {
         cout << "Enter Student Number to Edit: ";
@@ -770,6 +795,9 @@ void StudentDetails::EditStudent(string idToEdit)
     yrLvl = stoi(s[8]);
 
     ifile.close();
+    system("clear");
+    HeaderDesign();
+    cout << endl;
     // Same with the ViewDetails function, this reprints the information so that the user would know which info they will be editing
     cout << "\n\n1. Student Number: " << idNum << endl;
     cout << "2. First Name: " << fName << endl;
@@ -978,7 +1006,7 @@ void StudentDetails::EditStudent(string idToEdit)
     ofile.close();
 }
 
-void StudentDetails::DeleteStudentInput() //Function to take inputs for DeleteStudent Function
+void StudentDetails::DeleteStudentInput() // Function to take inputs for DeleteStudent Function
 {
     int idToDelete;
     char conChoice = ' ';
@@ -1118,6 +1146,8 @@ void StudentDetails::ViewStudents() // This function is for viewing student list
 {
     int sortChoice, choice;
     system("clear");
+    HeaderDesign();
+    cout << endl;
     cout << "View Students Menu" << endl;
     cout << "1. View All Students" << endl;
     cout << "2. Filter by Year" << endl;
@@ -1129,9 +1159,12 @@ void StudentDetails::ViewStudents() // This function is for viewing student list
     switch (choice)
     {
     case 0:
+        system("clear");
         return; // Return to main menu
     case 1:
         system("clear");
+        HeaderDesign();
+        cout << endl;
         cout << "Sort by: " << endl;
         cout << "1. Student Number" << endl;
         cout << "2. Last Name" << endl;
@@ -1142,19 +1175,23 @@ void StudentDetails::ViewStudents() // This function is for viewing student list
         {
         case 1:
         {
+            HeaderDesign();
+            cout << endl;
             cout << "Displaying Students in order of Student Number:\n";
             cout << "Student Number\t\tName" << endl;
             ViewStudentsSortedByIDNumber(root); // Calls function to display student list by id num
-            cout << endl;
+            Pause();
             break;
         }
 
         case 2:
         {
+            HeaderDesign();
+            cout << endl;
             cout << "Displaying Students in order of Last Name:\n";
             cout << "Student Number\t\tName" << endl;
             ViewStudentsSortedByLastName(); // Calls function to display student list by last name
-            cout << endl;
+            Pause();
             break;
         }
         }
@@ -1163,6 +1200,9 @@ void StudentDetails::ViewStudents() // This function is for viewing student list
     {
         // Filter by year
         int yearFilter;
+        system("clear");
+        HeaderDesign();
+        cout << endl;
         while (true)
         {
             cout << "Enter Year to Filter (2015-2024): "; // Asks for the year input
@@ -1178,6 +1218,8 @@ void StudentDetails::ViewStudents() // This function is for viewing student list
             }
         }
         system("clear");
+        HeaderDesign();
+        cout << endl;
         cout << "Displaying Students with ID Numbers starting in " << yearFilter << ".\n";
         cout << "Student Number\t\tName" << endl;
         FilterByYear(root, yearFilter); // Calls function to display student list of those that have the input year
@@ -1194,6 +1236,9 @@ void StudentDetails::ViewStudents() // This function is for viewing student list
     {
         // Filter by last name initial
         char lastNameInitial;
+        system("clear");
+        HeaderDesign();
+        cout << endl;
         while (true)
         {
             cout << "Enter Last Name Initial to Filter: "; // Asks for the initial input
@@ -1209,6 +1254,8 @@ void StudentDetails::ViewStudents() // This function is for viewing student list
             }
         }
         system("clear");
+        HeaderDesign();
+        cout << endl;
         cout << "Displaying Students with Last Names starting in " << lastNameInitial << ".\n";
         cout << "Student Number\t\tName" << endl;
         FilterByLastNameInitial(root, lastNameInitial); // Calls function to display student list of those that have the input initial
@@ -1231,6 +1278,8 @@ void StudentDetails::ViewStudentsForInputFunctions() // This version of view stu
 {
     int sortChoice, choice;
     system("clear");
+    HeaderDesign();
+    cout << endl;
     cout << "View Students Menu" << endl;
     cout << "1. View All Students" << endl;
     cout << "2. Filter by Year" << endl;
@@ -1242,6 +1291,8 @@ void StudentDetails::ViewStudentsForInputFunctions() // This version of view stu
     {
     case 1:
         system("clear");
+        HeaderDesign();
+        cout << endl;
         cout << "Sort by: " << endl;
         cout << "1. Student Number" << endl;
         cout << "2. Last Name" << endl;
@@ -1252,6 +1303,8 @@ void StudentDetails::ViewStudentsForInputFunctions() // This version of view stu
         {
         case 1:
         {
+            HeaderDesign();
+            cout << endl;
             cout << "Displaying Students in order of Student Number:\n";
             cout << "Student Number\t\tName" << endl;
             ViewStudentsSortedByIDNumber(root); // Calls function to display student list by id num
@@ -1261,6 +1314,8 @@ void StudentDetails::ViewStudentsForInputFunctions() // This version of view stu
 
         case 2:
         {
+            HeaderDesign();
+            cout << endl;
             cout << "Displaying Students in order of Last Name:\n";
             cout << "Student Number\t\tName" << endl;
             ViewStudentsSortedByLastName(); // Calls function to display student list by last name
@@ -1273,6 +1328,9 @@ void StudentDetails::ViewStudentsForInputFunctions() // This version of view stu
     {
         // Filter by year
         int yearFilter;
+        system("clear");
+        HeaderDesign();
+        cout << endl;
         while (true)
         {
             cout << "Enter Year to Filter (2015-2024): "; // Asks for the year input
@@ -1288,6 +1346,8 @@ void StudentDetails::ViewStudentsForInputFunctions() // This version of view stu
             }
         }
         system("clear");
+        HeaderDesign();
+        cout << endl;
         cout << "Displaying Students with ID Numbers starting in " << yearFilter << ".\n";
         cout << "Student Number\t\tName" << endl;
         FilterByYear(root, yearFilter); // Calls function to display student list of those that have the input year
@@ -1304,6 +1364,9 @@ void StudentDetails::ViewStudentsForInputFunctions() // This version of view stu
     {
         // Filter by last name initial
         char lastNameInitial;
+        system("clear");
+        HeaderDesign();
+        cout << endl;
         while (true)
         {
             cout << "Enter Last Name Initial to Filter: "; // Asks for the initial input
@@ -1319,6 +1382,8 @@ void StudentDetails::ViewStudentsForInputFunctions() // This version of view stu
             }
         }
         system("clear");
+        HeaderDesign();
+        cout << endl;   
         cout << "Displaying Students with Last Names starting in " << lastNameInitial << ".\n";
         cout << "Student Number\t\tName" << endl;
         FilterByLastNameInitial(root, lastNameInitial); // Calls function to display student list of those that have the input initial

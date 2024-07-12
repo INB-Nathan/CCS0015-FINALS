@@ -8,22 +8,11 @@ using namespace std;
 int main()
 {
     StudentDetails sNode;
-    int choice;
     sNode.FetchStudentInfo();
-
+    
     while (true)
     {
-        cout << "1. Add Student" << endl;
-        cout << "2. View Student List" << endl;
-        cout << "3. View Student's Record" << endl;
-        cout << "4. Edit Student Info" << endl;
-        cout << "5. Delete Student" << endl
-             << endl;
-        cout << "0. Exit" << endl;
-        cin >> choice;
-        cin.ignore();
-
-        switch (choice)
+        switch (sNode.StudMenu())
         {
         case 0:
         {
