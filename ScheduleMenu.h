@@ -26,7 +26,7 @@ class Schedule {
     char EndTrail();
 
     void AddScheduleData();
-    void AddScheduleRecord(string, string, string, string, string, int, int, int, int, int, int);
+    void AddScheduleRecord(string, string, string, string, int, int, int, int);
     void TimeFormat();
     void ViewSchedule();
     void EditSchedule();
@@ -41,6 +41,7 @@ class Schedule {
     bool IsValidDay(string);
     bool IsValidRoomNumber(string);
     bool IsValidSection(string);
+    bool IsValidCourseCode(string);
 };
 
 Schedule::Schedule() {
@@ -83,34 +84,21 @@ int Schedule::EditMenu() {
 }
 
 void Schedule::AddScheduleData() {
-    int schedHour, schedMinute, schedSecond, amountMinute, numUnits, yearLevel;
-    string courseTitle, courseCode, section, weekDay, roomNumber, fileName;
-    bool courseFound = false;
+    int schedHour, schedMinute, schedSecond, amountMinute;
+    string courseCode, section, weekDay, roomNumber;
 
-    cout << "Enter Course Code: ";
-    getline(cin, courseCode);
-    UpperString(courseCode);
-
-    fileName = "CourseRecords\\" + courseCode + ".txt";
-    ifstream ifile(fileName);
-    if (ifile.is_open()) {
-        string line;
-        getline(ifile, line);
-        stringstream ss(line);
-        getline(ss, courseCode, ',');
-        getline(ss, courseTitle, ',');
-        getline(ss, line, ',');
-        numUnits = stoi(line);
-        getline(ss, line, ',');
-        yearLevel = stoi(line);
-        ifile.close();
-        courseFound = true;
+    while (true) {
+        cout << "Enter Course Code: ";
+        getline(cin, courseCode);
+        UpperString(courseCode);
+        if(IsValidCourseCode(courseCode)) {
+            break;
+        }
+        else {
+            cout << "Please Enter a Valid Course Code.\n";
+        }
     }
-
-    if (!courseFound) {
-        cout << "Invalid course code. Please try again." << endl;
-        return;
-    }
+    
 
     while(true){
         cout << "Enter Section: ";
@@ -192,24 +180,34 @@ void Schedule::AddScheduleData() {
         }
     }
 
-    UpperString(courseTitle);
-    AddScheduleRecord(courseTitle, section, weekDay, courseCode, roomNumber, numUnits, yearLevel, schedHour, schedMinute, schedSecond, amountMinute);
+    AddScheduleRecord(section, weekDay, courseCode, roomNumber, schedHour, schedMinute, schedSecond, amountMinute);
 }
-void Schedule::AddScheduleRecord(string courseName, string block, string day, string courseId, string rNumber, int units, int yLevel, int sHour, int sMin, int sSec, int amountMinute) {
-    string schedFile, time, sectionChecker; 
+void Schedule::AddScheduleRecord(string block, string day, string courseId, string rNumber, int sHour, int sMin, int sSec, int amountMinute) {
+    string schedFile, time, sectionChecker, fileName, line; 
     SchedNode* parent = NULL;
-    holder = new SchedNode;
-    holder -> courseTitle = courseName;
-    holder -> section = block;
-    holder -> weekDay = day;
-    holder -> courseCode = courseId;
-    holder -> numUnits = units;
-    holder -> yearLevel = yLevel;
-    holder -> roomNumber = rNumber;
-    holder -> schedHour = sHour;
-    holder -> schedMinute = sMin;
-    holder -> schedSecond = sSec;
-    holder -> amountMinute = amountMinute;
+    fileName = "CourseRecords\\" + courseId + ".txt";
+    ifstream courseFile(fileName);
+    if (courseFile.is_open()) {
+        holder = new SchedNode;
+        getline(courseFile, holder->courseCode);
+        getline(courseFile, holder->courseTitle);
+        getline(courseFile, line);
+        holder->numUnits = stoi(line);
+        getline(courseFile, line);
+        holder->yearLevel = stoi(line);
+        courseFile.close();
+    } else {
+        cout << "Course file not found.\n";
+        return;
+    }
+    
+    holder->section = block;
+    holder->weekDay = day;
+    holder->roomNumber = rNumber;
+    holder->schedHour = sHour;
+    holder->schedMinute = sMin;
+    holder->schedSecond = sSec;
+    holder->amountMinute = amountMinute;
     holder->left = NULL;
     holder->right = NULL;
 
@@ -220,7 +218,31 @@ void Schedule::AddScheduleRecord(string courseName, string block, string day, st
         ifile.close();
         return;
     }
-            
+
+    // Check if a schedule with the same room number already exists
+    ifstream schedIfile("Schedules\\SCHEDULES.txt");
+    bool roomExists = false;
+    while (getline(schedIfile, line)) {
+        string schedRoomNumber;
+        ifstream schedRoomFile("Schedules\\" + line + ".txt");
+        getline(schedRoomFile, line);
+        getline(schedRoomFile, line);
+        getline(schedRoomFile, line);
+        getline(schedRoomFile, line);
+        getline(schedRoomFile, line);
+        getline(schedRoomFile, schedRoomNumber);
+        schedRoomFile.close();
+        if (schedRoomNumber == holder->roomNumber) {
+            roomExists = true;
+            break;
+        }
+    }
+    schedIfile.close();
+    if (roomExists) {
+        cout << "A schedule with the same room number already exists!\n";
+        return;
+    }
+
     if (root == NULL) {
         root = holder;
         cout << "Schedule successfully added!\n";
@@ -230,12 +252,12 @@ void Schedule::AddScheduleRecord(string courseName, string block, string day, st
         current = root;
         while (current != NULL) {
             parent = current;
-            if (block < current->section || day < current->weekDay || courseId < current->courseCode) {
-                if (sHour < current->schedHour || sMin < current->schedMinute || sSec < current->schedSecond)
+            if (holder->section < current->section || holder->weekDay < current->weekDay || holder->courseCode < current->courseCode || holder->roomNumber < current->roomNumber) {
+                if (holder->schedHour < current->schedHour || holder->schedMinute < current->schedMinute || holder->schedSecond < current->schedSecond)
                 current = current->left;
             }
-            else if (block > current->section || day > current -> weekDay || courseId > current->courseCode) {
-                if (sHour > current->schedHour || sMin > current->schedMinute || sSec > current->schedSecond)
+            else if (holder->section > current->section || holder->weekDay > current->weekDay || holder->courseCode > current->courseCode || holder->roomNumber > current->roomNumber) {
+                if (holder->schedHour > current->schedHour || holder->schedMinute > current->schedMinute || holder->schedSecond > current->schedSecond)
                 current = current->right;
             }
             else {
@@ -243,14 +265,13 @@ void Schedule::AddScheduleRecord(string courseName, string block, string day, st
                 return;
             }
         }
-        if (block < parent->section) {
+        if (holder->section < parent->section) {
             parent->left = holder;
         }
         else {
             parent->right = holder;
         }
         cout << "Schedule successfully added!\n";
-        AddFileNameRecord();
     }
 
     TimeFormat();
@@ -263,7 +284,9 @@ void Schedule::AddScheduleRecord(string courseName, string block, string day, st
     ofile << holder->startTime << " - " << holder->endTime << "\n";
     ofile << holder->roomNumber << "\n";
     ofile.close();
+    AddFileNameRecord();
 }
+
 
 void Schedule::ViewSchedule() {
     string schedFile;
@@ -549,7 +572,7 @@ void Schedule::LoadFiles() {
     string schedFile, startTime, endTime;
 
     if (ifile.is_open()) {
-        while (getline(ifile, schedFile)) { // Iterates over file names inside the text file 
+        while (getline(ifile, schedFile)) { // Iterates over file names inside the text file // Iterates over file names inside the text file 
             ifstream schedIfile("Schedules\\" + schedFile + ".txt");
             if (schedIfile.is_open()) {
                 string scheduleData[7];
@@ -574,6 +597,10 @@ void Schedule::LoadFiles() {
                 holder->schedMinute = stoi(startTime.substr(3, 2));
                 holder->schedHour = stoi(endTime.substr(0, 2));
                 holder->schedMinute = stoi(endTime.substr(3, 2));
+
+                // Reset left and right pointers to NULL
+                holder->left = NULL;
+                holder->right = NULL;
 
                 // Puts all the data from the found files to the record again
                 if (root == NULL) {
@@ -605,8 +632,8 @@ void Schedule::LoadFiles() {
     } else {
         cout << "Failed to open SCHEDULES.txt file." << endl;
     }
-}
 
+}
 void Schedule::AddFileNameRecord() {
     ofstream ofile("Schedules\\SCHEDULES.txt", ios::app);
     ofile << holder->section + "_" + holder->courseCode + "_" + holder->weekDay + "\n";
@@ -639,8 +666,7 @@ bool Schedule::IsValidAmountMinute(int amountMinute) {
 }
 
 bool Schedule::IsValidDay(string day) {
-    if (day == "MONDAY" || day == "TUESDAY" || day == "WEDNESDAY" || day == "THURSDAY" || 
-    day == "FRIDAY" || day == "SATURDAY" || day == "SUNDAY") {
+    if (day == "MONDAY" || day == "TUESDAY" || day == "WEDNESDAY" || day == "THURSDAY" || day == "FRIDAY" || day == "SATURDAY" || day == "SUNDAY") {
         return true;
     }
     else
@@ -673,6 +699,18 @@ bool Schedule::IsValidSection(string section) {
         return false;
     }
 }
+bool Schedule::IsValidCourseCode(string courseCode) {
+    if (courseCode.length() == 7) {
+        for (int i = 0; i < courseCode.length(); i++) {
+            if (!isalnum(courseCode[i])) {
+                return false;
+            }
+        }
+        return true;
+    } else {
+        return false;
+    }
+}
 
 char Schedule::EndTrail() {
     char continueChoice ='Y';
@@ -691,4 +729,6 @@ void Schedule::Pause() {
     cin.get();
     system("cls");
 }
+
+
 
