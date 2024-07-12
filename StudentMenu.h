@@ -244,6 +244,7 @@ bool StudentDetails::IsValidCourse(string degreeProg)
 StudentDetails::StudentDetails() // Constructor
 {
     root = NULL;
+    
 }
 
 void StudentDetails::AddStudent(string fName, string lName, string mName, string dProgram, string sGender, string sAddress, string bDay, int idNum, int yrLvl) // Function to add student into the tree and creates a file to store their data

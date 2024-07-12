@@ -34,7 +34,6 @@ class Schedule {
     void DeleteSchedule();
     void UpperString(string&);
     void LoadFiles();
-    void LoadCourseFiles();
     void AddFileNameRecord();
     bool IsValidHour(int);
     bool IsValidMinute(int);
