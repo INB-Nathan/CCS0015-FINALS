@@ -11,6 +11,7 @@ int main(){
     cout << "2. View Enrollees\n";
     cout << "0. Exit\n";
     cin >> choice;
+    system("cls");
     switch (choice){
         case 1:
             cout << "Enroll Student\n";
@@ -19,11 +20,13 @@ int main(){
             cin >> studentID;
             if (eMenu.isExisting(studentID)){
             eMenu.EnrollStudent(studentID);
+            system("cls");
             break;
             }
             }
         case 2:
             eMenu.ViewEnrollees();
+            system("pause");
             break;
         case 0:
             return 0;

@@ -53,7 +53,9 @@
         "xtr1common": "cpp",
         "xutility": "cpp",
         "__locale": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "*.tcc": "cpp",
+        "fstream": "cpp"
     },
     "liveServer.settings.multiRootWorkspaceName": "CCS0015-FINALS"
 }
