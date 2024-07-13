@@ -38,6 +38,7 @@ void EnrollMenu::Pause() // Function to replace "system("pause")"
 }
 
 int EnrollMenu::EnrollmentMenu() {
+    // Enrollment Menu Functions
     int choice;
     do {
         HeaderDesign();
@@ -55,6 +56,7 @@ int EnrollMenu::EnrollmentMenu() {
 
 int EnrollMenu::EnrollFunctionalities() {
     string studentID;
+    // Continuation of Menu Functions
     while (true) {
         switch (EnrollmentMenu()) {
             case 1:
@@ -62,13 +64,13 @@ int EnrollMenu::EnrollFunctionalities() {
             HeaderDesign();
             cout << "Enter student ID: ";
             cin >> studentID;
-            if (isExisting(studentID)){
-            EnrollStudent(studentID);
+            if (isExisting(studentID)){ // checking if the student id is already added in the student management menu.
+            EnrollStudent(studentID); // proceeding to enroll the student
             }
             }
             break;
             case 2:
-            ViewEnrollees();
+            ViewEnrollees(); // Proceed to View Enrollees function
             break;
             case 0:
             return 0;
@@ -85,12 +87,12 @@ int EnrollMenu::ViewSchedules(string courseCode, int identifier) {
     string schedFile;
     ifstream ifile;
     string scheduleData[7];
-    ifstream schedIfile("output/Schedules/SCHEDULES.txt");
+    ifstream schedIfile("output/Schedules/SCHEDULES.txt"); // to open the schedule file which contains the schedules per each course
     if (schedIfile.is_open()) {
         string line;
         HeaderDesign();
-        while (getline(schedIfile, line)) {
-            if(line.find(courseCode) != string::npos) {
+        while (getline(schedIfile, line)) { // while loop to traverse the schedule file
+            if(line.find(courseCode) != string::npos) { // finding the line which has the course code so that it only shows the coursecode entered by the user
             schedFile = "output/Schedules/" + line + ".txt";
             ifile.open(schedFile);
             if (ifile.is_open()) {
@@ -108,7 +110,7 @@ int EnrollMenu::ViewSchedules(string courseCode, int identifier) {
             }
         }
         schedIfile.close();
-        return identifier;
+        return identifier; // return identifier so that the enroll student can proceed outside the while loop
     } else {
         cout << "Failed to open SCHEDULES.txt file." << endl;
         return identifier;
@@ -116,7 +118,7 @@ int EnrollMenu::ViewSchedules(string courseCode, int identifier) {
 }
 
 bool EnrollMenu::courseCodeExists(string courseCode) {
-    ifstream file("output/CourseRecords/recordlist.txt");
+    ifstream file("output/CourseRecords/recordlist.txt"); // finds if the courseCode line exists
     string line;
     while (getline(file, line)) {
         if (line.find(courseCode) != string::npos) {
@@ -131,30 +133,42 @@ bool EnrollMenu::courseCodeExists(string courseCode) {
 
 bool EnrollMenu::scheduleExists(string courseSchedule, string blockSection)
 {
-    ifstream file("output/Schedules/SCHEDULES.txt");
+    ifstream file("output/Schedules/SCHEDULES.txt"); // finds if the courseSchedule line exists
     string line;
     while (getline(file, line))
     {
+        if (line.find(blockSection) != string::npos) {
         if (line.find(courseSchedule) != string::npos)
         {
             file.close();
             return true;
+        }
+        }
+        else{
+            file.close();
+            return false;
         }
     }
     file.close();
     return false;
 }
 
-bool EnrollMenu::blockSectionExists(string blockSection, string CourseCode)
+bool EnrollMenu::blockSectionExists(string blockSection, string CourseCode) // finds if the blockSectionExists
 {
     ifstream file("output/Schedules/SCHEDULES.txt");
     string line;
     while (getline(file, line))
     {
-        if (line.find(blockSection) != string::npos)
+        if (line.find(CourseCode) != string::npos){
+            if (line.find(blockSection) != string::npos)
         {
             file.close();
             return true;
+        }
+        }
+        else{
+            file.close();
+            return false;
         }
     }
     file.close();
