@@ -211,7 +211,7 @@ bool EnrollMenu::isEnrolled(string studentID, string courseCode, string courseSc
 void EnrollMenu::EnrollStudent(string studentID)
 {
     BinaryTree tree;
-    LoadCourses(tree);
+    LoadCourses(tree); // used from coursecode.h to load the courses into a binary tree
     int sure = 0, identifier = 0;
     string line;
     string courseCode, courseSchedule, blockSection, studentFirstName, studentLastName, studentMiddlename;
@@ -222,12 +222,12 @@ void EnrollMenu::EnrollStudent(string studentID)
     }
     do
     {
-        do
+        do // to make sure if you really want to enroll in the course the user inputted. if not it will loop so that you can enter another course code
         {
-            do
+            do // course code validation
             {
                 system("clear");
-                tree.ViewCourses();
+                tree.ViewCourses(); // viewing the tree which contains the courses
                 cout << "Enter course code: ";
                 cin >> courseCode;
                 if (courseCodeExists(courseCode) == false)
@@ -313,7 +313,7 @@ void EnrollMenu::ViewEnrollees()
     HeaderDesign();
     LoadCourses(tree);
     tree.ViewCourses();
-    do
+    do // course code validation
     {
         cout << "Enter course code: ";
         cin >> courseCode;
@@ -325,7 +325,7 @@ void EnrollMenu::ViewEnrollees()
     system("clear");
     HeaderDesign();
     ViewSchedules(courseCode, identifier);
-    do
+    do // block section validation
     {
         cout << "Enter block section: ";
         cin >> blockSection;
@@ -334,7 +334,7 @@ void EnrollMenu::ViewEnrollees()
             cout << "\nBlock section not found, Please try again.\n";
         }
     } while (blockSectionExists(blockSection, courseCode) == false);
-    do
+    do // schedule validation
     {
         cout << "\nEnter course schedule: ";
         cin >> courseSchedule;
@@ -354,7 +354,7 @@ void EnrollMenu::ViewEnrollees()
     HeaderDesign();
     cout << "\nEnrolled Students in " << courseCode << " " << blockSection << " " << courseSchedule << ":\n";
     cout << "===========================================================================================\n";
-    while (getline(file, line))
+    while (getline(file, line)) // to add student details into temp variable so that you can display the student information
     {
         studentID = line.substr(0, line.find("-"));
         line.erase(0, line.find("-") + 1);
