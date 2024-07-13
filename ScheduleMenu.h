@@ -33,7 +33,6 @@ class Schedule {
     void EditSchedule();
     void DeleteSchedule();
     void UpperString(string&);
-    void LoadFiles();
     void AddFileNameRecord();
     bool IsValidHour(int);
     bool IsValidMinute(int);
@@ -47,7 +46,6 @@ class Schedule {
 
 Schedule::Schedule() {
     root = NULL;
-    LoadFiles();
 }
 
 int Schedule::ScheduleFunctionalities() {
@@ -597,73 +595,6 @@ void Schedule::UpperString(string &str) {
     }
 }
 
-void Schedule::LoadFiles() {
-    ifstream ifile("output/Schedules/SCHEDULES.txt"); // Opens the txt file where all file names existing gets stored
-    string schedFile, startTime, endTime;
-
-    if (ifile.is_open()) {
-        while (getline(ifile, schedFile)) { // Iterates over file names inside the text file // Iterates over file names inside the text file 
-            ifstream schedIfile("output/Schedules/" + schedFile + ".txt");
-            if (schedIfile.is_open()) {
-                string scheduleData[7];
-                for (int i = 0; i < 7; i++) {
-                    getline(schedIfile, scheduleData[i]); // Iterates over the data of the open schedule file
-                }
-                schedIfile.close();
-
-                holder = new SchedNode;
-                holder->courseCode = scheduleData[0];
-                holder->courseTitle = scheduleData[1];
-                holder->section = scheduleData[2];
-                holder->numUnits = stoi(scheduleData[3]);
-                holder->weekDay = scheduleData[4];
-                startTime = scheduleData[5].substr(0, 5);
-                endTime = scheduleData[5].substr(7);
-                holder->startTime = startTime;
-                holder->endTime = endTime;
-                holder->roomNumber = scheduleData[6];
-
-                holder->schedHour = stoi(startTime.substr(0, 2));
-                holder->schedMinute = stoi(startTime.substr(3, 2));
-                holder->schedHour = stoi(endTime.substr(0, 2));
-                holder->schedMinute = stoi(endTime.substr(3, 2));
-
-                // Reset left and right pointers to NULL
-                holder->left = NULL;
-                holder->right = NULL;
-
-                // Puts all the data from the found files to the record again
-                if (root == NULL) {
-                    root = holder; 
-                } else {
-                    current = root;
-                    while (true) {
-                        if (holder->section < current->section) {
-                            if (current->left == NULL) {
-                                current->left = holder;
-                                break;
-                            }
-                            current = current->left;
-                        } else {
-                            if (current->right == NULL) {
-                                current->right = holder;
-                                break;
-                            }
-                            current = current->right;
-                        }
-                    }
-                }
-            } else {
-                cout << "Failed to open file: " << schedFile << ".txt" << endl;
-            }
-        }
-        ifile.close(); // Closes the schedules txt file either from the error catcher or the function has completely loaded all
-                       // schedule files
-    } else {
-        cout << "Failed to open SCHEDULES.txt file." << endl;
-    }
-
-}
 void Schedule::AddFileNameRecord() {
     ofstream ofile("output/Schedules/SCHEDULES.txt", ios::app);
     ofile << holder->section + "_" + holder->courseCode + "_" + holder->weekDay + "\n";
