@@ -12,6 +12,7 @@ private:
     string studentID, studentName, courseCode, courseTitle, courseUnits, courseYearLevel, courseSchedule, blockSection;
 
 public:
+    void Pause();
     int EnrollmentMenu();
     int EnrollFunctionalities();
 
@@ -27,9 +28,17 @@ public:
     int ViewSchedules(string,int);
 };
 
+void EnrollMenu::Pause() // Function to replace "system("pause")"
+{
+    cout << "Press Enter to continue...";
+    cin.ignore();
+    cin.get(); // Wait for the user to press Enter
+}
+
 int EnrollMenu::EnrollmentMenu() {
     int choice;
     do {
+        HeaderDesign();
         cout << "-- Enrollment Menu --\n\n";
         cout << "[1] Enroll Students\n";
         cout << "[2] View Enrollee\n";
@@ -38,7 +47,7 @@ int EnrollMenu::EnrollmentMenu() {
         cin >> choice;
         cin.ignore();
     } while (choice < 0 || choice > 2);
-    system("cls");
+    system("clear");
     return choice;
 }
 
@@ -48,6 +57,7 @@ int EnrollMenu::EnrollFunctionalities() {
         switch (EnrollmentMenu()) {
             case 1:
             while (true){
+            HeaderDesign();
             cout << "Enter student ID: ";
             cin >> studentID;
             if (isExisting(studentID)){
@@ -73,13 +83,14 @@ int EnrollMenu::ViewSchedules(string courseCode, int identifier) {
     string schedFile;
     ifstream ifile;
     string scheduleData[7];
-    ifstream schedIfile("Schedules\\SCHEDULES.txt");
+    ifstream schedIfile("output/Schedules/SCHEDULES.txt");
     if (schedIfile.is_open()) {
         string line;
         while (getline(schedIfile, line)) {
+            HeaderDesign();
             if(line.find(courseCode) != string::npos) {
                 identifier = identifier + 1;
-            schedFile = "Schedules\\" + line + ".txt";
+            schedFile = "output/Schedules/" + line + ".txt";
             ifile.open(schedFile);
             if (ifile.is_open()) {
                 for (int i = 0; i < 7; i++) {
@@ -118,7 +129,7 @@ bool EnrollMenu::courseCodeExists(string courseCode) {
 
 bool EnrollMenu::scheduleExists(string courseSchedule)
 {
-    ifstream file("schedules\\SCHEDULES.txt");
+    ifstream file("output/Schedules/SCHEDULES.txt");
     string line;
     while (getline(file, line))
     {
@@ -150,7 +161,7 @@ bool EnrollMenu::blockSectionExists(string blockSection)
 
 bool EnrollMenu::isExisting(string studentID)
 {
-    ifstream file("Students\\idlist.txt");
+    ifstream file("output/Students/idlist.txt");
     string line;
     while (getline(file, line))
     {
@@ -167,7 +178,7 @@ bool EnrollMenu::isExisting(string studentID)
 
 bool EnrollMenu::isEnrolled(string studentID, string courseCode, string courseSchedule, string blockSection)
 {
-    ifstream file("Students\\Enrolled Courses" + blockSection + "-" + courseCode + "-" + courseSchedule + "list.txt");
+    ifstream file("output/Students/Enrolled Courses" + blockSection + "-" + courseCode + "-" + courseSchedule + "list.txt");
     string line;
     while (getline(file, line))
     {
@@ -199,20 +210,20 @@ void EnrollMenu::EnrollStudent(string studentID)
         {
             do
             {
-                system("cls");
+                system("clear");
                 tree.ViewCourses();
                 cout << "Enter course code: ";
                 cin >> courseCode;
                 if (courseCodeExists(courseCode) == false)
                 {
                     cout << "Course not found.\n";
-                    system("pause");
+                    Pause();
                 }
             } while (courseCodeExists(courseCode) == false);
             cout << "Are you sure you want to enroll in this course? (1 for yes, 0 for no): ";
             cin >> sure;
         } while (sure == 0);
-        system("cls");
+        system("clear");
         ViewSchedules(courseCode, identifier);
         if (identifier == 0)
         {
@@ -239,7 +250,7 @@ void EnrollMenu::EnrollStudent(string studentID)
         }
     } while (scheduleExists(courseSchedule) == false);
 
-    ifstream studfile("Students\\" + studentID + ".txt");
+    ifstream studfile("output/Students/" + studentID + ".txt");
     if (studfile.is_open())
     {
         getline(studfile, studentID); // Read the student ID
@@ -252,7 +263,7 @@ void EnrollMenu::EnrollStudent(string studentID)
     {
         cerr << "Unable to open file for reading.\n";
     }
-    ofstream file("Students\\Enrolled Courses\\" + blockSection + "_" + courseCode + "_" + courseSchedule + "_LIST.txt", ios::app);
+    ofstream file("output/Students/Enrolled Courses/" + blockSection + "_" + courseCode + "_" + courseSchedule + "_LIST.txt", ios::app);
     if (file.is_open())
     {
         file << studentID << "-" << studentLastName << "-" << studentFirstName << "-" << studentMiddlename << "\n";
@@ -269,6 +280,7 @@ void EnrollMenu::ViewEnrollees()
 {
     string courseCode, courseSchedule, blockSection;
     string studentID, studentFirstName, studentLastName, studentMiddlename;
+    HeaderDesign();
     do
     {
         cout << "Enter course code: ";
@@ -296,7 +308,7 @@ void EnrollMenu::ViewEnrollees()
             cout << "Schedule not found, Please try again.\n";
         }
     } while (scheduleExists(courseSchedule) == false);
-    ifstream file("Students\\Enrolled Courses\\" + blockSection + "_" + courseCode + "_" + courseSchedule + "_LIST.txt");
+    ifstream file("output/Students/Enrolled Courses/" + blockSection + "_" + courseCode + "_" + courseSchedule + "_LIST.txt");
     string line;
     if (!file.is_open())
     {
@@ -316,5 +328,5 @@ void EnrollMenu::ViewEnrollees()
         cout << studentID << " " << studentLastName << ", " << studentFirstName << " " << studentMiddlename << "\n";
     }
     file.close();
-    system("pause");
+    Pause();
 }

@@ -3,6 +3,8 @@
 using namespace std;
 
 void Front() {
+    int choice;
+
     cout << "                          _ _.-'`-._ _" << endl;
     cout << "                         ;.'________'.;" << endl;
     cout << "              _________n.[____________].n_________" << endl;
@@ -27,13 +29,6 @@ void Front() {
     cout << "                                                |___/ " << endl;
     cout << "" << endl;
     cout << "" << endl;
-    cout << "                        How can we help you? " << endl;
-    cout << "" << endl;
-    cout << "" << endl;
-    cout << "" << endl;
-    cout << "              [1] Start                  [2] Exit " << endl;
-    cout << "" << endl;
-    cout << "                       Select option: ";
 }
 
 void HeaderDesign() {

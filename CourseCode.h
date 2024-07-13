@@ -115,7 +115,8 @@ void BinaryTree::Insert(const Course& course) {
 }
 
 void BinaryTree::ViewCourses() const {
-    system("cls");
+    system("clear");
+    HeaderDesign();
     if (root == nullptr) {
         cout << "No courses available." << endl;
         return;
@@ -273,7 +274,7 @@ void AddCourse(BinaryTree& tree) {
     course.SaveToFile();
     tree.Insert(course);
 
-    system("cls");
+    system("clear");
     cout << "Course added successfully." << endl;
 }
 
@@ -287,7 +288,7 @@ void EditCourse(BinaryTree& tree) {
     cin.ignore();
     Node* node = tree.Find(code);
     if (node == nullptr) {
-        system("cls");
+        system("clear");
         cout << "Course not found.\n";
         return;
     }
@@ -341,7 +342,7 @@ void EditCourse(BinaryTree& tree) {
     node->course.SetYearLevel(year);
     node->course.SaveToFile();
 
-    system("cls");
+    system("clear");
     cout << "Course edited successfully!" << endl;
     cout << endl;
 }
@@ -359,7 +360,7 @@ void DeleteCourse(BinaryTree& tree) {
     }
 
     tree.Remove(code);
-    system("cls");
+    system("clear");
     cout << "Course deleted successfully." << endl;
 }
 
@@ -418,7 +419,7 @@ int CourseCodeMenu() {
     cin >> choice;
     cin.ignore();
     } while (choice < 0 || choice > 4);
-    system("cls");
+    system("clear");
     return choice;
 }
 

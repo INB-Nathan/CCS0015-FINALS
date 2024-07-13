@@ -2,6 +2,7 @@
 #include "ScheduleMenu.h"
 #include "StudentMenu.h"
 #include "EnrollMenu.h"
+
 using namespace std;
 
 int StudentManagementMenu();
@@ -10,7 +11,9 @@ int main() {
     Schedule sched;
     StudentDetails student;
     EnrollMenu enroll;
+    
     while (true) {
+        Front();
         switch (StudentManagementMenu()){
             case 1:
             enroll.EnrollFunctionalities();
@@ -48,6 +51,6 @@ int StudentManagementMenu() {
         cout << ":: ";
         cin >> choice;
     } while (choice < 0 || choice > 4);
-    system("cls");
+    system("clear");
     return choice;
 }

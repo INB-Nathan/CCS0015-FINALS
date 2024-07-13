@@ -77,7 +77,7 @@ int Schedule::ScheduleFunctionalities() {
 
 int Schedule::ScheduleMenu() {
     int choice;
-
+    HeaderDesign();
     do {
         cout << "-- Schedule Management --\n\n";
         cout << "[1] Add a Schedule\n";
@@ -89,12 +89,13 @@ int Schedule::ScheduleMenu() {
         cin >> choice;
         cin.ignore();
     } while (choice < 0 || choice > 4);
-    system("cls");
+    system("clear");
     return choice;
 }
 
 int Schedule::EditMenu() {
     int choice;
+    HeaderDesign();
     do {
         cout << "\n\n-- Edit Schedule Menu --\n\n";
         cout << "[1] Edit Day\n";
@@ -106,14 +107,14 @@ int Schedule::EditMenu() {
         cin >> choice;
         cin.ignore();
     } while (choice < 0 || choice > 4);
-    system("cls");
+    system("clear");
     return choice;
 }
 
 void Schedule::AddScheduleData() {
     int schedHour, schedMinute, schedSecond, amountMinute;
     string courseCode, section, weekDay, roomNumber;
-
+    HeaderDesign();
     while (true) {
         cout << "Enter Course Code: ";
         getline(cin, courseCode);
@@ -212,7 +213,7 @@ void Schedule::AddScheduleData() {
 void Schedule::AddScheduleRecord(string block, string day, string courseId, string rNumber, int sHour, int sMin, int sSec, int amountMinute) {
     string schedFile, time, sectionChecker, fileName, line; 
     SchedNode* parent = NULL;
-    fileName = "CourseRecords\\" + courseId + ".txt";
+    fileName = "output/CourseRecords/" + courseId + ".txt";
     ifstream courseFile(fileName);
     if (courseFile.is_open()) {
         holder = new SchedNode;
@@ -238,7 +239,7 @@ void Schedule::AddScheduleRecord(string block, string day, string courseId, stri
     holder->left = NULL;
     holder->right = NULL;
 
-    schedFile = "Schedules\\" + holder->section + "_" + holder->courseCode + "_" + holder->weekDay + ".txt";
+    schedFile = "output/Schedules/" + holder->section + "_" + holder->courseCode + "_" + holder->weekDay + ".txt";
     ifstream ifile(schedFile);
     if (ifile.is_open()) {
         cout << "Schedule Already Exists!\n";
@@ -247,11 +248,11 @@ void Schedule::AddScheduleRecord(string block, string day, string courseId, stri
     }
 
     // Check if a schedule with the same room number already exists
-    ifstream schedIfile("Schedules\\SCHEDULES.txt");
+    ifstream schedIfile("output/Schedules/SCHEDULES.txt");
     bool roomExists = false;
     while (getline(schedIfile, line)) {
         string schedRoomNumber;
-        ifstream schedRoomFile("Schedules\\" + line + ".txt");
+        ifstream schedRoomFile("output/Schedules/" + line + ".txt");
         getline(schedRoomFile, line);
         getline(schedRoomFile, line);
         getline(schedRoomFile, line);
@@ -319,12 +320,12 @@ void Schedule::ViewSchedule() {
     string schedFile;
     ifstream ifile;
     string scheduleData[7];
-
-    ifstream schedIfile("Schedules\\SCHEDULES.txt");
+    HeaderDesign();
+    ifstream schedIfile("output/Schedules/SCHEDULES.txt");
     if (schedIfile.is_open()) {
         string line;
         while (getline(schedIfile, line)) {
-            schedFile = "Schedules\\" + line + ".txt";
+            schedFile = "output/Schedules/" + line + ".txt";
             ifile.open(schedFile);
             if (ifile.is_open()) {
                 for (int i = 0; i < 7; i++) {
@@ -349,7 +350,7 @@ void Schedule::ViewSchedule() {
 void Schedule::EditSchedule() {
     string section, courseCode, weekDay, schedFile, newSchedFile, newDay, newSection, newRoom;
     int schedHour, schedMinute, schedSecond, amountMinute;
-
+    HeaderDesign();
     while (true) {
         cout << "Enter Section: ";
         getline(cin, section);
@@ -376,7 +377,7 @@ void Schedule::EditSchedule() {
         }
     }
 
-    schedFile = "Schedules\\" + section + "_" + courseCode + "_" + weekDay + ".txt";
+    schedFile = "output/Schedules/" + section + "_" + courseCode + "_" + weekDay + ".txt";
 
     ifstream ifile(schedFile);
     if (ifile.is_open()) {
@@ -407,7 +408,7 @@ void Schedule::EditSchedule() {
                         UpperString(newDay);
                         if (IsValidDay(newDay)) {
                             holder->weekDay = newDay;
-                            newSchedFile = "Schedules\\" + holder->section + "_" + holder->courseCode + "_" + holder->weekDay + ".txt";
+                            newSchedFile = "output/Schedules/" + holder->section + "_" + holder->courseCode + "_" + holder->weekDay + ".txt";
                             rename(schedFile.c_str(), newSchedFile.c_str());
                             schedFile = newSchedFile;
                             break;
@@ -474,7 +475,7 @@ void Schedule::EditSchedule() {
                         if (IsValidSection(newSection)) {
                             holder->section = newSection;
 
-                            newSchedFile = "Schedules\\" + holder->section + "_" + holder->courseCode + "_" + holder->weekDay + ".txt";
+                            newSchedFile = "output/Schedules/" + holder->section + "_" + holder->courseCode + "_" + holder->weekDay + ".txt";
                             rename(schedFile.c_str(), newSchedFile.c_str());
                             schedFile = newSchedFile;
                             break;
@@ -524,7 +525,7 @@ void Schedule::EditSchedule() {
 
 void Schedule::DeleteSchedule() {
     string section, courseCode, weekDay, schedFile;
-
+    HeaderDesign();
     cout << "Enter Section: ";
     getline(cin, section);
     cout << "Enter Course Code: ";
@@ -535,14 +536,14 @@ void Schedule::DeleteSchedule() {
     UpperString(section);
     UpperString(courseCode);
     UpperString(weekDay);
-    schedFile = "Schedules\\" + section + "_" + courseCode + "_" + weekDay + ".txt";
+    schedFile = "output/Schedules/" + section + "_" + courseCode + "_" + weekDay + ".txt";
 
     ifstream ifile(schedFile);
     if (ifile.is_open()) {
         ifile.close();
         remove(schedFile.c_str());
-        ifstream schedIfile("Schedules\\SCHEDULES.txt");
-        ofstream tempFile("Schedules\\temp.txt");
+        ifstream schedIfile("output/Schedules/SCHEDULES.txt");
+        ofstream tempFile("output/Schedules/temp.txt");
         string line;
         while (getline(schedIfile, line)) {
             if (line != section + "_" + courseCode + "_" + weekDay) {
@@ -551,8 +552,8 @@ void Schedule::DeleteSchedule() {
         }
         schedIfile.close();
         tempFile.close();
-        remove("Schedules\\SCHEDULES.txt"); 
-        rename("Schedules\\temp.txt", "Schedules\\SCHEDULES.txt");
+        remove("output/Schedules/SCHEDULES.txt"); 
+        rename("output/Schedules/temp.txt", "output/Schedules/SCHEDULES.txt");
         cout << "Schedule successfully deleted!\n";
     } else {
         cout << "Schedule not found!\n";
@@ -595,12 +596,12 @@ void Schedule::UpperString(string &str) {
 }
 
 void Schedule::LoadFiles() {
-    ifstream ifile("Schedules\\SCHEDULES.txt"); // Opens the txt file where all file names existing gets stored
+    ifstream ifile("output/Schedules/SCHEDULES.txt"); // Opens the txt file where all file names existing gets stored
     string schedFile, startTime, endTime;
 
     if (ifile.is_open()) {
         while (getline(ifile, schedFile)) { // Iterates over file names inside the text file // Iterates over file names inside the text file 
-            ifstream schedIfile("Schedules\\" + schedFile + ".txt");
+            ifstream schedIfile("output/Schedules/" + schedFile + ".txt");
             if (schedIfile.is_open()) {
                 string scheduleData[7];
                 for (int i = 0; i < 7; i++) {
@@ -662,7 +663,7 @@ void Schedule::LoadFiles() {
 
 }
 void Schedule::AddFileNameRecord() {
-    ofstream ofile("Schedules\\SCHEDULES.txt", ios::app);
+    ofstream ofile("output/Schedules/SCHEDULES.txt", ios::app);
     ofile << holder->section + "_" + holder->courseCode + "_" + holder->weekDay + "\n";
     ofile.close();
 }
@@ -745,7 +746,7 @@ char Schedule::EndTrail() {
     cout << "Do you want to Continue [Y/N]: ";
     cin >> continueChoice;
     continueChoice = toupper(continueChoice);
-    system("cls");
+    system("clear");
 
     return continueChoice;
 }
@@ -754,7 +755,7 @@ void Schedule::Pause() {
     cout << "Press Enter to continue...";
     cin.ignore();
     cin.get();
-    system("cls");
+    system("clear");
 }
 
 
