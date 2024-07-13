@@ -73,7 +73,7 @@ int CourseFunctionalities();
 void UpdateRecordList(const string& courseCode, bool isAdding);
 
 void HeaderDesign(){
-        cout << "                        .|                                          _" << endl;
+    cout << "                        .|                                          _" << endl;
     cout << "                       | |                                         | |" << endl;
     cout << "                       |'|            ._____                       |'|            ._____" << endl;
     cout << "               ___    |  |            |.   |' .---" << "-|       ___    |  |            |.   |' .---" << ".  " << endl;

@@ -76,8 +76,8 @@ int EnrollMenu::EnrollFunctionalities() {
     while (true) {
         switch (EnrollmentMenu()) {
             case 1:
-            while (true){
             HeaderDesign();
+            while (true){
             cout << "Enter student ID: ";
             cin >> studentID;
             if (isExisting(studentID)){
@@ -86,6 +86,7 @@ int EnrollMenu::EnrollFunctionalities() {
             }
             break;
             case 2:
+            HeaderDesign();
             ViewEnrollees();
             break;
             case 0:
