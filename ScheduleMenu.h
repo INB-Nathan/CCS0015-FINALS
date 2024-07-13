@@ -24,6 +24,7 @@ class Schedule {
     void Pause();
     char EndTrail();
     int ScheduleFunctionalities();
+    void HeaderDesignCopy();
 
     void AddScheduleData();
     void AddScheduleRecord(string, string, string, string, int, int, int, int);
@@ -77,7 +78,7 @@ int Schedule::ScheduleFunctionalities() {
 
 int Schedule::ScheduleMenu() {
     int choice;
-    HeaderDesign();
+    HeaderDesignCopy();
     do {
         cout << "-- Schedule Management --\n\n";
         cout << "[1] Add a Schedule\n";
@@ -95,7 +96,7 @@ int Schedule::ScheduleMenu() {
 
 int Schedule::EditMenu() {
     int choice;
-    HeaderDesign();
+    HeaderDesignCopy();
     do {
         cout << "\n\n-- Edit Schedule Menu --\n\n";
         cout << "[1] Edit Day\n";
@@ -114,7 +115,7 @@ int Schedule::EditMenu() {
 void Schedule::AddScheduleData() {
     int schedHour, schedMinute, schedSecond, amountMinute;
     string courseCode, section, weekDay, roomNumber;
-    HeaderDesign();
+    HeaderDesignCopy();
     while (true) {
         cout << "Enter Course Code: ";
         getline(cin, courseCode);
@@ -313,6 +314,7 @@ void Schedule::AddScheduleRecord(string block, string day, string courseId, stri
     ofile << holder->roomNumber << "\n";
     ofile.close();
     AddFileNameRecord();
+    return;
 }
 
 
@@ -320,7 +322,7 @@ void Schedule::ViewSchedule() {
     string schedFile;
     ifstream ifile;
     string scheduleData[7];
-    HeaderDesign();
+    HeaderDesignCopy();
     ifstream schedIfile("output/Schedules/SCHEDULES.txt");
     if (schedIfile.is_open()) {
         string line;
@@ -350,7 +352,7 @@ void Schedule::ViewSchedule() {
 void Schedule::EditSchedule() {
     string section, courseCode, weekDay, schedFile, newSchedFile, newDay, newSection, newRoom;
     int schedHour, schedMinute, schedSecond, amountMinute;
-    HeaderDesign();
+    HeaderDesignCopy();
     while (true) {
         cout << "Enter Section: ";
         getline(cin, section);
@@ -525,7 +527,7 @@ void Schedule::EditSchedule() {
 
 void Schedule::DeleteSchedule() {
     string section, courseCode, weekDay, schedFile;
-    HeaderDesign();
+    HeaderDesignCopy();
     cout << "Enter Section: ";
     getline(cin, section);
     cout << "Enter Course Code: ";
@@ -758,5 +760,18 @@ void Schedule::Pause() {
     system("clear");
 }
 
-
-
+void Schedule::HeaderDesignCopy() {
+    cout << "                        .|                                          _" << endl;
+    cout << "                       | |                                         | |" << endl;
+    cout << "                       |'|            ._____                       |'|            ._____" << endl;
+    cout << "               ___    |  |            |.   |' .---" << "-|       ___    |  |            |.   |' .---" << ".  " << endl;
+    cout << "       _    .-'   '-. |  |     .--'|  ||   | _|    |    .-'   '-. |  |     .--'|  ||   | _|    |" << endl;
+    cout << "    .-'|  _.|  |    ||   '-__  |   |  |    ||      |  _.|  |    ||   '-__  |   |  |    ||      |  " << endl;
+    cout << "    |' | |.    |    ||       | |   |  |    ||      | |.    |    ||       | |   |  |    ||      |" << endl;
+    cout << " ___|  '-'     '      \"       '-'   '-.'    '`      |-'     '      \"       '-'   '-.'    '`      |___" << endl;
+    cout << " ___      _        _             _   ___     _ _            _   _      _                _ _                  " << endl;
+    cout << "|_ _|__ _| |___ __(_)__ _   _ _ (_) | _ )_ _(_) |_ ___ ___ | | | |_ _ (_)_ _____ _ _ __(_) |_ _  _ " << endl;
+    cout << " | |/ _` | / -_|_-< / _` | | ' \\| | | _ \\ '_| |  _/ _ (_-< | |_| | ' \\| \\ V / -_) '_(_-< |  _| || | " << endl;
+    cout << "|___\\__, |_\\___/__/_\\__,_| |_||_|_| |___/_| |_|\\__\\___/__/  \\___/|_||_|_|\\_/\\___|_| /__/_|\\__|\\_, |" << endl;
+    cout << "    |___/                                                                                     |__/           " << endl;
+}

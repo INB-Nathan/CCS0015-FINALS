@@ -3,8 +3,6 @@
 using namespace std;
 
 void Front() {
-    int choice;
-
     cout << "                          _ _.-'`-._ _" << endl;
     cout << "                         ;.'________'.;" << endl;
     cout << "              _________n.[____________].n_________" << endl;
