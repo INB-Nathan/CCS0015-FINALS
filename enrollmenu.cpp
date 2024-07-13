@@ -7,10 +7,8 @@ int main(){
     string studentID;
     int choice;
     while (true){
-    cout << "1. Enroll Student\n";
-    cout << "2. View Enrollees\n";
-    cout << "0. Exit\n";
-    cin >> choice;
+    eMenu.EnrollmentMenu();
+
     system("cls");
     switch (choice){
         case 1:
