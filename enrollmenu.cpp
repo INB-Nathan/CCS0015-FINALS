@@ -5,34 +5,5 @@ using namespace std;
 int main(){
     EnrollMenu eMenu;
     string studentID;
-    int choice;
-    while (true){
-    cout << "1. Enroll Student\n";
-    cout << "2. View Enrollees\n";
-    cout << "0. Exit\n";
-    cin >> choice;
-    system("cls");
-    switch (choice){
-        case 1:
-            cout << "Enroll Student\n";
-            while (true){
-            cout << "Enter student ID: ";
-            cin >> studentID;
-            if (eMenu.isExisting(studentID)){
-            eMenu.EnrollStudent(studentID);
-            system("cls");
-            break;
-            }
-            }
-        case 2:
-            eMenu.ViewEnrollees();
-            system("pause");
-            break;
-        case 0:
-            return 0;
-        default:
-            cout << "Invalid choice.\n";
-            break;
-    } 
-    } 
+    eMenu.EnrollFunctionalities();
 }
