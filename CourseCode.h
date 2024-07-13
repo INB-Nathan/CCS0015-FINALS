@@ -116,7 +116,7 @@ void BinaryTree::Insert(const Course& course) {
 
 void BinaryTree::ViewCourses() const {
     system("clear");
-    HeaderDesign();
+    
     if (root == nullptr) {
         cout << "No courses available." << endl;
         return;
@@ -366,11 +366,11 @@ void DeleteCourse(BinaryTree& tree) {
 
 
 void LoadCourses(BinaryTree& tree) {
-    ifstream recordList("CourseRecords/recordlist.txt");
+    ifstream recordList("output/CourseRecords/recordlist.txt");
     string code;
     while (getline(recordList, code)) {
         Course course;
-        course.LoadFromFile("CourseRecords/" + code + ".txt");
+        course.LoadFromFile("output/CourseRecords/" + code + ".txt");
         tree.Insert(course);
     }
     recordList.close();
@@ -378,8 +378,8 @@ void LoadCourses(BinaryTree& tree) {
 
 
 void UpdateRecordList(const string& courseCode, bool isAdding) {
-    ifstream inFile("CourseRecords/recordlist.txt");
-    ofstream tempFile("CourseRecords/temp.txt");
+    ifstream inFile("output/CourseRecords/recordlist.txt");
+    ofstream tempFile("output/CourseRecords/temp.txt");
     string line;
     bool found = false;
     
@@ -398,8 +398,8 @@ void UpdateRecordList(const string& courseCode, bool isAdding) {
     inFile.close();
     tempFile.close();
 
-    remove("CourseRecords/recordlist.txt");
-    rename("CourseRecords/temp.txt", "CourseRecords/recordlist.txt");
+    remove("output/CourseRecords/recordlist.txt");
+    rename("output/CourseRecords/temp.txt", "CourseRecords/recordlist.txt");
 }
 
 int CourseCodeMenu() {
