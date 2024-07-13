@@ -397,6 +397,7 @@ void Schedule::EditSchedule() {
         SchedNode* temp = root;
         while (temp != NULL) {
             if (temp->section == section && temp->courseCode == courseCode && temp->weekDay == weekDay) {
+                holder=temp;
                 break;
             } else if (temp->section < section || temp->weekDay < weekDay || temp->courseCode < courseCode) {
                 temp = temp->right;
@@ -405,15 +406,17 @@ void Schedule::EditSchedule() {
             }
         }
         // prints an error message if the file is not found
-        if (temp == NULL) {
+        if (holder == NULL) {
             cout << "Schedule not found!\n";
             return;
         }
+        system("clear");
         // displays a menu of what operations the user can do in edit
         while (true) {        
             switch (EditMenu()) {
                 case 1: {
                     while (true) {
+                        HeaderDesignCopy();
                         cout << "Enter new Day: "; // asks for a new day from the user
                         getline(cin, newDay);
                         UpperString(newDay);
@@ -432,6 +435,7 @@ void Schedule::EditSchedule() {
                 case 2: { // when the user want to edit the hour
                     while (true) {
                         // asks the user to input the new starting time separately from hour, minute and second and amount of time too
+                        HeaderDesignCopy();
                         cout << "Enter new Start Hour: "; // asks for the new starting hour
                         cin >> schedHour; 
                         cin.ignore();
@@ -482,6 +486,7 @@ void Schedule::EditSchedule() {
                 }
                 case 3: {
                     while (true) {
+                        HeaderDesignCopy();
                         cout << "Enter new Section: "; // asks the user for the new section of the schedule
                         getline(cin, newSection);
                         UpperString(newSection);
@@ -500,6 +505,7 @@ void Schedule::EditSchedule() {
                 }
                 case 4: {
                     while (true) {
+                        HeaderDesignCopy();
                         cout << "Enter new Room: "; // asks the user for a new room for the schedule
                         getline(cin, newRoom);
                         UpperString(newRoom);
@@ -518,6 +524,7 @@ void Schedule::EditSchedule() {
                     cout << "Invalid choice!\n";
                     return;
             }
+            system("clear");
             // edits the file with the current and new details for the course
            ofstream ofile(schedFile);
             ofile << holder->courseCode << "\n";
@@ -573,6 +580,7 @@ void Schedule::DeleteSchedule() {
     } else {
         cout << "Schedule not found!\n"; // error message if the schedule file is not found
     }
+    system("clear");
 }
 
 void Schedule::TimeFormat() {
