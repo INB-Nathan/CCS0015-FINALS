@@ -21,9 +21,9 @@ public:
     // Validation Functions
     bool isEnrolled(string, string, string, string);
     bool isExisting(string);
-    bool blockSectionExists(string, string);
+    bool blockSectionExists(string);
     bool courseCodeExists(string);
-    bool scheduleExists(string,string);
+    bool scheduleExists(string);
     // Function Prototypes
     void EnrollStudent(string);
     void ViewEnrollees();
@@ -61,6 +61,7 @@ int EnrollMenu::EnrollFunctionalities() {
         switch (EnrollmentMenu()) {
             case 1:
             while (true){
+                system("clear");
             HeaderDesign();
             cout << "Enter student ID: ";
             cin >> studentID;
@@ -70,6 +71,7 @@ int EnrollMenu::EnrollFunctionalities() {
             }
             break;
             case 2:
+            system("clear");
             ViewEnrollees(); // Proceed to View Enrollees function
             break;
             case 0:
@@ -131,18 +133,16 @@ bool EnrollMenu::courseCodeExists(string courseCode) {
 }
 
 
-bool EnrollMenu::scheduleExists(string courseSchedule, string blockSection)
+bool EnrollMenu::scheduleExists(string courseSchedule)
 {
     ifstream file("output/Schedules/SCHEDULES.txt"); // finds if the courseSchedule line exists
     string line;
     while (getline(file, line))
     {
-        if (line.find(blockSection) != string::npos) {
         if (line.find(courseSchedule) != string::npos)
         {
             file.close();
             return true;
-        }
         }
         else{
             file.close();
@@ -153,18 +153,16 @@ bool EnrollMenu::scheduleExists(string courseSchedule, string blockSection)
     return false;
 }
 
-bool EnrollMenu::blockSectionExists(string blockSection, string CourseCode) // finds if the blockSectionExists
+bool EnrollMenu::blockSectionExists(string blockSection) // finds if the blockSectionExists
 {
     ifstream file("output/Schedules/SCHEDULES.txt");
     string line;
     while (getline(file, line))
     {
-        if (line.find(CourseCode) != string::npos){
             if (line.find(blockSection) != string::npos)
         {
             file.close();
             return true;
-        }
         }
         else{
             file.close();
@@ -263,20 +261,20 @@ void EnrollMenu::EnrollStudent(string studentID)
     {
         cout << "\nEnter block section: ";
         cin >> blockSection;
-        if (blockSectionExists(blockSection, courseCode) == false)
+        if (blockSectionExists(blockSection) == false)
         {
             cout << "Block section not found, Please try again.\n";
         }
-    } while (blockSectionExists(blockSection, courseCode) == false);
+    } while (blockSectionExists(blockSection) == false);
     do
     {
         cout << "\nEnter course schedule: ";
         cin >> courseSchedule;
-        if (scheduleExists(courseSchedule, blockSection) == false)
+        if (scheduleExists(courseSchedule) == false)
         {
             cout << "Schedule not found, Please try again.\n";
         }
-    } while (scheduleExists(courseSchedule, blockSection) == false);
+    } while (scheduleExists(courseSchedule) == false);
 
     ifstream studfile("output/Students/" + studentID + ".txt");
     if (studfile.is_open())
@@ -300,8 +298,10 @@ void EnrollMenu::EnrollStudent(string studentID)
     else
     {
         cout << "Unable to open file for writing.\n";
+        return;
     }
     cout << "Student enrolled successfully.\n";
+    return;
 }
 
 void EnrollMenu::ViewEnrollees()
@@ -312,9 +312,10 @@ void EnrollMenu::ViewEnrollees()
     string studentID, studentFirstName, studentLastName, studentMiddlename;
     HeaderDesign();
     LoadCourses(tree);
-    tree.ViewCourses();
     do // course code validation
     {
+        system("clear");
+        tree.ViewCourses();
         cout << "Enter course code: ";
         cin >> courseCode;
         if (courseCodeExists(courseCode) == false)
@@ -329,20 +330,20 @@ void EnrollMenu::ViewEnrollees()
     {
         cout << "Enter block section: ";
         cin >> blockSection;
-        if (blockSectionExists(blockSection, courseCode) == false)
+        if (blockSectionExists(blockSection) == false)
         {
             cout << "\nBlock section not found, Please try again.\n";
         }
-    } while (blockSectionExists(blockSection, courseCode) == false);
+    } while (blockSectionExists(blockSection) == false);
     do // schedule validation
     {
         cout << "\nEnter course schedule: ";
         cin >> courseSchedule;
-        if (scheduleExists(courseSchedule, blockSection) == false)
+        if (scheduleExists(courseSchedule) == false)
         {
             cout << "\nSchedule not found, Please try again.\n";
         }
-    } while (scheduleExists(courseSchedule, blockSection) == false);
+    } while (scheduleExists(courseSchedule) == false);
     ifstream file("output/Students/Enrolled Courses/" + blockSection + "_" + courseCode + "_" + courseSchedule + "_LIST.txt");
     string line;
     if (!file.is_open())
