@@ -9,15 +9,18 @@ using namespace std;
 
 class Course {
 private:
+    // These are the private member variables for course information.
     string CourseCode;
     string CourseTitle;
     int Units;
     int YearLevel;
 
 public:
+    // This is the constructor for course information
     Course(string code = "", string title = "", int unit = 0, int year = 0)
         : CourseCode(code), CourseTitle(title), Units(unit), YearLevel(year) {}
 
+    // These are the declaration for the function members for course information
     void Display() const;
     string GetFileName() const;
     void SaveToFile() const;
@@ -38,15 +41,18 @@ public:
 
 class Node {
 public:
+    // These are the private member variables for Node
     Course course;
     Node* left;
     Node* right;
 
+    // This is the constructor of Node
     Node(Course c) : course(c), left(nullptr), right(nullptr) {}
 };
 
 class BinaryTree {
 public:
+    // These are the private members for BinaryTree
     Node* root;
     BinaryTree() : root(nullptr) {}
     void Insert(const Course& course);
@@ -62,6 +68,7 @@ private:
     Node* MinValueNode(Node* node);
 };
 
+//These are function declarations
 void HeaderDesign();
 bool IsAlphaString(const string& str);
 void AddCourse(BinaryTree& tree);
@@ -73,6 +80,7 @@ int CourseFunctionalities();
 void UpdateRecordList(const string& courseCode, bool isAdding);
 void HeaderDesignCopy2();
 
+// This function pauses the screen to prevent the program from carrying tasks consecutively
 void Pause(){
     cout << "Press Enter to continue...";
     cin.ignore();
