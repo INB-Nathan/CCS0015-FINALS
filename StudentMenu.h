@@ -69,7 +69,7 @@ public:
 int StudentDetails::StudMenu()
 {
     int choice;
-    
+    FetchStudentInfo();
     HeaderDesign();
     do {
     cout << endl;
@@ -1283,6 +1283,7 @@ void StudentDetails::ViewStudents() // This function is for viewing student list
             ViewStudents();
         }
         cout << endl;
+        Pause();
         break;
     }
     case 3:
@@ -1319,6 +1320,7 @@ void StudentDetails::ViewStudents() // This function is for viewing student list
             ViewStudents();
         }
         cout << endl;
+        Pause();
         break;
     }
     default:

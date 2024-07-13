@@ -70,6 +70,14 @@ void LoadCourses(BinaryTree& tree);
 int CourseCodeMenu();
 int CourseFunctionalities();
 void UpdateRecordList(const string& courseCode, bool isAdding);
+void HeaderDesignCopy2();
+
+void Pause(){
+    cout << "Press Enter to continue...";
+    cin.ignore();
+    cin.get();
+    system("clear");
+}
 
 void Course::Display() const {
     cout << "| " << setw(11) << CourseCode << " | " << setw(60) << CourseTitle << " | "
@@ -78,7 +86,7 @@ void Course::Display() const {
 }
 
 string Course::GetFileName() const {
-    return "CourseRecords/" + CourseCode + ".txt";
+    return "output/CourseRecords/" + CourseCode + ".txt";
 }
 
 void Course::SaveToFile() const {
@@ -116,7 +124,7 @@ void BinaryTree::Insert(const Course& course) {
 
 void BinaryTree::ViewCourses() const {
     system("clear");
-    
+    HeaderDesignCopy2();
     if (root == nullptr) {
         cout << "No courses available." << endl;
         return;
@@ -129,6 +137,7 @@ void BinaryTree::ViewCourses() const {
     cout << "|" << setw(97) << setfill('=') << "" << setfill(' ') << "+\n";
 
     InOrder(root);
+    Pause();
     cout << endl;
 }
 
@@ -215,6 +224,8 @@ void AddCourse(BinaryTree& tree) {
     int units, year;
     bool isValid = false;
 
+    HeaderDesignCopy2();
+
     while (true) {
         cout << "Enter course code: ";
         cin >> code;
@@ -274,15 +285,15 @@ void AddCourse(BinaryTree& tree) {
     course.SaveToFile();
     tree.Insert(course);
 
-    system("clear");
     cout << "Course added successfully." << endl;
+    Pause();
 }
 
 void EditCourse(BinaryTree& tree) {
     string code, input, title;
     int units, year;
     bool isValid = false;
-
+    
     cout << "Enter course code to edit: ";
     cin >> code;
     cin.ignore();
@@ -337,31 +348,34 @@ void EditCourse(BinaryTree& tree) {
         cout << "Invalid input! Please enter a year level between 1 and 4." << endl;
     }
 
-    node->course.SetCourseCode(title);
+    node->course.SetCourseTitle(title);
     node->course.SetUnits(units);
     node->course.SetYearLevel(year);
     node->course.SaveToFile();
 
-    system("clear");
     cout << "Course edited successfully!" << endl;
+    Pause();
     cout << endl;
 }
 
 void DeleteCourse(BinaryTree& tree) {
     string code;
-    cout << "Enter Course Code to Delete: ";
+    cout << "Enter course code to delete: ";
+    cin >> code;
     cin.ignore();
-    getline(cin, code);
-
     Node* node = tree.Find(code);
     if (node == nullptr) {
-        cout << "Course not found." << endl;
+        system("clear");
+        cout << "Course not found.\n";
         return;
     }
 
     tree.Remove(code);
     system("clear");
+
+
     cout << "Course deleted successfully." << endl;
+    Pause();
 }
 
 
@@ -399,12 +413,13 @@ void UpdateRecordList(const string& courseCode, bool isAdding) {
     tempFile.close();
 
     remove("output/CourseRecords/recordlist.txt");
-    rename("output/CourseRecords/temp.txt", "CourseRecords/recordlist.txt");
+    rename("output/CourseRecords/temp.txt", "output/CourseRecords/recordlist.txt");
 }
 
 int CourseCodeMenu() {
     int choice;
     do {
+    HeaderDesignCopy2();
     cout << endl;
     cout << "+" << setw(97) << setfill('=') << "" << setfill(' ') << "+\n";
     cout << "|                                          COURSE MENU                                            |\n";
@@ -423,9 +438,25 @@ int CourseCodeMenu() {
     return choice;
 }
 
+void HeaderDesignCopy2() {
+    cout << "                        .|                                          _" << endl;
+    cout << "                       | |                                         | |" << endl;
+    cout << "                       |'|            ._____                       |'|            ._____" << endl;
+    cout << "               ___    |  |            |.   |' .---" << "-|       ___    |  |            |.   |' .---" << ".  " << endl;
+    cout << "       _    .-'   '-. |  |     .--'|  ||   | _|    |    .-'   '-. |  |     .--'|  ||   | _|    |" << endl;
+    cout << "    .-'|  _.|  |    ||   '-__  |   |  |    ||      |  _.|  |    ||   '-__  |   |  |    ||      |  " << endl;
+    cout << "    |' | |.    |    ||       | |   |  |    ||      | |.    |    ||       | |   |  |    ||      |" << endl;
+    cout << " ___|  '-'     '      \"       '-'   '-.'    '`      |-'     '      \"       '-'   '-.'    '`      |___" << endl;
+    cout << " ___      _        _             _   ___     _ _            _   _      _                _ _                  " << endl;
+    cout << "|_ _|__ _| |___ __(_)__ _   _ _ (_) | _ )_ _(_) |_ ___ ___ | | | |_ _ (_)_ _____ _ _ __(_) |_ _  _ " << endl;
+    cout << " | |/ _` | / -_|_-< / _` | | ' \\| | | _ \\ '_| |  _/ _ (_-< | |_| | ' \\| \\ V / -_) '_(_-< |  _| || | " << endl;
+    cout << "|___\\__, |_\\___/__/_\\__,_| |_||_|_| |___/_| |_|\\__\\___/__/  \\___/|_||_|_|\\_/\\___|_| /__/_|\\__|\\_, |" << endl;
+    cout << "    |___/                                                                                     |__/           " << endl;
+}
+
 int CourseFunctionalities() {
     BinaryTree tree;
-    
+    LoadCourses(tree);
     while (true) {
         switch (CourseCodeMenu()) {
             case 1:
