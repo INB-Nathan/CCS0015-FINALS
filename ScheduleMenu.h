@@ -321,6 +321,7 @@ void Schedule::AddScheduleRecord(string block, string day, string courseId, stri
     ofile.close();
     // after adding the details to the file the file name is also added to a single file to record
     AddFileNameRecord();
+    system("clear");
     return;
 }
 
@@ -547,16 +548,40 @@ void Schedule::DeleteSchedule() {
     string section, courseCode, weekDay, schedFile;
     HeaderDesignCopy();
     // enters the details of the schedule relating to the file name to be deleted
-    cout << "Enter Section: ";
-    getline(cin, section);
-    cout << "Enter Course Code: ";
-    getline(cin, courseCode);
-    cout << "Enter Day: ";
-    getline(cin, weekDay);
+    while (true) {
+        cout << "Enter Section: ";
+        getline(cin, section);
+        UpperString(section);
+        if (IsValidSection(section)) {
+            break;
+        }
+        else {
+            cout << "Invalid Section.\n";
+        }
+    }
+    while (true) { // loops until the course code is valid
+        cout << "Enter Course Code: ";
+        getline(cin, courseCode);
+        UpperString(courseCode);
+        if(IsValidCourseCode(courseCode)) { // uses the validation to check if the course code inputted is valid
+            break;
+        }
+        else {
+            cout << "Please Enter a Valid Course Code.\n";
+        }
+    }
 
-    UpperString(section);
-    UpperString(courseCode);
-    UpperString(weekDay);
+    while (true) {
+        cout << "Enter Day the Course to be scheduled for: ";
+        getline(cin, weekDay);
+        UpperString(weekDay);
+        if(IsValidDay(weekDay)) { // uses the validation to check if the week day inputted is valid
+            break;
+        }
+        else {
+            cout << "Please enter a valid Week Day.\n";
+        }
+    }
     schedFile = "output/Schedules/" + section + "_" + courseCode + "_" + weekDay + ".txt"; // opens the file of the schedule
 
     ifstream ifile(schedFile);
