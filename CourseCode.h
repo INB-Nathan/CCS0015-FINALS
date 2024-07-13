@@ -62,6 +62,7 @@ private:
     Node* MinValueNode(Node* node);
 };
 
+void HeaderDesign();
 bool IsAlphaString(const string& str);
 void AddCourse(BinaryTree& tree);
 void EditCourse(BinaryTree& tree);
@@ -70,6 +71,22 @@ void LoadCourses(BinaryTree& tree);
 int CourseCodeMenu();
 int CourseFunctionalities();
 void UpdateRecordList(const string& courseCode, bool isAdding);
+
+void HeaderDesign(){
+        cout << "                        .|                                          _" << endl;
+    cout << "                       | |                                         | |" << endl;
+    cout << "                       |'|            ._____                       |'|            ._____" << endl;
+    cout << "               ___    |  |            |.   |' .---" << "-|       ___    |  |            |.   |' .---" << ".  " << endl;
+    cout << "       _    .-'   '-. |  |     .--'|  ||   | _|    |    .-'   '-. |  |     .--'|  ||   | _|    |" << endl;
+    cout << "    .-'|  _.|  |    ||   '-__  |   |  |    ||      |  _.|  |    ||   '-__  |   |  |    ||      |  " << endl;
+    cout << "    |' | |.    |    ||       | |   |  |    ||      | |.    |    ||       | |   |  |    ||      |" << endl;
+    cout << " ___|  '-'     '      \"       '-'   '-.'    '`      |-'     '      \"       '-'   '-.'    '`      |___" << endl;
+    cout << " ___      _        _             _   ___     _ _            _   _      _                _ _                  " << endl;
+    cout << "|_ _|__ _| |___ __(_)__ _   _ _ (_) | _ )_ _(_) |_ ___ ___ | | | |_ _ (_)_ _____ _ _ __(_) |_ _  _ " << endl;
+    cout << " | |/ _` | / -_|_-< / _` | | ' \\| | | _ \\ '_| |  _/ _ (_-< | |_| | ' \\| \\ V / -_) '_(_-< |  _| || | " << endl;
+    cout << "|___\\__, |_\\___/__/_\\__,_| |_||_|_| |___/_| |_|\\__\\___/__/  \\___/|_||_|_|\\_/\\___|_| /__/_|\\__|\\_, |" << endl;
+    cout << "    |___/                                                                                     |__/           " << endl;
+}
 
 void Course::Display() const {
     cout << "| " << setw(11) << CourseCode << " | " << setw(60) << CourseTitle << " | "

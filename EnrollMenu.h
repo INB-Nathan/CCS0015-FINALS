@@ -6,6 +6,7 @@
 using namespace std;
 
 
+
 class EnrollMenu
 {
 private:
@@ -26,7 +27,26 @@ public:
     void EnrollStudent(string);
     void ViewEnrollees();
     int ViewSchedules(string,int);
+    // DESIGN
+    void HeaderDesign();
 };
+
+void EnrollMenu::HeaderDesign() {
+    cout << "                        .|                                          _" << endl;
+    cout << "                       | |                                         | |" << endl;
+    cout << "                       |'|            ._____                       |'|            ._____" << endl;
+    cout << "               ___    |  |            |.   |' .---" << "-|       ___    |  |            |.   |' .---" << ".  " << endl;
+    cout << "       _    .-'   '-. |  |     .--'|  ||   | _|    |    .-'   '-. |  |     .--'|  ||   | _|    |" << endl;
+    cout << "    .-'|  _.|  |    ||   '-__  |   |  |    ||      |  _.|  |    ||   '-__  |   |  |    ||      |  " << endl;
+    cout << "    |' | |.    |    ||       | |   |  |    ||      | |.    |    ||       | |   |  |    ||      |" << endl;
+    cout << " ___|  '-'     '      \"       '-'   '-.'    '`      |-'     '      \"       '-'   '-.'    '`      |___" << endl;
+    cout << " ___      _        _             _   ___     _ _            _   _      _                _ _                  " << endl;
+    cout << "|_ _|__ _| |___ __(_)__ _   _ _ (_) | _ )_ _(_) |_ ___ ___ | | | |_ _ (_)_ _____ _ _ __(_) |_ _  _ " << endl;
+    cout << " | |/ _` | / -_|_-< / _` | | ' \\| | | _ \\ '_| |  _/ _ (_-< | |_| | ' \\| \\ V / -_) '_(_-< |  _| || | " << endl;
+    cout << "|___\\__, |_\\___/__/_\\__,_| |_||_|_| |___/_| |_|\\__\\___/__/  \\___/|_||_|_|\\_/\\___|_| /__/_|\\__|\\_, |" << endl;
+    cout << "    |___/                                                                                     |__/           " << endl;
+}
+
 
 void EnrollMenu::Pause() // Function to replace "system("pause")"
 {
@@ -201,6 +221,7 @@ void EnrollMenu::EnrollStudent(string studentID)
     string courseCode, courseSchedule, blockSection, studentFirstName, studentLastName, studentMiddlename;
     if (isEnrolled(studentID, blockSection, courseCode, courseSchedule))
     {
+        HeaderDesign();
         cout << "Student is already enrolled in the course.\n";
         return;
     }
@@ -211,6 +232,7 @@ void EnrollMenu::EnrollStudent(string studentID)
             do
             {
                 system("clear");
+                HeaderDesign();
                 tree.ViewCourses();
                 cout << "Enter course code: ";
                 cin >> courseCode;
@@ -224,6 +246,7 @@ void EnrollMenu::EnrollStudent(string studentID)
             cin >> sure;
         } while (sure == 0);
         system("clear");
+        HeaderDesign();
         ViewSchedules(courseCode, identifier);
         if (identifier == 0)
         {
